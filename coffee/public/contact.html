@@ -220,13 +220,104 @@
   cursor: pointer; transition: all 0.3s;
 }
 .logout-btn:hover { color: var(--caramel); border-color: var(--caramel); }
+
+/* ── HAMBURGER MENU ── */
+.nav-toggle {
+  display: none; flex-direction: column; justify-content: center;
+  gap: 5px; cursor: pointer; padding: 0.4rem; background: none; border: none;
+  z-index: 200;
+}
+.nav-toggle span {
+  display: block; width: 24px; height: 2px;
+  background: var(--espresso); transition: all 0.3s;
+}
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 900px) {
+  /* NAV */
+  nav { padding: 1rem 1.5rem; }
+  .nav-toggle { display: flex; }
+  .nav-links {
+    display: none; flex-direction: column; gap: 0;
+    position: fixed; top: 0; right: 0; width: 75%; max-width: 300px;
+    height: 100vh; background: var(--foam);
+    padding: 5rem 2rem 2rem; box-shadow: -8px 0 32px rgba(44,26,14,0.15);
+    z-index: 150; overflow-y: auto;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links li { border-bottom: 1px solid rgba(200,131,42,0.1); }
+  .nav-links a {
+    display: block; padding: 1rem 0; font-size: 0.85rem;
+    letter-spacing: 2px; border-bottom: none;
+  }
+  .nav-reserve {
+    margin-top: 1rem; text-align: center;
+    padding: 0.8rem 1rem !important; display: block;
+  }
+  .logout-btn { margin-top: 0.5rem; width: 100%; }
+
+  /* CONTACT HERO */
+  .contact-hero { padding: 0 1.5rem 3rem; }
+  .contact-hero-content { padding-top: 5rem; }
+  .hero-title { font-size: clamp(2rem, 10vw, 3.5rem); }
+  .hero-sub { font-size: 0.9rem; }
+
+  /* INFO BAR */
+  .info-bar {
+    padding: 1.2rem 1rem; flex-wrap: wrap; gap: 1rem;
+    justify-content: flex-start;
+  }
+  .ib-div { display: none; }
+  .ib-item { flex: 1 1 45%; min-width: 130px; }
+
+  /* CONTACT MAIN */
+  .contact-main { grid-template-columns: 1fr; }
+  .contact-left { padding: 3rem 1.5rem; }
+  .contact-right { padding: 3rem 1.5rem; }
+
+  /* FORM */
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  .form-group.full { grid-column: span 1; }
+
+  /* HOURS */
+  .hours-section { padding: 2.5rem 1.5rem; }
+
+  /* SOCIAL */
+  .social-section {
+    grid-template-columns: 1fr; gap: 2.5rem; padding: 3rem 1.5rem;
+  }
+
+  /* FAQ */
+  .faq-section { padding: 3rem 1.5rem; }
+  .faq-grid { grid-template-columns: 1fr; }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 1.5rem; flex-direction: column; gap: 1.5rem; text-align: center;
+  }
+  .f-links { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+}
+
+@media (max-width: 600px) {
+  .info-bar { flex-direction: column; gap: 1rem; }
+  .ib-item { flex: 1 1 100%; }
+  .hero-title { font-size: clamp(1.8rem, 9vw, 2.8rem); }
+  .nl-form { flex-direction: column; }
+  .nl-btn { width: 100%; }
+}
 </style>
 </head>
 <body>
 
 <nav>
   <a href="home.html" class="nav-logo">MACH <em style="color:var(--caramel);font-style:italic">Cafe</em> </a>
-  <ul class="nav-links">
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
     <li><a href="home.html">Home</a></li>
     <li><a href="men.html">Menu</a></li>
     <li><a href="contact.html" class="active">Contact</a></li>
@@ -557,6 +648,20 @@
 </footer>
 
 <script>
+
+// Hamburger menu toggle
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', () => {
+  navToggle.classList.toggle('open');
+  navLinks.classList.toggle('open');
+});
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navToggle.classList.remove('open');
+    navLinks.classList.remove('open');
+  });
+});
 
 // ── AUTH GUARD — paste this at the top of every page except login ──
 (function() {
