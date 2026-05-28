@@ -163,6 +163,37 @@
 
   .empty-state { text-align: center; padding: 4rem; color: var(--muted); }
   .date-label { font-size: 0.78rem; color: var(--muted); background: rgba(123,79,46,0.06); padding: 0.6rem 1rem; margin-bottom: 1rem; display: inline-block; }
+
+  /* ── MOBILE RESPONSIVE ── */
+  @media (max-width: 768px) {
+    header { padding: 1rem 1.2rem; }
+    header h1 { font-size: 1.05rem; }
+    .tabs { padding: 0 0.5rem; }
+    .tab-btn { padding: 0.85rem 0.9rem; font-size: 0.7rem; letter-spacing: 1px; }
+    .panel { padding: 1.2rem; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .section-hdr { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+    .inv-table { font-size: 0.78rem; }
+    .inv-table th, .inv-table td { padding: 0.7rem 0.6rem; }
+    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .form-card { padding: 1.2rem; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-actions { flex-direction: column; }
+    .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+    .stock-entry-grid { grid-template-columns: 1fr; }
+    .section-hdr > div { flex-wrap: wrap; width: 100%; }
+    #log-date-filter { flex: 1; min-width: 0; }
+    #panel-import-excel .form-actions { flex-direction: column; }
+  }
+  @media (max-width: 480px) {
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .stat-box { padding: 0.9rem 0.8rem; gap: 0.5rem; }
+    .stat-icon { font-size: 1.4rem; }
+    .stat-value { font-size: 1.3rem; }
+    .tab-btn { padding: 0.75rem 0.6rem; font-size: 0.65rem; }
+    header h1 { font-size: 0.95rem; }
+  }
+
 </style>
 </head>
 <body>
@@ -211,6 +242,7 @@
     <h2 class="section-title">Current Stock Levels — Ongole</h2>
     <button class="btn-secondary btn-sm" onclick="loadOverview()">↻ Refresh</button>
   </div>
+  <div class="table-scroll">
   <table class="inv-table">
     <thead>
       <tr><th>Item</th><th>Category</th><th>Current Qty</th><th>Unit</th><th>Reorder Level</th><th>Status</th></tr>
@@ -219,6 +251,7 @@
       <tr><td colspan="6" class="empty-state">Loading…</td></tr>
     </tbody>
   </table>
+  </div>
 </div>
 
 <!-- ══ PANEL: STOCK ENTRY ══ -->
@@ -270,6 +303,7 @@
     </div>
   </div>
   <div class="section-hdr"><h2 class="section-title">All Items — Ongole</h2></div>
+  <div class="table-scroll">
   <table class="inv-table">
     <thead>
       <tr><th>Item</th><th>Category</th><th>Unit</th><th>Current Qty</th><th>Reorder Level</th><th>Actions</th></tr>
@@ -278,6 +312,7 @@
       <tr><td colspan="6" class="empty-state">Loading…</td></tr>
     </tbody>
   </table>
+  </div>
 </div>
 
 <!-- ══ PANEL: IMPORT EXCEL ══ -->
@@ -308,12 +343,16 @@
     <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem">
       Review the data below before importing. Items already in the DB will be updated; new ones will be added.
     </p>
+    <div class="table-scroll">
+    <div class="table-scroll">
     <table class="inv-table">
       <thead>
         <tr><th>#</th><th>Name</th><th>Unit</th><th>Current Qty</th><th>Reorder Level</th><th>Category</th></tr>
       </thead>
       <tbody id="excel-preview-body"></tbody>
     </table>
+    </div>
+    </div>
   </div>
 
   <!-- Import result -->
@@ -344,6 +383,7 @@
       <button class="btn-secondary btn-sm" onclick="document.getElementById('log-date-filter').value='';loadLogs()">Clear</button>
     </div>
   </div>
+  <div class="table-scroll">
   <table class="inv-table">
     <thead>
       <tr><th>Time</th><th>Item</th><th>Type</th><th>Change</th><th>New Qty</th><th>Note</th></tr>
@@ -352,6 +392,7 @@
       <tr><td colspan="6" class="empty-state">Loading…</td></tr>
     </tbody>
   </table>
+  </div>
 </div>
 
 <div id="toast">✓ Done</div>
