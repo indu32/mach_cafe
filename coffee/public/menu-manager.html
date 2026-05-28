@@ -188,13 +188,56 @@ body { font-family: 'Jost', sans-serif; background: var(--foam); color: var(--te
 .btn-confirm-cancel { padding: 0.9rem 1.4rem; background: none; color: var(--espresso); border: 1px solid rgba(123,79,46,0.3); font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
 
 @media (max-width: 768px) {
-  .topbar, .page-header, .stats-strip, .filters-bar { padding-left: 1.5rem; padding-right: 1.5rem; }
-  .table-wrap { padding: 1rem 1.5rem 3rem; }
+  /* TOP BAR */
+  .topbar { padding: 0.8rem 1.2rem; flex-wrap: wrap; gap: 0.6rem; }
+  .topbar-logo { font-size: 1.1rem; }
+  .topbar-right { gap: 0.6rem; }
+  .topbar-user { display: none; }
+
+  /* HEADER & STRIPS */
+  .page-header, .stats-strip, .filters-bar { padding-left: 1.2rem; padding-right: 1.2rem; }
+  .table-wrap { padding: 1rem 1.2rem 3rem; overflow-x: auto; }
   .page-header-inner { flex-direction: column; align-items: flex-start; gap: 1rem; }
-  .stats-inner { gap: 1.5rem; flex-wrap: wrap; }
-  .form-row { grid-template-columns: 1fr; }
+  .btn-add-new { width: 100%; justify-content: center; }
+
+  /* STATS */
+  .stats-inner { gap: 1.2rem; flex-wrap: wrap; }
+  .stat-val { font-size: 1.3rem; }
+
+  /* FILTERS */
+  .filters-inner { gap: 0.5rem; }
+  .filter-btn { font-size: 0.65rem; padding: 0.35rem 0.7rem; }
+  .search-wrap { margin-left: 0; width: 100%; }
+  .search-wrap input { width: 100%; }
+
+  /* TABLE — horizontal scroll */
+  .table-wrap { -webkit-overflow-scrolling: touch; }
+  .items-table { min-width: 520px; }
   .items-table thead th:nth-child(4),
   .items-table td:nth-child(4) { display: none; }
+
+  /* FORM */
+  .form-row { grid-template-columns: 1fr; }
+
+  /* DRAWER */
+  .drawer { width: 100vw; max-width: 100vw; right: -100vw; }
+
+  /* AUTH BOX */
+  #auth-gate { padding: 1rem; }
+
+  /* CONFIRM MODAL */
+  .confirm-box { margin: 1rem; }
+  .confirm-actions { flex-direction: column; }
+
+  /* TOAST */
+  .toast { white-space: normal; text-align: center; width: 90vw; }
+}
+
+@media (max-width: 480px) {
+  .topbar { padding: 0.7rem 1rem; }
+  .page-header { padding: 1.5rem 1rem 1rem; }
+  .page-title { font-size: 1.6rem; }
+  .filter-btn { font-size: 0.6rem; padding: 0.3rem 0.5rem; letter-spacing: 1px; }
 }
 
 .logout-btn {
