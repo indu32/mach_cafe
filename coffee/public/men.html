@@ -320,6 +320,32 @@ footer{
   font-size:0.75rem;
 }
 
+/* HAMBURGER */
+
+.nav-toggle{
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  gap:5px;
+  cursor:pointer;
+  padding:0.4rem;
+  background:none;
+  border:none;
+  z-index:200;
+}
+
+.nav-toggle span{
+  display:block;
+  width:24px;
+  height:2px;
+  background:var(--espresso);
+  transition:all 0.3s;
+}
+
+.nav-toggle.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2){ opacity:0; }
+.nav-toggle.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
 /* RESPONSIVE */
 
 @media(max-width:992px){
@@ -339,13 +365,75 @@ footer{
 
 @media(max-width:700px){
 
-  .items-grid{
-    grid-template-columns:1fr;
+  nav{
+    padding:1rem 1.5rem;
   }
 
-  nav{
+  .nav-toggle{
+    display:flex;
+  }
+
+  .nav-links{
+    display:none;
     flex-direction:column;
-    gap:1rem;
+    gap:0;
+    position:fixed;
+    top:0;
+    right:0;
+    width:75%;
+    max-width:280px;
+    height:100vh;
+    background:white;
+    padding:5rem 2rem 2rem;
+    box-shadow:-8px 0 32px rgba(0,0,0,0.1);
+    z-index:150;
+    overflow-y:auto;
+  }
+
+  .nav-links.open{
+    display:flex;
+  }
+
+  .nav-links li{
+    border-bottom:1px solid rgba(123,79,46,0.1);
+  }
+
+  .nav-links a{
+    display:block;
+    padding:1rem 0;
+  }
+
+  .logout-btn{
+    margin-top:0.5rem;
+    width:100%;
+  }
+
+  .menu-hero{
+    padding:1.5rem;
+    min-height:auto;
+  }
+
+  .menu-hero-content{
+    padding-top:5rem;
+  }
+
+  .menu-nav{
+    padding:0 0.5rem;
+    top:60px;
+  }
+
+  .mnav-btn{
+    padding:0.85rem 0.9rem;
+    font-size:0.7rem;
+    letter-spacing:1px;
+  }
+
+  .menu-section{
+    padding:3rem 1.5rem;
+  }
+
+  .items-grid{
+    grid-template-columns:1fr;
   }
 
   .sec-header{
@@ -359,9 +447,16 @@ footer{
   }
 
   footer{
+    padding:2rem 1.5rem;
     flex-direction:column;
     gap:1.5rem;
     text-align:center;
+  }
+
+  .f-links{
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:1rem;
   }
 }
 </style>
@@ -374,7 +469,11 @@ footer{
     MACH <em style="color:var(--caramel)">Cafe</em>
   </a>
 
-  <ul class="nav-links">
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <ul class="nav-links" id="navLinks">
     <li><a href="/home.html">Home</a></li>
     <li><a href="/men.html" class="active">Menu</a></li>
     <li><a href="/contact.html">Contact</a></li>
@@ -588,6 +687,20 @@ function buildCard(item){
     </div>
   `;
 }
+
+// HAMBURGER
+const navToggle = document.getElementById('navToggle');
+const navLinks  = document.getElementById('navLinks');
+navToggle.addEventListener('click', () => {
+  navToggle.classList.toggle('open');
+  navLinks.classList.toggle('open');
+});
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    navToggle.classList.remove('open');
+    navLinks.classList.remove('open');
+  });
+});
 
 // START
 loadMenu();
