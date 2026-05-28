@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Owner Access — MACH Cafe</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --cream: #FFFFFF; --espresso: #3B1F0C; --mocha: #5A3520;
+    --caramel: #7B4F2E; --foam: #F8F8F8; --muted: #8A6B55;
+  }
+  .logout-btn {
+  background: none;
+  border: 1px solid rgba(212,169,106,0.3);
+  color: var(--latte);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 0.5rem 1.4rem;
+  cursor: pointer; transition: all 0.3s;
+}
+.logout-btn:hover { color: var(--caramel); border-color: var(--caramel); }
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--espresso);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  body::before {
+    content: 'VB';
+    position: fixed;
+    right: -2rem;
+    bottom: -3rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 40vw;
+    font-weight: 700;
+    color: rgba(255,255,255,0.02);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .login-card {
+    background: var(--foam);
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    position: relative;
+    z-index: 1;
+  }
+
+  .login-header {
+    background: var(--espresso);
+    color: #fff;
+    padding: 2.5rem 2.5rem 2rem;
+    text-align: center;
+  }
+  .login-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+  .login-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+  }
+  .login-sub {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.45;
+  }
+
+  .login-body { padding: 2rem 2.5rem 2.5rem; }
+
+  /* ── Destination selector ── */
+  .dest-label {
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+    display: block;
+  }
+  .dest-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+    margin-bottom: 1.8rem;
+  }
+  .dest-btn {
+    padding: 1rem 0.8rem;
+    background: var(--cream);
+    border: 2px solid rgba(123,79,46,0.2);
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: all 0.25s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .dest-btn .dest-icon { font-size: 1.6rem; }
+  .dest-btn:hover {
+    border-color: var(--caramel);
+    color: var(--caramel);
+  }
+  .dest-btn.selected {
+    background: var(--espresso);
+    border-color: var(--espresso);
+    color: #fff;
+  }
+
+  /* ── Password field ── */
+  .field-label {
+    display: block;
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .field-input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(123,79,46,0.25);
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem;
+    color: var(--espresso);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 0.5rem;
+  }
+  .field-input:focus { border-color: var(--caramel); }
+  .field-input.error { border-color: #c0392b; }
+
+  .error-msg {
+    font-size: 0.78rem;
+    color: #c0392b;
+    margin-bottom: 1rem;
+    min-height: 1.2rem;
+    display: none;
+  }
+  .error-msg.visible { display: block; }
+
+  .btn-enter {
+    width: 100%;
+    padding: 1.1rem;
+    background: var(--caramel);
+    color: #fff;
+    border: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 0.5rem;
+  }
+  .btn-enter:hover { background: var(--espresso); }
+  .btn-enter:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .login-note {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 1.2rem;
+    line-height: 1.6;
+  }
+
+
+.btn-back {
+  padding: 1.1rem 1.4rem;
+  background: none;
+  color: var(--espresso);
+  border: 1px solid rgba(123,79,46,0.3);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: border-color 0.2s;
+  white-space: nowrap;
+}
+.btn-back:hover { border-color: var(--espresso); }
+  /* Loading spinner inside button */
+  .btn-enter.loading { pointer-events: none; opacity: 0.7; }
+</style>
+</head>
+<body>
+
+<div class="login-card">
+  <div class="login-header">
+    <div class="login-icon">🔐</div>
+    <div class="login-title">Owner Access</div>
+    <div class="login-sub">MACH Cafe </div>
+  </div>
+
+  <div class="login-body">
+
+    <span class="dest-label">Where do you want to go?</span>
+    <div class="dest-options">
+      <button class="dest-btn selected" id="dest-printer" onclick="selectDest('printer-dashboard.html', this)">
+        <span class="dest-icon">🖨️</span>
+        Printer Dashboard
+      </button>
+      <button class="dest-btn" id="dest-kitchen" onclick="selectDest('kitchen-inventory.html', this)">
+        <span class="dest-icon">📦</span>
+        Kitchen Inventory
+      </button>
+    </div>
+
+    <label class="field-label" for="password">Password</label>
+    <input
+      class="field-input"
+      type="password"
+      id="password"
+      placeholder="Enter owner password"
+      onkeydown="if(event.key==='Enter') doLogin()"
+      autofocus
+    />
+    <div class="error-msg" id="error-msg">Incorrect password. Please try again.</div>
+
+    <div style="display:flex; gap:0.8rem; padding:1.5rem 2.5rem; background:var(--foam); border-top:1px solid rgba(123,79,46,0.1);">
+  <a class="btn-back" href="menu.html">← Back</a>
+  <button class="btn-enter" id="btn-enter" onclick="doLogin()">Enter →</button>
+</div> 
+
+    <p class="login-note">Only authorised owners can access these pages</p>
+  </div>
+</div>
+
+<script>
+
+// ── AUTH GUARD — paste this at the top of every page except login ──
+(function() {
+  const role   = sessionStorage.getItem('mach_role');
+  const access = JSON.parse(sessionStorage.getItem('mach_access') || '[]');
+  const page   = location.pathname.split('/').pop() || 'index.html';
+
+  if (!role) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  // Owner token check
+  if (role === 'owner') {
+    const token = localStorage.getItem('mach_token');
+    if (!token) { window.location.href = 'index.html'; return; }
+  }
+
+  // Check this page is in the role's allowed access list
+  if (!access.includes(page)) {
+    window.location.href = 'index.html';
+  }
+})();
+
+function logout() {
+  sessionStorage.clear();
+  localStorage.removeItem('mach_token');
+  window.location.href = 'index.html';
+}
+  // Which page to open after login — default is printer dashboard
+  // Also check if menu.html set a redirect target via sessionStorage
+  let destination = sessionStorage.getItem('owner_redirect') || 'printer-dashboard.html';
+
+  // Highlight the correct button on load
+  window.addEventListener('DOMContentLoaded', () => {
+    if (destination === 'kitchen-inventory.html') {
+      document.getElementById('dest-printer').classList.remove('selected');
+      document.getElementById('dest-kitchen').classList.add('selected');
+    }
+  });
+
+  function selectDest(page, btn) {
+    destination = page;
+    document.querySelectorAll('.dest-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  async function doLogin() {
+    const pwdInput = document.getElementById('password');
+    const errorMsg = document.getElementById('error-msg');
+    const btn      = document.getElementById('btn-enter');
+    const password = pwdInput.value.trim();
+
+    // Clear previous error
+    pwdInput.classList.remove('error');
+    errorMsg.classList.remove('visible');
+
+    if (!password) {
+      pwdInput.classList.add('error');
+      errorMsg.textContent = 'Please enter your password.';
+      errorMsg.classList.add('visible');
+      pwdInput.focus();
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Verifying...';
+    btn.classList.add('loading');
+
+    try {
+      const res  = await fetch('/api/owner/login', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ password })
+      });
+      const data = await res.json();
+
+      if (data.success && data.token) {
+        // ✅ Save token to sessionStorage so other pages can use it
+        sessionStorage.setItem('owner_token', data.token);
+        // Clear the redirect target now that we've used it
+        sessionStorage.removeItem('owner_redirect');
+        // Navigate to chosen destination
+        window.location.href = '/' + destination;
+      } else {
+        // Wrong password
+        pwdInput.classList.add('error');
+        errorMsg.textContent = data.error || 'Incorrect password. Please try again.';
+        errorMsg.classList.add('visible');
+        pwdInput.value = '';
+        pwdInput.focus();
+      }
+    } catch (err) {
+      // Server unreachable
+      errorMsg.textContent = 'Cannot reach server. Make sure node server.js is running.';
+      errorMsg.classList.add('visible');
+    }
+
+    btn.disabled = false;
+    btn.textContent = 'Enter →';
+    btn.classList.remove('loading');
+  }
+</script>
+
+</body>
+</html>

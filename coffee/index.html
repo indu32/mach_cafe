@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velvet Bean Coffee — Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --cream: #F5EFE0; --espresso: #2C1A0E; --mocha: #6B3F2A;
+    --caramel: #C8832A; --latte: #D4A96A; --foam: #FAF5EC;
+    --text: #1E110A; --muted: #7A5C44;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Jost', sans-serif; background: var(--foam); color: var(--text); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(250,245,236,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200,131,42,0.2);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--espresso); letter-spacing: 1px; text-decoration: none; }
+  .nav-logo span { color: var(--caramel); }
+  .nav-links { display: flex; gap: 0; list-style: none; }
+  .nav-links a {
+    text-decoration: none; font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--mocha);
+    padding: 0.5rem 1.4rem; transition: all 0.3s; border-bottom: 2px solid transparent;
+  }
+  .nav-links a:hover { color: var(--caramel); }
+  .nav-links a.active { color: var(--caramel); border-bottom-color: var(--caramel); }
+  .nav-reserve {
+    background: var(--espresso); color: var(--cream) !important;
+    padding: 0.6rem 1.6rem !important; border-bottom: none !important;
+    border-radius: 0 !important;
+  }
+  .nav-reserve:hover { background: var(--mocha) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center;
+    padding: 0 4rem; background: var(--espresso); position: relative; overflow: hidden;
+  }
+  .hero-rings {
+    position: absolute; right: 8vw; top: 50%; transform: translateY(-50%);
+    width: 42vw; max-width: 560px; aspect-ratio: 1; pointer-events: none;
+    animation: spin 40s linear infinite;
+  }
+  @keyframes spin { from { transform: translateY(-50%) rotate(0deg); } to { transform: translateY(-50%) rotate(360deg); } }
+  .hero-cup {
+    position: absolute; right: 8vw; top: 50%; transform: translateY(-50%);
+    width: 42vw; max-width: 560px; aspect-ratio: 1; pointer-events: none;
+    animation: fadeLeft 1s 0.5s ease both;
+  }
+  @keyframes fadeLeft { from { opacity:0; transform: translate(50px,-50%); } to { opacity:1; transform: translate(0,-50%); } }
+  .hero-watermark {
+    position: absolute; bottom: -3rem; left: -2rem;
+    font-family: 'Playfair Display', serif; font-size: 28vw; font-weight: 700;
+    color: rgba(255,255,255,0.02); line-height: 1; user-select: none; pointer-events: none;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 580px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--caramel); border: 1px solid rgba(200,131,42,0.35);
+    padding: 0.45rem 1.2rem; margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+  .pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--caramel); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(28px);} to{opacity:1;transform:translateY(0);} }
+  .hero h1 {
+    font-family: 'Playfair Display', serif; font-size: clamp(3rem,6vw,5.5rem);
+    color: var(--cream); line-height: 1.05; margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+  .hero h1 em { color: var(--caramel); font-style: italic; }
+  .hero-desc {
+    font-size: 1.05rem; color: rgba(245,239,224,0.6); line-height: 1.85;
+    margin-bottom: 2.8rem; max-width: 440px; animation: fadeUp 0.8s 0.2s ease both;
+  }
+  .hero-btns { display: flex; gap: 1rem; animation: fadeUp 0.8s 0.3s ease both; }
+  .btn-solid {
+    background: var(--caramel); color: var(--espresso);
+    padding: 1rem 2.2rem; font-family: 'Jost', sans-serif; font-weight: 500;
+    font-size: 0.82rem; letter-spacing: 2px; text-transform: uppercase;
+    border: none; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block;
+  }
+  .btn-solid:hover { background: var(--latte); transform: translateY(-2px); }
+  .btn-ghost {
+    background: transparent; color: rgba(245,239,224,0.8);
+    padding: 1rem 2.2rem; font-family: 'Jost', sans-serif; font-weight: 500;
+    font-size: 0.82rem; letter-spacing: 2px; text-transform: uppercase;
+    border: 1px solid rgba(245,239,224,0.25); cursor: pointer; transition: all 0.3s;
+    text-decoration: none; display: inline-block;
+  }
+  .btn-ghost:hover { border-color: var(--caramel); color: var(--caramel); transform: translateY(-2px); }
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 4rem;
+    display: flex; align-items: center; gap: 0.8rem;
+    font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(245,239,224,0.3); animation: fadeUp 1.2s 0.8s ease both;
+  }
+  .scroll-line { width: 40px; height: 1px; background: var(--caramel); }
+
+  /* STATS */
+  .stats { background: var(--caramel); padding: 2.2rem 4rem; display: flex; justify-content: space-around; align-items: center; }
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2.6rem; color: var(--espresso); font-weight: 700; }
+  .stat-label { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--espresso); opacity: 0.65; margin-top: 0.25rem; }
+  .stat-div { width: 1px; height: 48px; background: rgba(44,26,14,0.18); }
+
+  /* SECTIONS */
+  section { padding: 6rem 4rem; }
+  .section-tag { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; color: var(--caramel); margin-bottom: 0.8rem; display: block; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem,4vw,3rem); color: var(--espresso); line-height: 1.2; margin-bottom: 1rem; }
+  .section-sub { color: var(--muted); font-size: 0.97rem; line-height: 1.8; max-width: 500px; }
+
+  /* ABOUT */
+  .about { background: var(--cream); display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+  .about-visual { position: relative; height: 500px; }
+  .ab1 { position: absolute; top:0; left:0; width:72%; height:82%; background: var(--espresso); overflow:hidden; }
+  .ab2 { position: absolute; bottom:0; right:0; width:52%; height:52%; background: var(--caramel); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.3rem; }
+  .ab2-num { font-family:'Playfair Display',serif; font-size:3.5rem; color:var(--espresso); font-weight:700; line-height:1; }
+  .ab2-lbl { font-size:0.68rem; letter-spacing:3px; text-transform:uppercase; color:var(--espresso); opacity:0.75; }
+  .about-features { display:flex; flex-direction:column; gap:1.4rem; margin-top:2.2rem; }
+  .feature { display:flex; gap:1.2rem; align-items:flex-start; padding:1.2rem; transition:background 0.3s; }
+  .feature:hover { background: rgba(200,131,42,0.06); }
+  .feat-icon { width:44px; height:44px; min-width:44px; background:rgba(200,131,42,0.12); display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
+  .feat-title { font-weight:500; font-size:0.93rem; color:var(--espresso); margin-bottom:0.3rem; }
+  .feat-desc { font-size:0.83rem; color:var(--muted); line-height:1.65; }
+
+  /* STORY */
+  .story { background: var(--espresso); display:grid; grid-template-columns:1fr 1fr; gap:0; }
+  .story-left { padding:6rem 4rem; }
+  .story-left .section-title { color:var(--cream); }
+  .story-left .section-tag { color:var(--caramel); }
+  .story-left .section-sub { color:rgba(245,239,224,0.55); max-width:420px; }
+  .story-timeline { display:flex; flex-direction:column; gap:0; margin-top:2.5rem; }
+  .timeline-item { display:flex; gap:1.5rem; padding:1.5rem 0; border-top:1px solid rgba(255,255,255,0.06); }
+  .tl-year { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--caramel); min-width:50px; padding-top:0.1rem; }
+  .tl-text { font-size:0.85rem; color:rgba(245,239,224,0.55); line-height:1.7; }
+  .tl-title { font-size:0.92rem; font-weight:500; color:var(--cream); margin-bottom:0.3rem; }
+  .story-right { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:1.5px; }
+  .story-box { padding:2.5rem 2rem; background:rgba(255,255,255,0.04); display:flex; flex-direction:column; gap:0.5rem; transition:background 0.3s; }
+  .story-box:hover { background:rgba(255,255,255,0.08); }
+  .story-box.highlight { background:var(--caramel); grid-column:span 2; }
+  .story-box-icon { font-size:1.8rem; margin-bottom:0.5rem; }
+  .story-box-title { font-family:'Playfair Display',serif; font-size:1.15rem; color:var(--cream); }
+  .story-box.highlight .story-box-title { color:var(--espresso); }
+  .story-box-text { font-size:0.82rem; color:rgba(245,239,224,0.55); line-height:1.6; }
+  .story-box.highlight .story-box-text { color:rgba(44,26,14,0.7); }
+
+  /* FACILITIES */
+  .facilities { background:var(--foam); }
+  .fac-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:3.5rem; }
+  .fac-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5px; }
+  .fac-card {
+    background:var(--cream); padding:2.5rem 2rem;
+    position:relative; overflow:hidden; cursor:default;
+    transition:transform 0.3s;
+  }
+  .fac-card::after {
+    content:''; position:absolute; bottom:0; left:0;
+    width:100%; height:4px; background:var(--caramel);
+    transform:scaleX(0); transform-origin:left; transition:transform 0.35s;
+  }
+  .fac-card:hover { transform:translateY(-5px); }
+  .fac-card:hover::after { transform:scaleX(1); }
+  .fac-icon { font-size:2.2rem; margin-bottom:1.2rem; display:block; }
+  .fac-title { font-family:'Playfair Display',serif; font-size:1.2rem; color:var(--espresso); margin-bottom:0.6rem; }
+  .fac-desc { font-size:0.83rem; color:var(--muted); line-height:1.7; }
+  .fac-tag { display:inline-block; margin-top:1rem; font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; background:rgba(200,131,42,0.1); color:var(--caramel); padding:0.25rem 0.8rem; }
+
+  /* TESTIMONIALS */
+  .testimonials { background:var(--cream); }
+  .test-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5px; margin-top:3rem; }
+  .test-card { padding:2.5rem 2rem; background:var(--foam); position:relative; transition:transform 0.3s; }
+  .test-card:hover { transform:translateY(-4px); }
+  .test-card::before {
+    content:'\201C'; font-family:'Playfair Display',serif; font-size:6rem;
+    color:rgba(200,131,42,0.12); position:absolute; top:-1rem; left:1.5rem; line-height:1;
+  }
+  .stars { color:var(--caramel); font-size:0.85rem; margin-bottom:0.8rem; }
+  .test-text { font-size:0.87rem; color:var(--muted); line-height:1.85; margin-bottom:1.5rem; font-style:italic; position:relative; }
+  .test-author { display:flex; align-items:center; gap:1rem; }
+  .author-avatar { width:42px; height:42px; border-radius:50%; background:var(--caramel); display:flex; align-items:center; justify-content:center; font-weight:500; color:var(--espresso); font-size:0.82rem; }
+  .author-name { font-weight:500; font-size:0.9rem; color:var(--espresso); }
+  .author-role { font-size:0.73rem; color:var(--muted); letter-spacing:1px; }
+
+  /* GALLERY STRIP */
+  .gallery-strip { background:var(--espresso); padding:5rem 4rem; }
+  .gallery-strip .section-title { color:var(--cream); }
+  .gallery-strip .section-tag { color:var(--caramel); }
+  .g-grid { display:grid; grid-template-columns: 2fr 1fr 1fr 1fr; grid-template-rows:260px; gap:1.5px; margin-top:3rem; }
+  .g-item { overflow:hidden; position:relative; cursor:pointer; }
+  .g-fill { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:4rem; transition:transform 0.4s; }
+  .g-item:hover .g-fill { transform:scale(1.06); }
+  .g1 { background:#3d2415; }
+  .g2 { background:#4a2e1a; font-size:3rem !important; }
+  .g3 { background:#5c3822; font-size:3rem !important; }
+  .g4 { background:#3a2010; font-size:3rem !important; }
+  .g-overlay { position:absolute; inset:0; background:rgba(44,26,14,0.82); opacity:0; transition:opacity 0.3s; display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-style:italic; color:var(--cream); font-size:1rem; text-align:center; padding:1rem; }
+  .g-item:hover .g-overlay { opacity:1; }
+
+  /* CTA STRIP */
+  .cta-strip { background:var(--caramel); padding:5rem 4rem; display:flex; align-items:center; justify-content:space-between; gap:3rem; }
+  .cta-strip h2 { font-family:'Playfair Display',serif; font-size:2.5rem; color:var(--espresso); max-width:420px; }
+  .cta-strip p { color:rgba(44,26,14,0.65); margin-top:0.7rem; font-size:0.95rem; }
+  .cta-actions { display:flex; gap:1rem; flex-shrink:0; }
+
+  /* FOOTER */
+  footer { background:#1A0D07; padding:3rem 4rem; display:flex; justify-content:space-between; align-items:center; }
+  .f-logo { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--cream); }
+  .f-logo span { color:var(--caramel); }
+  .f-links { display:flex; gap:2rem; list-style:none; }
+  .f-links a { text-decoration:none; font-size:0.75rem; color:rgba(245,239,224,0.35); letter-spacing:2px; text-transform:uppercase; transition:color 0.3s; }
+  .f-links a:hover { color:var(--caramel); }
+  .f-copy { font-size:0.75rem; color:rgba(245,239,224,0.25); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Velvet<span>Bean</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="contact.html" class="nav-reserve">Reserve a Table</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-watermark">BEAN</div>
+
+  <!-- Rotating rings SVG -->
+  <svg class="hero-rings" viewBox="0 0 560 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="280" cy="280" r="270" stroke="rgba(200,131,42,0.08)" stroke-width="1"/>
+    <circle cx="280" cy="280" r="220" stroke="rgba(200,131,42,0.06)" stroke-width="1" stroke-dasharray="8 16"/>
+    <circle cx="280" cy="280" r="170" stroke="rgba(200,131,42,0.1)" stroke-width="1"/>
+  </svg>
+
+  <!-- Cup SVG -->
+  <svg class="hero-cup" viewBox="0 0 560 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="280" cy="370" rx="160" ry="25" fill="rgba(44,26,14,0.6)"/>
+    <rect x="190" y="220" width="180" height="140" rx="12" fill="#3d2415"/>
+    <rect x="198" y="228" width="164" height="128" rx="9" fill="#4a2e1a"/>
+    <ellipse cx="280" cy="248" rx="76" ry="18" fill="#6B3F2A"/>
+    <ellipse cx="280" cy="244" rx="68" ry="14" fill="#8B5E45"/>
+    <ellipse cx="280" cy="240" rx="54" ry="10" fill="#2C1A0E"/>
+    <circle cx="258" cy="232" r="8" fill="rgba(200,131,42,0.25)"/>
+    <rect x="370" y="272" width="44" height="12" rx="6" fill="#3d2415"/>
+    <rect x="362" y="264" width="8" height="28" rx="4" fill="#3d2415"/>
+    <text x="230" y="310" font-size="13" fill="rgba(200,131,42,0.55)" font-family="Georgia, serif" font-style="italic">velvet bean</text>
+    <path d="M 248 180 Q 262 140 278 165 Q 294 140 308 180" stroke="rgba(245,239,224,0.12)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M 264 168 Q 272 130 280 152" stroke="rgba(245,239,224,0.08)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="pill"><span class="pill-dot"></span>Est. 2018 · Artisan Coffee · Vijayawada</div>
+    <h1>Where Every Sip<br>Tells a <em>Story</em></h1>
+    <p class="hero-desc">Hand-crafted specialty coffee sourced from the world's finest estates. A sanctuary for those who believe great coffee is not just a drink — it's an art form.</p>
+    <div class="hero-btns">
+      <a href="menu.html" class="btn-solid">Explore Menu</a>
+      <a href="contact.html" class="btn-ghost">Reserve a Table</a>
+    </div>
+  </div>
+  <div class="scroll-hint"><span class="scroll-line"></span>Scroll to explore</div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-num">12+</div><div class="stat-label">Coffee Origins</div></div>
+  <div class="stat-div"></div>
+  <div class="stat"><div class="stat-num">48</div><div class="stat-label">Menu Items</div></div>
+  <div class="stat-div"></div>
+  <div class="stat"><div class="stat-num">7 Yrs</div><div class="stat-label">Of Excellence</div></div>
+  <div class="stat-div"></div>
+  <div class="stat"><div class="stat-num">50K+</div><div class="stat-label">Happy Guests</div></div>
+  <div class="stat-div"></div>
+  <div class="stat"><div class="stat-num">4.9 ★</div><div class="stat-label">Guest Rating</div></div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-visual">
+    <div class="ab1">
+      <svg viewBox="0 0 340 420" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect width="340" height="420" fill="#3d2415"/>
+        <circle cx="170" cy="170" r="100" fill="#4a2e1a"/>
+        <circle cx="170" cy="164" r="80" fill="#6B3F2A"/>
+        <circle cx="170" cy="158" r="62" fill="#5c3822"/>
+        <circle cx="170" cy="153" r="48" fill="#2C1A0E"/>
+        <circle cx="152" cy="143" r="8" fill="rgba(200,131,42,0.28)"/>
+        <circle cx="185" cy="148" r="5" fill="rgba(200,131,42,0.18)"/>
+        <text x="170" y="330" text-anchor="middle" font-size="12" fill="rgba(200,131,42,0.55)" font-family="Georgia,serif" font-style="italic">single origin · hand-roasted</text>
+        <line x1="70" y1="345" x2="118" y2="345" stroke="rgba(200,131,42,0.3)" stroke-width="1"/>
+        <line x1="222" y1="345" x2="270" y2="345" stroke="rgba(200,131,42,0.3)" stroke-width="1"/>
+        <path d="M 60 60 L 80 60 L 80 80" stroke="rgba(200,131,42,0.2)" stroke-width="1" fill="none"/>
+        <path d="M 280 60 L 260 60 L 260 80" stroke="rgba(200,131,42,0.2)" stroke-width="1" fill="none"/>
+      </svg>
+    </div>
+    <div class="ab2">
+      <div class="ab2-num">50K+</div>
+      <div class="ab2-lbl">Happy Guests</div>
+    </div>
+  </div>
+  <div>
+    <span class="section-tag">Our Story</span>
+    <h2 class="section-title">More Than Coffee —<br>It's a <em style="color:var(--caramel);font-style:italic">Ritual</em></h2>
+    <p class="section-sub">Born from a love of the craft, Velvet Bean is a space where exceptional coffee meets thoughtful hospitality. We source our beans directly from small-batch farms across Ethiopia, Colombia, and Sumatra — then roast them fresh every morning right here in our open-view roastery.</p>
+    <div class="about-features">
+      <div class="feature">
+        <div class="feat-icon">🌍</div>
+        <div><div class="feat-title">Direct Trade Sourcing</div><div class="feat-desc">We partner directly with farmers to ensure fair wages and the finest quality single-origin beans year-round.</div></div>
+      </div>
+      <div class="feature">
+        <div class="feat-icon">🔥</div>
+        <div><div class="feat-title">In-House Roasting</div><div class="feat-desc">Roasted fresh every morning in our open-view roastery for peak flavour and absolute freshness.</div></div>
+      </div>
+      <div class="feature">
+        <div class="feat-icon">🌿</div>
+        <div><div class="feat-title">Sustainably Operated</div><div class="feat-desc">100% compostable packaging, zero-waste kitchen, solar-powered, and carbon-offset delivery.</div></div>
+      </div>
+      <div class="feature">
+        <div class="feat-icon">🏆</div>
+        <div><div class="feat-title">Award-Winning Coffee</div><div class="feat-desc">Best Specialty Coffee in Andhra Pradesh, 2024 — South India Barista Guild.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY / TIMELINE -->
+<section class="story" id="story">
+  <div class="story-left">
+    <span class="section-tag">Our Journey</span>
+    <h2 class="section-title" style="color:var(--cream)">Seven Years of<br>Crafting <em style="color:var(--caramel)">Perfection</em></h2>
+    <p class="section-sub">From a tiny 8-seater kiosk to Vijayawada's most beloved coffee destination — our story is one of passion, patience, and really good espresso.</p>
+    <div class="story-timeline">
+      <div class="timeline-item">
+        <div class="tl-year">2018</div>
+        <div><div class="tl-title">The First Pour</div><div class="tl-text">Started with an 8-seat kiosk on MG Road, two espresso machines, and a dream. Served 30 cups on day one.</div></div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-year">2020</div>
+        <div><div class="tl-title">The Roastery Opens</div><div class="tl-text">Installed our first drum roaster. Began sourcing directly from Ethiopian cooperatives.</div></div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-year">2022</div>
+        <div><div class="tl-title">Expanded & Elevated</div><div class="tl-text">Moved to our current flagship location with rooftop seating, private pods, and a full food menu.</div></div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-year">2024</div>
+        <div><div class="tl-title">Award & Recognition</div><div class="tl-text">Named Best Specialty Café in South India. Featured in Condé Nast Traveller India.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="story-right">
+    <div class="story-box highlight">
+      <div class="story-box-icon">🏆</div>
+      <div class="story-box-title">Best Specialty Coffee — South India 2024</div>
+      <div class="story-box-text">Awarded by the South India Barista Guild, judged across 200+ cafés statewide on bean quality, barista craft, and guest experience.</div>
+    </div>
+    <div class="story-box">
+      <div class="story-box-icon">🌱</div>
+      <div class="story-box-title">Farm to Cup</div>
+      <div class="story-box-text">Every bean traced to its origin farm. We visit our partner farms twice a year.</div>
+    </div>
+    <div class="story-box">
+      <div class="story-box-icon">🎓</div>
+      <div class="story-box-title">Barista School</div>
+      <div class="story-box-text">All our baristas are certified Q-graders trained in-house over 6 months.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FACILITIES -->
+<section class="facilities" id="facilities">
+  <div class="fac-header">
+    <div>
+      <span class="section-tag">What We Offer</span>
+      <h2 class="section-title">Facilities & Experiences</h2>
+    </div>
+    <p style="max-width:320px;color:var(--muted);font-size:0.88rem;line-height:1.7;">Whether you're here to work, meet, create, or simply breathe — we've designed every corner with intention.</p>
+  </div>
+  <div class="fac-grid">
+    <div class="fac-card">
+      <span class="fac-icon">📶</span>
+      <div class="fac-title">High-Speed Fibre Wi-Fi</div>
+      <div class="fac-desc">Dedicated 1Gbps connection with private VLAN options for focused work sessions. All-day workspace access with any purchase.</div>
+      <span class="fac-tag">Work-Friendly</span>
+    </div>
+    <div class="fac-card">
+      <span class="fac-icon">🚪</span>
+      <div class="fac-title">Private Meeting Pods</div>
+      <div class="fac-desc">Soundproofed pods seating 2–8 people with HDMI screens, whiteboard walls, and dedicated Wi-Fi. Bookable via app or front desk.</div>
+      <span class="fac-tag">Bookable</span>
+    </div>
+    <div class="fac-card">
+      <span class="fac-icon">🌿</span>
+      <div class="fac-title">Rooftop Garden Terrace</div>
+      <div class="fac-desc">Open-air terrace with hanging planters, ambient string lights, and panoramic city views. Perfect for sunset sessions and weekend brunch.</div>
+      <span class="fac-tag">Open Air</span>
+    </div>
+    <div class="fac-card">
+      <span class="fac-icon">☕</span>
+      <div class="fac-title">Barista Masterclasses</div>
+      <div class="fac-desc">Weekend workshops on espresso technique, latte art, pour-over, and home brewing. Led by our head barista every Saturday morning.</div>
+      <span class="fac-tag">Weekends</span>
+    </div>
+    <div class="fac-card">
+      <span class="fac-icon">🎵</span>
+      <div class="fac-title">Vinyl & Chill Evenings</div>
+      <div class="fac-desc">Every Thursday, curated vinyl records spin in the background with a special cocktail and coffee pairing menu from 6 PM.</div>
+      <span class="fac-tag">Thursdays</span>
+    </div>
+    <div class="fac-card">
+      <span class="fac-icon">🚗</span>
+      <div class="fac-title">Free Valet Parking</div>
+      <div class="fac-desc">Complimentary valet service at the entrance. Basement parking for 40 vehicles available. EV charging stations on Level B1.</div>
+      <span class="fac-tag">Complimentary</span>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <span class="section-tag">What Our Guests Say</span>
+  <h2 class="section-title">Pure Coffee Love</h2>
+  <div class="test-grid">
+    <div class="test-card">
+      <div class="stars">★★★★★</div>
+      <div class="test-text">The cold brew tonic completely changed my understanding of what coffee can be. I've been coming here every single morning for three years — it's part of my soul now.</div>
+      <div class="test-author"><div class="author-avatar">AR</div><div><div class="author-name">Aisha Reddy</div><div class="author-role">Architect, Hyderabad</div></div></div>
+    </div>
+    <div class="test-card">
+      <div class="stars">★★★★★</div>
+      <div class="test-text">Not just a café — it's a sanctuary. The private pods are perfect for client calls, and the espresso keeps me sharper than any boardroom meeting ever could.</div>
+      <div class="test-author"><div class="author-avatar">VK</div><div><div class="author-name">Vikram Kumar</div><div class="author-role">Founder, TechViz</div></div></div>
+    </div>
+    <div class="test-card">
+      <div class="stars">★★★★★</div>
+      <div class="test-text">The barista masterclass was genuinely transformative. I now make better coffee at home than most cafés serve. Worth every minute and every rupee.</div>
+      <div class="test-author"><div class="author-avatar">PS</div><div><div class="author-name">Priya Sharma</div><div class="author-role">Food Blogger</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY STRIP -->
+<section class="gallery-strip">
+  <span class="section-tag">Visual Journey</span>
+  <h2 class="section-title">Inside Velvet Bean</h2>
+  <div class="g-grid">
+    <div class="g-item"><div class="g-fill g1" style="font-size:5rem">☕</div><div class="g-overlay">The Perfect Pour</div></div>
+    <div class="g-item"><div class="g-fill g2">🌿</div><div class="g-overlay">Garden Terrace</div></div>
+    <div class="g-item"><div class="g-fill g3">🍰</div><div class="g-overlay">Pastry Lab</div></div>
+    <div class="g-item"><div class="g-fill g4">🔥</div><div class="g-overlay">In-House Roastery</div></div>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<div class="cta-strip">
+  <div>
+    <h2>Ready to Experience<br>Velvet Bean?</h2>
+    <p>Visit us today or browse our full menu online.</p>
+  </div>
+  <div class="cta-actions">
+    <a href="menu.html" class="btn-solid">See Full Menu</a>
+    <a href="contact.html" class="btn-ghost" style="border-color:var(--espresso);color:var(--espresso);">Reserve a Table</a>
+  </div>
+</div>
+
+<footer>
+  <div class="f-logo">Velvet<span>Bean</span></div>
+  <ul class="f-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="f-copy">© 2026 Velvet Bean Coffee · Vijayawada</div>
+</footer>
+</body>
+</html>

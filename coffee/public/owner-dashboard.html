@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MACH Cafe — Owner Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --cream: #F5EFE0; --espresso: #2C1A0E; --mocha: #6B3F2A;
+    --caramel: #C8832A; --latte: #D4A96A; --foam: #FAF5EC;
+    --text: #1E110A; --muted: #7A5C44;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--espresso);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(44,26,14,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200,131,42,0.2);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--cream); letter-spacing: 1px; text-decoration: none; }
+  .nav-logo span { color: var(--caramel); }
+  .nav-right { display: flex; align-items: center; gap: 1.2rem; }
+  .nav-badge {
+    font-size: 0.68rem; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--caramel); border: 1px solid rgba(200,131,42,0.35);
+    padding: 0.4rem 1rem; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--caramel); animation: pulse 2s infinite; }
+  .nav-back {
+    text-decoration: none; font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--latte);
+    padding: 0.5rem 1.4rem; transition: color 0.3s;
+    border: 1px solid rgba(212,169,106,0.3);
+  }
+  .nav-back:hover { color: var(--caramel); border-color: var(--caramel); }
+
+  /* ── BACKGROUND ── */
+  .bg-texture {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(200,131,42,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(107,63,42,0.12) 0%, transparent 50%),
+      var(--espresso);
+  }
+  .bg-watermark {
+    position: fixed; bottom: -6rem; right: -4rem; z-index: 0;
+    font-family: 'Playfair Display', serif; font-size: 30vw; font-weight: 700;
+    color: rgba(255,255,255,0.02); line-height: 1; user-select: none; pointer-events: none;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .page-wrap {
+    position: relative; z-index: 1;
+    padding: 7rem 2rem 4rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .portal-header {
+    text-align: center; margin-bottom: 3.5rem;
+    animation: fadeUp 0.7s ease both;
+  }
+  .portal-pill {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--caramel); border: 1px solid rgba(200,131,42,0.35);
+    padding: 0.45rem 1.2rem; margin-bottom: 1.5rem;
+  }
+  .pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--caramel); animation: pulse 2s infinite; }
+  .portal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    color: var(--cream); line-height: 1.1; margin-bottom: 0.8rem;
+  }
+  .portal-title em { color: var(--caramel); font-style: italic; }
+  .portal-sub { font-size: 0.95rem; color: rgba(245,239,224,0.45); letter-spacing: 0.5px; }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: flex; align-items: center; justify-content: center;
+    gap: 3rem; margin-bottom: 3rem;
+    padding: 1.2rem 2rem;
+    background: rgba(250,245,236,0.03);
+    border: 1px solid rgba(200,131,42,0.12);
+    animation: fadeUp 0.7s ease 0.1s both;
+  }
+  .stat-item { text-align: center; }
+  .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; color: var(--caramel); display: block; line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .stat-label {
+    font-size: 0.65rem; letter-spacing: 2.5px; text-transform: uppercase;
+    color: rgba(245,239,224,0.3);
+  }
+  .stat-divider { width: 1px; height: 2.5rem; background: rgba(200,131,42,0.15); }
+
+  /* ── BRANCHES GRID ── */
+  .branches-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ── BRANCH CARD ── */
+  .branch-card {
+    background: rgba(250,245,236,0.04);
+    border: 1px solid rgba(200,131,42,0.15);
+    cursor: pointer;
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.7s ease both;
+    text-decoration: none;
+    display: block;
+  }
+  .branch-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: linear-gradient(90deg, var(--caramel), var(--latte));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+  .branch-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(200,131,42,0.06) 0%, transparent 70%);
+    opacity: 0; transition: opacity 0.35s ease;
+  }
+  .branch-card:hover {
+    border-color: rgba(200,131,42,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+  .branch-card:hover::before { transform: scaleX(1); }
+  .branch-card:hover::after  { opacity: 1; }
+
+  .branch-card:nth-child(1) { animation-delay: 0.05s; }
+  .branch-card:nth-child(2) { animation-delay: 0.12s; }
+  .branch-card:nth-child(3) { animation-delay: 0.19s; }
+
+  /* ── CARD IMAGE BAND ── */
+  .card-img-band {
+    height: 110px;
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .band-guntupalli {
+    background: linear-gradient(135deg, rgba(107,63,42,0.6) 0%, rgba(44,26,14,0.9) 100%);
+  }
+  .band-ongole {
+    background: linear-gradient(135deg, rgba(44,80,107,0.5) 0%, rgba(44,26,14,0.9) 100%);
+  }
+  .band-kodaikanal {
+    background: linear-gradient(135deg, rgba(42,80,63,0.5) 0%, rgba(44,26,14,0.9) 100%);
+  }
+  .band-icon {
+    font-size: 3rem; z-index: 1; position: relative;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+  }
+  .band-pattern {
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(200,131,42,0.04) 10px,
+      rgba(200,131,42,0.04) 11px
+    );
+  }
+  .band-status {
+    position: absolute; top: 0.8rem; right: 0.8rem;
+    font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase;
+    padding: 0.25rem 0.65rem; border: 1px solid rgba(200,131,42,0.4);
+    color: var(--caramel); background: rgba(44,26,14,0.7);
+    backdrop-filter: blur(4px);
+  }
+
+  /* ── CARD BODY ── */
+  .card-body { padding: 1.6rem; }
+
+  .card-location-pill {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(245,239,224,0.35); margin-bottom: 0.8rem;
+  }
+  .card-location-pill span { font-size: 0.8rem; }
+
+  .card-branch-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; color: var(--cream);
+    margin-bottom: 0.3rem; line-height: 1.2;
+  }
+  .card-branch-tagline {
+    font-size: 0.75rem; color: var(--caramel);
+    letter-spacing: 1px; margin-bottom: 1.1rem;
+    font-style: italic;
+  }
+  .card-desc {
+    font-size: 0.8rem; color: rgba(245,239,224,0.4);
+    line-height: 1.75; margin-bottom: 1.3rem;
+  }
+
+  /* ── DETAIL ROWS ── */
+  .card-details { margin-bottom: 1.4rem; }
+  .detail-row {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(200,131,42,0.07);
+    font-size: 0.76rem;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-icon { font-size: 0.9rem; width: 18px; text-align: center; flex-shrink: 0; }
+  .detail-label { color: rgba(245,239,224,0.3); letter-spacing: 0.5px; width: 70px; flex-shrink: 0; }
+  .detail-value { color: var(--cream); font-weight: 500; }
+
+  /* ── ACCESS TAGS ── */
+  .access-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
+  .access-tag {
+    font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0.22rem 0.6rem; border: 1px solid rgba(212,169,106,0.25);
+    color: var(--latte);
+  }
+
+  /* ── ENTER BUTTON ── */
+  .card-enter-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%;
+    background: rgba(200,131,42,0.1);
+    border: 1px solid rgba(200,131,42,0.25);
+    color: var(--latte);
+    padding: 0.8rem 1.1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; transition: all 0.3s;
+    position: relative; z-index: 2;
+  }
+  .branch-card:hover .card-enter-btn {
+    background: var(--caramel);
+    border-color: var(--caramel);
+    color: var(--espresso);
+  }
+  .btn-arrow { transition: transform 0.3s; }
+  .branch-card:hover .btn-arrow { transform: translateX(4px); }
+
+  /* ── SUCCESS OVERLAY ── */
+  .success-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(44,26,14,0.95);
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.2rem;
+  }
+  .success-overlay.show { display: flex; animation: fadeIn 0.4s ease; }
+  .success-icon { font-size: 3rem; animation: bounceIn 0.5s ease; }
+  .success-role { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--cream); }
+  .success-msg  { font-size: 0.85rem; color: rgba(245,239,224,0.5); letter-spacing: 2px; text-transform: uppercase; }
+  .success-bar  { width: 200px; height: 2px; background: rgba(200,131,42,0.2); margin-top: 1rem; overflow: hidden; }
+  .success-bar-fill { height: 100%; background: var(--caramel); animation: fillBar 1.5s ease forwards; }
+
+  /* ── FOOTER ── */
+  .portal-footer {
+    text-align: center; margin-top: 3rem;
+    font-size: 0.72rem; color: rgba(245,239,224,0.2); letter-spacing: 1.5px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp    { from{opacity:0;transform:translateY(24px);}  to{opacity:1;transform:translateY(0);} }
+  @keyframes fadeIn    { from{opacity:0;} to{opacity:1;} }
+  @keyframes pulse     { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+  @keyframes bounceIn  { 0%{transform:scale(0.5);opacity:0;} 80%{transform:scale(1.1);} 100%{transform:scale(1);opacity:1;} }
+  @keyframes fillBar   { from{width:0;} to{width:100%;} }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:960px) {
+    .branches-grid { grid-template-columns: 1fr 1fr; }
+    .branch-card:nth-child(3) { grid-column: 1 / -1; max-width: 480px; margin: 0 auto; width: 100%; }
+    nav { padding: 1rem 1.5rem; }
+    .page-wrap { padding: 6rem 1rem 3rem; }
+    .stats-bar { gap: 1.5rem; flex-wrap: wrap; }
+  }
+  @media(max-width:600px) {
+    .branches-grid { grid-template-columns: 1fr; }
+    .branch-card:nth-child(3) { grid-column: auto; max-width: 100%; }
+    .nav-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-texture"></div>
+<div class="bg-watermark">M</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">MACH <span>cafe</span></a>
+  <div class="nav-right">
+    <div class="nav-badge">
+      <span class="nav-dot"></span>
+      Owner Access
+    </div>
+    <a class="nav-back" href="index.html">← Sign Out</a>
+  </div>
+</nav>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon">☕</div>
+  <div class="success-role" id="successRole">Welcome</div>
+  <div class="success-msg"  id="successMsg">Opening branch…</div>
+  <div class="success-bar"><div class="success-bar-fill"></div></div>
+</div>
+
+<!-- PAGE -->
+<div class="page-wrap">
+
+  <div class="portal-header">
+    <div class="portal-pill">
+      <span class="pill-dot"></span>
+      Owner Dashboard
+    </div>
+    <h1 class="portal-title">Select a <em>Branch</em></h1>
+    <p class="portal-sub">Choose a branch to view its full manager-level details and controls</p>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-value">3</span>
+      <span class="stat-label">Active Branches</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value">2</span>
+      <span class="stat-label">States</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value">Full</span>
+      <span class="stat-label">Access Level</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-value">Live</span>
+      <span class="stat-label">System Status</span>
+    </div>
+  </div>
+
+  <!-- BRANCHES GRID -->
+  <div class="branches-grid">
+
+    <!-- BRANCH 1 — GUNTUPALLI -->
+    <div class="branch-card" onclick="enterBranch('guntupalli', 'Guntupalli')">
+      <div class="card-img-band band-guntupalli">
+        <div class="band-pattern"></div>
+        <div class="band-icon">🏘️</div>
+        <div class="band-status">● Active</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location-pill"><span>📍</span> Andhra Pradesh</div>
+        <div class="card-branch-name">Guntupalli</div>
+        <div class="card-branch-tagline">Heritage & Hospitality Hub</div>
+        <div class="card-desc">
+          Our founding branch, nestled near the historic Buddhist rock-cut caves.
+          Known for a loyal local crowd and the highest dine-in volume across the chain.
+        </div>
+        <div class="card-details">
+          <div class="detail-row">
+            <span class="detail-icon">🕐</span>
+            <span class="detail-label">Hours</span>
+            <span class="detail-value">24/7</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">👥</span>
+            <span class="detail-label">Team</span>
+            <span class="detail-value">12 Staff Members</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">🪑</span>
+            <span class="detail-label">Seating</span>
+            <span class="detail-value">48 Covers</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">📞</span>
+            <span class="detail-label">Contact</span>
+            <span class="detail-value">+91 98765 43210</span>
+          </div>
+        </div>
+        <div class="access-tags">
+          <span class="access-tag">Home</span>
+          <span class="access-tag">Menu</span>
+          <span class="access-tag">Kitchen Inv.</span>
+          <span class="access-tag">Printer</span>
+        </div>
+        <button class="card-enter-btn" onclick="enterBranch('guntupalli','Guntupalli')">
+          <span>Visit Branch</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- BRANCH 2 — ONGOLE -->
+    <div class="branch-card" onclick="enterBranch('ongole', 'Ongole')">
+      <div class="card-img-band band-ongole">
+        <div class="band-pattern"></div>
+        <div class="band-icon">🌊</div>
+        <div class="band-status">● Active</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location-pill"><span>📍</span> Andhra Pradesh</div>
+        <div class="card-branch-name">Ongole</div>
+        <div class="card-branch-tagline">Coastal Calm & Craft Coffee</div>
+        <div class="card-desc">
+          Our coastal branch with a breezy open terrace overlooking the city.
+          Popular for weekend brunches and evening filter coffee walks.
+        </div>
+        <div class="card-details">
+          <div class="detail-row">
+            <span class="detail-icon">🕐</span>
+            <span class="detail-label">Hours</span>
+            <span class="detail-value">24/7</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">👥</span>
+            <span class="detail-label">Team</span>
+            <span class="detail-value">9 Staff Members</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">🪑</span>
+            <span class="detail-label">Seating</span>
+            <span class="detail-value">36 Covers</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">📞</span>
+            <span class="detail-label">Contact</span>
+            <span class="detail-value">+91 98765 43211</span>
+          </div>
+        </div>
+        <div class="access-tags">
+          <span class="access-tag">Home</span>
+          <span class="access-tag">Menu</span>
+          <span class="access-tag">Kitchen Inv.</span>
+          <span class="access-tag">Printer</span>
+        </div>
+        <button class="card-enter-btn" onclick="enterBranch('ongole','Ongole')">
+          <span>Visit Branch</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- BRANCH 3 — KODAIKANAL -->
+    <div class="branch-card" onclick="enterBranch('kodaikanal', 'Kodaikanal')">
+      <div class="card-img-band band-kodaikanal">
+        <div class="band-pattern"></div>
+        <div class="band-icon">⛰️</div>
+        <div class="band-status">● Active</div>
+      </div>
+      <div class="card-body">
+        <div class="card-location-pill"><span>📍</span> Tamil Nadu</div>
+        <div class="card-branch-name">Kodaikanal</div>
+        <div class="card-branch-tagline">Mountain Mist & Morning Brews</div>
+        <div class="card-desc">
+          Perched at 2,100 m in the Palani Hills, our premium hill-station branch.
+          Famous for its fog-view terrace and signature spiced cardamom espresso.
+        </div>
+        <div class="card-details">
+          <div class="detail-row">
+            <span class="detail-icon">🕐</span>
+            <span class="detail-label">Hours</span>
+            <span class="detail-value">24/7</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">👥</span>
+            <span class="detail-label">Team</span>
+            <span class="detail-value">8 Staff Members</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">🪑</span>
+            <span class="detail-label">Seating</span>
+            <span class="detail-value">30 Covers</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-icon">📞</span>
+            <span class="detail-label">Contact</span>
+            <span class="detail-value">+91 98765 43212</span>
+          </div>
+        </div>
+        <div class="access-tags">
+          <span class="access-tag">Home</span>
+          <span class="access-tag">Menu</span>
+          <span class="access-tag">Kitchen Inv.</span>
+          <span class="access-tag">Printer</span>
+        </div>
+        <button class="card-enter-btn" onclick="enterBranch('kodaikanal','Kodaikanal')">
+          <span>Visit Branch</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /branches-grid -->
+
+  <div class="portal-footer">© 2026 MACH cafe · Owner Dashboard · All Branches</div>
+
+</div><!-- /page-wrap -->
+
+<script>
+// ═══════════════════════════════════════════════
+//  AUTH GUARD — redirect to index if not owner
+// ═══════════════════════════════════════════════
+(function authGuard() {
+  const role  = sessionStorage.getItem('mach_role');
+  const token = localStorage.getItem('mach_token');
+  if (role !== 'owner' || !token) {
+    window.location.href = 'index.html';
+  }
+})();
+
+// ═══════════════════════════════════════════════
+//  BRANCH CONFIG
+//  Maps branch key → full access list + redirect
+// ═══════════════════════════════════════════════
+const OWNER_BRANCHES = {
+  guntupalli: {
+    redirect : 'home_m.html',
+    access   : [
+      'home_m.html', 'men_m.html', 'contact.html',
+      'kitchen-inventory-guntupalli.html',
+      'printer-dashboard-guntupalli.html',
+    ],
+  },
+  ongole: {
+    redirect : 'home_m.html',
+    access   : [
+      'home_m.html', 'men_m.html', 'contact.html',
+      'kitchen-inventory-ongole.html',
+      'printer-dashboard-ongole.html',
+    ],
+  },
+  kodaikanal: {
+    redirect : 'home_m.html',
+    access   : [
+      'home_m.html', 'men_m.html', 'contact.html',
+      'kitchen-inventory-kodaikanal.html',
+      'printer-dashboard-kodaikanal.html',
+    ],
+  },
+};
+
+// ═══════════════════════════════════════════════
+//  ENTER BRANCH
+// ═══════════════════════════════════════════════
+function enterBranch(key, label) {
+  event.stopPropagation();
+  const branch = OWNER_BRANCHES[key];
+  if (!branch) return;
+
+  // Store selected branch in session so sub-pages know which branch
+  sessionStorage.setItem('mach_location', key);
+  sessionStorage.setItem('mach_access',   JSON.stringify(branch.access));
+
+  // Show success overlay then navigate
+  document.getElementById('successRole').textContent = 'Owner — ' + label;
+  document.getElementById('successMsg').textContent  = 'Opening ' + label + ' branch…';
+  document.getElementById('successOverlay').classList.add('show');
+
+  setTimeout(() => { window.location.href = branch.redirect; }, 1600);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MACH Cafe— Contact & Reserve</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --cream: #F5EFE0; --espresso: #2C1A0E; --mocha: #6B3F2A;
+    --caramel: #C8832A; --latte: #D4A96A; --foam: #FAF5EC;
+    --text: #1E110A; --muted: #7A5C44;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Jost', sans-serif; background: var(--foam); color: var(--text); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(250,245,236,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200,131,42,0.2);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--espresso); letter-spacing: 1px; text-decoration: none; }
+  .nav-logo span { color: var(--caramel); }
+  .nav-links { display: flex; gap: 0; list-style: none; }
+  .nav-links a {
+    text-decoration: none; font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--mocha);
+    padding: 0.5rem 1.4rem; transition: all 0.3s; border-bottom: 2px solid transparent;
+  }
+  .nav-links a:hover { color: var(--caramel); }
+  .nav-links a.active { color: var(--caramel); border-bottom-color: var(--caramel); }
+  .nav-reserve { background: var(--espresso); color: var(--cream) !important; padding: 0.6rem 1.6rem !important; border-bottom: none !important; }
+  .nav-reserve:hover { background: var(--mocha) !important; }
+
+  /* HERO */
+  .contact-hero {
+    min-height: 40vh; background: var(--espresso);
+    display: flex; align-items: flex-end;
+    padding: 0 4rem 3.5rem; position: relative; overflow: hidden;
+  }
+  .contact-hero::before {
+    content: 'VISIT'; position: absolute; right: -1rem; bottom: -2rem;
+    font-family: 'Playfair Display', serif; font-size: 20vw; font-weight: 700;
+    color: rgba(255,255,255,0.025); line-height: 1; pointer-events: none;
+  }
+  .contact-hero-content { position: relative; z-index: 2; padding-top: 7rem; }
+  .hero-tag { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; color: var(--caramel); margin-bottom: 1rem; display: block; }
+  .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 5rem); color: var(--cream); line-height: 1.05; }
+  .hero-title em { color: var(--caramel); font-style: italic; }
+  .hero-sub { color: rgba(245,239,224,0.5); font-size: 1rem; margin-top: 1rem; max-width: 480px; line-height: 1.7; }
+
+  /* QUICK INFO BAR */
+  .info-bar {
+    background: var(--caramel); padding: 1.8rem 4rem;
+    display: flex; gap: 0; justify-content: space-around;
+  }
+  .ib-item { display: flex; align-items: center; gap: 1rem; }
+  .ib-icon { font-size: 1.4rem; }
+  .ib-label { font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--espresso); opacity: 0.65; }
+  .ib-value { font-size: 0.95rem; font-weight: 500; color: var(--espresso); margin-top: 0.15rem; }
+  .ib-div { width: 1px; background: rgba(44,26,14,0.2); }
+
+  /* MAIN GRID */
+  .contact-main { display: grid; grid-template-columns: 1fr 1fr; min-height: 70vh; }
+
+  /* LEFT — MAP + INFO */
+  .contact-left { background: var(--espresso); padding: 5rem 4rem; }
+  .sec-tag { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; color: var(--caramel); margin-bottom: 0.8rem; display: block; }
+  .sec-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--cream); line-height: 1.2; margin-bottom: 2.5rem; }
+
+  /* MAP VISUAL */
+  .map-visual {
+    width: 100%; aspect-ratio: 4/3;
+    background: #3d2415; position: relative; overflow: hidden;
+    margin-bottom: 2.5rem;
+  }
+  .map-grid-line { position: absolute; background: #4a2e1a; }
+  .map-pin {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%);
+    display: flex; flex-direction: column; align-items: center;
+    animation: bounce 2s ease-in-out infinite;
+  }
+  @keyframes bounce { 0%,100%{transform:translate(-50%,-60%);} 50%{transform:translate(-50%,-70%);} }
+  .map-pin-head { width: 22px; height: 22px; background: var(--caramel); border-radius: 50% 50% 50% 0; transform: rotate(-45deg); }
+  .map-pin-dot { width: 8px; height: 8px; background: var(--espresso); border-radius: 50%; position: absolute; top: 7px; left: 7px; }
+  .map-pin-tail { width: 2px; height: 30px; background: var(--caramel); margin-top: -4px; }
+  .map-label { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--caramel); margin-top: 0.5rem; white-space: nowrap; }
+
+  .info-list { display: flex; flex-direction: column; gap: 0; }
+  .info-row {
+    display: flex; gap: 1.5rem; align-items: flex-start;
+    padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: padding 0.3s;
+  }
+  .info-row:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+  .info-row:hover { padding-left: 0.5rem; }
+  .info-icon-wrap {
+    width: 44px; height: 44px; min-width: 44px; background: rgba(200,131,42,0.12);
+    display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+  }
+  .info-label { font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--caramel); margin-bottom: 0.4rem; }
+  .info-value { font-size: 0.92rem; color: rgba(245,239,224,0.75); line-height: 1.7; }
+  .info-value a { color: var(--caramel); text-decoration: none; }
+  .info-value a:hover { text-decoration: underline; }
+
+  /* HOURS TABLE */
+  .hours-section { padding: 4rem; background: var(--cream); }
+  .hours-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--espresso); margin-bottom: 0.5rem; }
+  .hours-sub { font-size: 0.87rem; color: var(--muted); margin-bottom: 2rem; }
+  .hours-table { width: 100%; }
+  .hours-table tr { border-bottom: 1px solid rgba(200,131,42,0.1); }
+  .hours-table tr:last-child { border-bottom: none; }
+  .hours-table td { padding: 0.9rem 0; font-size: 0.9rem; }
+  .hours-table td:first-child { color: var(--espresso); font-weight: 500; }
+  .hours-table td:last-child { text-align: right; color: var(--muted); }
+  .hours-table tr.today td { color: var(--caramel) !important; }
+  .today-badge { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; background: rgba(200,131,42,0.12); color: var(--caramel); padding: 0.15rem 0.5rem; margin-left: 0.5rem; }
+  .open-now { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #3a7a3a; background: rgba(76,153,76,0.08); padding: 0.3rem 0.8rem; border-radius: 0; margin-bottom: 2rem; }
+  .open-dot { width: 8px; height: 8px; border-radius: 50%; background: #4a9a4a; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+  /* RIGHT — RESERVATION FORM */
+  .contact-right { background: var(--foam); padding: 5rem 4rem; }
+  .form-sec-tag { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; color: var(--caramel); margin-bottom: 0.8rem; display: block; }
+  .form-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--espresso); margin-bottom: 0.5rem; }
+  .form-sub { font-size: 0.87rem; color: var(--muted); line-height: 1.7; margin-bottom: 2.5rem; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+  .form-group.full { grid-column: span 2; }
+  label { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  input, select, textarea {
+    width: 100%; padding: 0.85rem 1rem;
+    border: 1px solid rgba(200,131,42,0.2); background: var(--cream);
+    font-family: 'Jost', sans-serif; font-size: 0.9rem; color: var(--espresso);
+    outline: none; transition: border-color 0.3s; appearance: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--caramel); }
+  input::placeholder, textarea::placeholder { color: var(--muted); opacity: 0.6; }
+  textarea { resize: vertical; min-height: 100px; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C8832A' fill='none' stroke-width='1.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 12px; cursor: pointer; }
+  .btn-submit {
+    width: 100%; padding: 1.1rem; background: var(--espresso); color: var(--cream);
+    border: none; font-family: 'Jost', sans-serif; font-size: 0.82rem;
+    letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
+    transition: all 0.3s; margin-top: 0.5rem;
+  }
+  .btn-submit:hover { background: var(--caramel); color: var(--espresso); }
+
+  .or-divider { text-align: center; margin: 2rem 0; color: var(--muted); font-size: 0.82rem; letter-spacing: 2px; text-transform: uppercase; position: relative; }
+  .or-divider::before, .or-divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: rgba(200,131,42,0.2); }
+  .or-divider::before { left: 0; }
+  .or-divider::after { right: 0; }
+
+  .contact-options { display: flex; flex-direction: column; gap: 1rem; }
+  .contact-btn {
+    display: flex; align-items: center; gap: 1.2rem;
+    padding: 1rem 1.5rem; background: var(--cream);
+    border: 1px solid rgba(200,131,42,0.2); text-decoration: none;
+    transition: all 0.3s; cursor: pointer;
+  }
+  .contact-btn:hover { border-color: var(--caramel); transform: translateX(4px); }
+  .contact-btn-icon { font-size: 1.4rem; width: 40px; text-align: center; }
+  .contact-btn-label { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .contact-btn-value { font-size: 0.92rem; color: var(--espresso); font-weight: 500; }
+
+  /* SOCIAL + NEWSLETTER */
+  .social-section { background: var(--espresso); padding: 5rem 4rem; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+  .social-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--cream); margin-bottom: 1rem; }
+  .social-sub { font-size: 0.88rem; color: rgba(245,239,224,0.5); line-height: 1.7; margin-bottom: 2rem; }
+  .social-links { display: flex; gap: 0; }
+  .slink {
+    width: 52px; height: 52px; background: rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; cursor: pointer; transition: all 0.3s;
+    border-right: 1px solid rgba(255,255,255,0.05); text-decoration: none;
+  }
+  .slink:hover { background: rgba(200,131,42,0.2); transform: translateY(-3px); }
+
+  .newsletter-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--cream); margin-bottom: 0.5rem; }
+  .newsletter-sub { font-size: 0.85rem; color: rgba(245,239,224,0.5); line-height: 1.7; margin-bottom: 1.8rem; }
+  .nl-form { display: flex; gap: 0; }
+  .nl-input { flex: 1; padding: 0.9rem 1.2rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: var(--cream); font-family: 'Jost', sans-serif; font-size: 0.9rem; outline: none; }
+  .nl-input::placeholder { color: rgba(245,239,224,0.3); }
+  .nl-input:focus { border-color: var(--caramel); }
+  .nl-btn { padding: 0.9rem 1.8rem; background: var(--caramel); color: var(--espresso); border: none; font-family: 'Jost', sans-serif; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; }
+  .nl-btn:hover { background: var(--latte); }
+  .nl-note { font-size: 0.75rem; color: rgba(245,239,224,0.3); margin-top: 0.8rem; }
+
+  /* FAQ */
+  .faq-section { background: var(--cream); padding: 5rem 4rem; }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5px; margin-top: 3rem; }
+  .faq-item { padding: 2rem; background: var(--foam); cursor: pointer; transition: all 0.3s; }
+  .faq-item:hover { background: var(--cream); }
+  .faq-q { font-weight: 500; font-size: 0.95rem; color: var(--espresso); margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+  .faq-arrow { color: var(--caramel); flex-shrink: 0; transition: transform 0.3s; font-size: 1rem; }
+  .faq-a { font-size: 0.84rem; color: var(--muted); line-height: 1.7; display: none; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open .faq-arrow { transform: rotate(90deg); }
+
+  footer { background: #1A0D07; padding: 3rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .f-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--cream); }
+  .f-logo span { color: var(--caramel); }
+  .f-links { display: flex; gap: 2rem; list-style: none; }
+  .f-links a { text-decoration: none; font-size: 0.75rem; color: rgba(245,239,224,0.35); letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; }
+  .f-links a:hover { color: var(--caramel); }
+  .f-copy { font-size: 0.75rem; color: rgba(245,239,224,0.25); }
+  .success-msg { background: rgba(76,153,76,0.1); border: 1px solid rgba(76,153,76,0.3); color: #3a7a3a; padding: 1rem; text-align: center; font-size: 0.87rem; display: none; margin-top: 1rem; }
+.logout-btn {
+  background: none;
+  border: 1px solid rgba(212,169,106,0.3);
+  color: var(--latte);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 0.5rem 1.4rem;
+  cursor: pointer; transition: all 0.3s;
+}
+.logout-btn:hover { color: var(--caramel); border-color: var(--caramel); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="home.html" class="nav-logo">MACH <em style="color:var(--caramel);font-style:italic">Cafe</em> </a>
+  <ul class="nav-links">
+    <li><a href="home.html">Home</a></li>
+    <li><a href="men.html">Menu</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+    <li><a href="#reservation" class="nav-reserve">Reserve a Table</a></li>
+    <li><button class="logout-btn" onclick="logout()">Logout</button></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="contact-hero">
+  <div class="contact-hero-content">
+    <span class="hero-tag">We'd Love to See You</span>
+    <div class="hero-title">Come <em>Find</em> Us</div>
+    <p class="hero-sub">Whether you want to reserve a table, ask about an event, or just say hello — we're always here. Drop by, call, or reach out below.</p>
+  </div>
+</div>
+
+<!-- QUICK INFO BAR -->
+<div class="info-bar">
+  <!--<div class="ib-item">
+    <span class="ib-icon">📍</span>
+    <div><div class="ib-label">Location</div><div class="ib-value">Guntupalli, Vijayawada</div></div>
+  </div>
+  <div class="ib-div"></div>-->
+  <div class="ib-item">
+    <span class="ib-icon">📞</span>
+    <div><div class="ib-label">Phone</div><div class="ib-value">+91 98765 43210</div></div>
+  </div>
+  <div class="ib-div"></div>
+  <div class="ib-item">
+    <span class="ib-icon">🕐</span>
+    <div><div class="ib-label">Timings</div><div class="ib-value" id="today-hours">24/7</div></div>
+  </div>
+  <div class="ib-div"></div>
+  <div class="ib-item">
+    <span class="ib-icon">✉️</span>
+    <div><div class="ib-label">Email</div><div class="ib-value">hello@mach.in</div></div>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="contact-main">
+
+  <!-- LEFT: MAP + INFO -->
+  <div class="contact-left">
+    <span class="sec-tag">Where to Find Us</span>
+    <h2 class="sec-title">Our Location</h2>
+
+    <!-- MAP -->
+    <div class="map-visual">
+      <svg width="100%" height="100%" viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <rect width="500" height="380" fill="#3d2415"/>
+        <!-- grid roads -->
+        <rect x="0" y="185" width="500" height="22" fill="#4a2e1a"/>
+        <rect x="230" y="0" width="16" height="380" fill="#4a2e1a"/>
+        <rect x="0" y="120" width="500" height="8" fill="#3a2010"/>
+        <rect x="0" y="260" width="500" height="8" fill="#3a2010"/>
+        <rect x="140" y="0" width="8" height="380" fill="#3a2010"/>
+        <rect x="360" y="0" width="8" height="380" fill="#3a2010"/>
+        <!-- buildings -->
+        <rect x="50" y="50" width="75" height="55" rx="2" fill="#4a2e1a" opacity="0.8"/>
+        <rect x="50" y="135" width="75" height="36" rx="2" fill="#4a2e1a" opacity="0.6"/>
+        <rect x="370" y="50" width="80" height="60" rx="2" fill="#4a2e1a" opacity="0.8"/>
+        <rect x="370" y="130" width="60" height="40" rx="2" fill="#4a2e1a" opacity="0.7"/>
+        <rect x="50" y="278" width="80" height="70" rx="2" fill="#4a2e1a" opacity="0.8"/>
+        <rect x="370" y="278" width="80" height="70" rx="2" fill="#4a2e1a" opacity="0.7"/>
+        <!-- road labels -->
+        <text x="250" y="200" text-anchor="middle" font-size="10" fill="rgba(200,131,42,0.5)" font-family="sans-serif"></text>
+        <!-- pin shadow -->
+        <ellipse cx="238" cy="196" rx="12" ry="5" fill="rgba(0,0,0,0.4)"/>
+        <!-- pin -->
+        <polygon points="238,155 252,175 238,192 224,175" fill="var(--caramel)"/>
+        <circle cx="238" cy="175" r="7" fill="#2C1A0E"/>
+        <text x="238" y="145" text-anchor="middle" font-size="9" fill="rgba(200,131,42,0.7)" font-family="sans-serif" letter-spacing="1">MACH Cafe</text>
+        <!-- compass -->
+        <text x="470" y="350" font-size="11" fill="rgba(200,131,42,0.4)" font-family="sans-serif">N↑</text>
+      </svg>
+    </div>
+
+    <div class="info-list">
+      <!--div class="info-row">
+        <div class="info-icon-wrap">📍</div>
+        <div>
+          <div class="info-label">Address</div>
+          <div class="info-value">Guntupalli <br>Vijayawada, Andhra Pradesh 521241<br><a href="#">Get Directions →</a></div>
+        </div>
+      </div>-->
+      <div class="info-row">
+        <div class="info-icon-wrap">📞</div>
+        <div>
+          <div class="info-label">Phone & WhatsApp</div>
+          <div class="info-value"><a href="tel:+919952949948">+91 9952949948</a><br><a href="tel:+919952949948">+91 9952949948</a> (Landline)</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon-wrap">✉️</div>
+        <div>
+          <div class="info-label">Email</div>
+          <div class="info-value"><a href="mailto:hello@mach.in">hello@mach.in</a><br><a href="mailto:events@mach.in">events@mach.in</a> (Events & Private Bookings)</div>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon-wrap">🚗</div>
+        <div>
+          <div class="info-label">Parking</div>
+          <div class="info-value">Free valet at entrance · Basement parking for 40 vehicles · EV charging on B1 level</div>
+        </div>
+      </div>
+      <!--<div class="info-row">
+        <div class="info-icon-wrap">🚌</div>
+        <div>
+          <div class="info-label">How to Reach</div>
+          <div class="info-value">Guntupalli Bus Stop: 2-min walk · Auto/Cab: Ask for Guntupalli Center · Vijayawada  </div>
+        </div>
+      </div>-->
+      <div class="info-row">
+        <div class="info-icon-wrap">♿</div>
+        <div>
+          <div class="info-label">Accessibility</div>
+          <div class="info-value">Fully wheelchair accessible · Ground floor seating available · Accessible restrooms on all floors</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: RESERVATION FORM -->
+  <div class="contact-right" id="reservation">
+    <span class="form-sec-tag">Reserve Your Spot</span>
+    <h2 class="form-title">Book a Table</h2>
+    <p class="form-sub">Reserve in advance and we'll have your favourite corner ready. For groups of 10+, please email us at <a href="mailto:events@mach.in" style="color:var(--caramel)">events@mach.in</a></p>
+
+    <div id="res-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="fname">First Name</label>
+          <input type="text" id="fname" placeholder="Arjun">
+        </div>
+        <div class="form-group">
+          <label for="lname">Last Name</label>
+          <input type="text" id="lname" placeholder="Sharma">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="+91 9952949948">
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="mach@gmail.com">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" id="date">
+        </div>
+        <div class="form-group">
+          <label for="time">Preferred Time</label>
+          <select id="time">
+            <option value="">Select a time</option>
+            <optgroup label="Morning">
+              <option>7:00 AM</option>
+              <option>8:00 AM</option>
+              <option>9:00 AM</option>
+              <option>10:00 AM</option>
+              <option>11:00 AM</option>
+            </optgroup>
+            <optgroup label="Afternoon">
+              <option>12:00 PM</option>
+              <option>1:00 PM</option>
+              <option>2:00 PM</option>
+              <option>3:00 PM</option>
+              <option>4:00 PM</option>
+            </optgroup>
+            <optgroup label="Evening">
+              <option>5:00 PM</option>
+              <option>6:00 PM</option>
+              <option>7:00 PM</option>
+              <option>8:00 PM</option>
+              <option>9:00 PM</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="guests">Number of Guests</label>
+          <select id="guests">
+            <option>1 Guest</option>
+            <option>2 Guests</option>
+            <option>3 Guests</option>
+            <option>4 Guests</option>
+            <option>5 Guests</option>
+            <option>6 Guests</option>
+            <option>7–9 Guests</option>
+            <option>10+ (Contact us)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="seating">Seating Preference</label>
+          <select id="seating">
+            <option>No Preference</option>
+            <option>Indoor — Main Hall</option>
+            <option>Indoor — Private Pod</option>
+            <option>Rooftop Garden Terrace</option>
+            <option>Window Seat</option>
+            <option>Quiet Corner</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="occasion">Occasion (Optional)</label>
+        <select id="occasion">
+          <option value="">Just Visiting</option>
+          <option>Birthday Celebration</option>
+          <option>Anniversary</option>
+          <option>Business Meeting</option>
+          <option>Date Night</option>
+          <option>Family Gathering</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="notes">Special Requests or Dietary Notes</label>
+        <textarea id="notes" placeholder="Allergies, accessibility needs, decoration requests, preferred barista, etc..."></textarea>
+      </div>
+      <button class="btn-submit" onclick="submitReservation()">Confirm Reservation →</button>
+      <div class="success-msg" id="success-msg">✓ Your reservation has been received! We'll send a confirmation to your email within 30 minutes.</div>
+    </div>
+
+    <div class="or-divider">Or reach us directly</div>
+
+    <div class="contact-options">
+      <a class="contact-btn" href="tel:+919876543210">
+        <span class="contact-btn-icon">📞</span>
+        <div><div class="contact-btn-label">Call Us</div><div class="contact-btn-value">+91 9952949948</div></div>
+      </a>
+      <a class="contact-btn" href="https://wa.me/919952949948">
+        <span class="contact-btn-icon">💬</span>
+        <div><div class="contact-btn-label">WhatsApp</div><div class="contact-btn-value">Chat with us on WhatsApp</div></div>
+      </a>
+      <a class="contact-btn" href="mailto:hello@velvetbean.in">
+        <span class="contact-btn-icon">✉️</span>
+        <div><div class="contact-btn-label">Email Us</div><div class="contact-btn-value">hello@mach.in</div></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- HOURS TABLE -->
+<div class="hours-section">
+  <div style="max-width: 720px; margin: 0 auto;">
+    <div class="open-now"><span class="open-dot"></span> Open Now</div>
+    <h2 class="hours-title">Opening Hours</h2>
+    <p class="hours-sub">We're open every day — rain, shine, or festival. Last orders accepted 30 minutes before closing.</p>
+    <table class="hours-table">
+      <tr><td>Monday</td><td>24/7</td></tr>
+      <tr><td>Tuesday</td><td>24/7</td></tr>
+      <tr><td>Wednesday</td><td>24/7</td></tr>
+      <tr><td>Thursday <span style="font-size:0.72rem;color:var(--caramel)">· Vinyl Night from 6 PM</span></td><td>To morning 6 AM</td></tr>
+      <tr><td>Friday</td><td>24/7</td></tr>
+      <tr class="today"><td>Saturday <span class="today-badge">TODAY</span> <span style="font-size:0.72rem">· Barista Masterclass 9 AM</span></td><td>8:00 AM – 11:00 PM</td></tr>
+      <tr><td>Sunday</td><td>24/7</td></tr>
+    </table>
+    <div style="margin-top:1.5rem; padding:1rem; background:rgba(200,131,42,0.06); border-left:3px solid var(--caramel);">
+      <p style="font-size:0.83rem; color:var(--muted); line-height:1.7;">🎊 <strong style="color:var(--espresso)">Public Holidays:</strong> We observe reduced hours (9 AM – 8 PM) on national holidays. Follow us on Instagram for live updates and surprise pop-up events.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SOCIAL + NEWSLETTER -->
+<div class="social-section">
+  <div>
+    <h2 class="social-title">Follow the <em style="color:var(--caramel);font-style:italic">Journey</em></h2>
+    <p class="social-sub">Behind-the-scenes roastery content, latte art, seasonal menu drops, and the occasional sunrise from our rooftop. Updated daily.</p>
+    <div class="social-links">
+      <a class="slink" href="#" title="Instagram">📸</a>
+      <a class="slink" href="#" title="Facebook">📘</a>
+      <a class="slink" href="#" title="Twitter/X">🐦</a>
+      <a class="slink" href="#" title="YouTube">▶️</a>
+      <a class="slink" href="#" title="Zomato">🍽️</a>
+    </div>
+  </div>
+  
+</div>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <span class="sec-tag" style="color:var(--caramel)">Common Questions</span>
+  <h2 style="font-family:'Playfair Display',serif;font-size:2rem;color:var(--espresso)">Frequently Asked</h2>
+  <div class="faq-grid">
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Do I need a reservation to visit? <span class="faq-arrow">›</span></div>
+      <div class="faq-a">Walk-ins are always welcome! However, for weekends, Vinyl Night (Thursdays), and groups of 4+, we strongly recommend reserving a table in advance to guarantee your preferred seating.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Is there a minimum spend for the private pods? <span class="faq-arrow">›</span></div>
+      <div class="faq-a">Private meeting pods have a minimum spend of ₹500 per person for bookings up to 2 hours. For longer bookings or full-day use, please contact events@velvetbean.in for custom pricing.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Do you do private events or café buyouts? <span class="faq-arrow">›</span></div>
+      <div class="faq-a">Yes! We offer full and partial café buyouts for birthdays, corporate events, product launches, and more. Email events@velvetbean.in or call us to discuss packages starting at ₹25,000.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Can I bring my pet? <span class="faq-arrow">›</span></div>
+      <div class="faq-a">Absolutely — pets are welcome on our rooftop garden terrace! We have a small pet menu with water bowls and dog-friendly treats. Leashes are required inside the café premises.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Do you offer home delivery or takeaway? <span class="faq-arrow">›</span></div>
+      <div class="faq-a">Takeaway is available for all menu items. We partner with Swiggy and Zomato for delivery within 5km. For large orders or office catering, call us directly for special packaging and pricing.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How do I sign up for Barista Masterclasses? <span class="faq-arrow">›</span></div>
+      <div class="faq-a">Masterclasses run every Saturday at 9 AM. Slots are limited to 12 participants. Book via WhatsApp (+91 98765 43210), Instagram DM, or in-person at the counter. Cost is ₹1,200 per person including coffee and materials.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">MACH <em style="color:var(--caramel);font-style:italic">Cafe</em></div>
+  <ul class="f-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="men.html">Menu</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="f-copy">© 2026 MACH Cafe·</div>
+</footer>
+
+<script>
+
+// ── AUTH GUARD — paste this at the top of every page except login ──
+(function() {
+  const role   = sessionStorage.getItem('mach_role');
+  const access = JSON.parse(sessionStorage.getItem('mach_access') || '[]');
+  const page   = location.pathname.split('/').pop() || 'index.html';
+
+  if (!role) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  // Owner token check
+  if (role === 'owner') {
+    const token = localStorage.getItem('mach_token');
+    if (!token) { window.location.href = 'index.html'; return; }
+  }
+
+  // Check this page is in the role's allowed access list
+  if (!access.includes(page)) {
+    window.location.href = 'index.html';
+  }
+})();
+function logout() {
+  sessionStorage.clear();
+  localStorage.removeItem('mach_token');
+  window.location.href = 'index.html';
+}
+
+
+function submitReservation() {
+  const fname = document.getElementById('fname').value;
+  const email = document.getElementById('email').value;
+  const date = document.getElementById('date').value;
+  const time = document.getElementById('time').value;
+
+  if (!fname || !email || !date || !time) {
+    alert('Please fill all fields.');
+    return;
+  }
+
+  const phoneNumber = "919952949948"; // Your WhatsApp number
+
+  const message =
+`☕ Velvet Bean Reservation
+
+Name: ${fname}
+Email: ${email}
+Date: ${date}
+Time: ${time}`;
+
+  const whatsappURL =
+`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+  window.open(whatsappURL, '_blank');
+
+  document.getElementById('success-msg').style.display = 'block';
+
+  document.querySelector('.btn-submit').textContent =
+    '✓ Reservation Submitted';
+
+  document.querySelector('.btn-submit').style.background =
+    '#4a9a4a';
+}
+
+function subscribeNL() {
+  const email = document.getElementById('nl-email').value;
+  if (!email || !email.includes('@')) { return; }
+  document.getElementById('nl-msg').textContent = '✓ You\'re subscribed! Look out for our next email.';
+  document.getElementById('nl-msg').style.color = '#4a9a4a';
+  document.getElementById('nl-email').value = '';
+}
+
+function toggleFaq(el) {
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
+
+// Set today's date as minimum for date picker
+const today = new Date();
+document.getElementById('date').min = today.toISOString().split('T')[0];
+
+// Dynamic hours based on day
+const day = today.getDay();
+const hoursEl = document.getElementById('today-hours');
+if (day === 4) hoursEl.textContent = '7:00 AM – 11:00 PM (Vinyl Night!)';
+else if (day === 5) hoursEl.textContent = '7:00 AM – 11:00 PM';
+else if (day === 6) hoursEl.textContent = '8:00 AM – 11:00 PM';
+else if (day === 0) hoursEl.textContent = '8:00 AM – 10:00 PM';
+else hoursEl.textContent = '7:00 AM – 10:00 PM';
+</script>
+</body>
+</html>

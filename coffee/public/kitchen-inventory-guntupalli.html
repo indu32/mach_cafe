@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MACH Cafe — Kitchen Inventory · Guntupalli</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --cream: #FFFFFF; --espresso: #3B1F0C; --mocha: #5A3520;
+    --caramel: #7B4F2E; --latte: #A0714F; --foam: #F8F8F8;
+    --text: #2A1408; --muted: #8A6B55;
+    --green: #2e7d32; --red: #c62828; --orange: #e65100;
+    --accent: #C8956C;
+    --accent-light: #C8956C;
+    --accent-bg: rgba(200,149,108,0.2);
+    --accent-border: rgba(200,149,108,0.5);
+  }
+  body { font-family: 'Jost', sans-serif; background: var(--foam); color: var(--text); }
+
+  /* ── AUTH GATE ── */
+  #auth-gate {
+    position: fixed; inset: 0; background: var(--espresso);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; flex-direction: column; gap: 1rem;
+  }
+  #auth-gate p { color: rgba(255,255,255,0.5); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; }
+  #auth-gate a { color: var(--accent-light); text-decoration: none; font-size: 0.85rem; border-bottom: 1px solid var(--accent-light); padding-bottom: 2px; }
+
+  header {
+    background: var(--espresso); color: #fff;
+    padding: 1.2rem 2rem;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-left { display: flex; flex-direction: column; gap: 0.3rem; }
+  header h1 { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
+
+  /* ── BRANCH BADGE ── */
+  .branch-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--accent-bg); border: 1px solid var(--accent-border);
+    color: var(--accent-light); font-size: 0.68rem; letter-spacing: 2px;
+    text-transform: uppercase; padding: 0.28rem 0.8rem; width: fit-content;
+  }
+  .branch-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 1.5s infinite; }
+  .live-dot { display: inline-block; width: 10px; height: 10px; background: #4caf50; border-radius: 50%; margin-right: 0.4rem; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .btn-logout { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 0.4rem 1rem; font-family: 'Jost', sans-serif; font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .btn-logout:hover { background: rgba(255,255,255,0.2); }
+
+  /* TABS */
+  .tabs {
+    background: var(--mocha); display: flex; padding: 0 2rem; overflow-x: auto;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 1rem 1.6rem; background: none; border: none;
+    border-bottom: 3px solid transparent;
+    font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.45); cursor: pointer;
+    transition: all 0.3s; white-space: nowrap;
+  }
+  .tab-btn:hover { color: #fff; }
+  .tab-btn.active { color: var(--accent-light); border-bottom-color: var(--accent); }
+
+  /* PANELS */
+  .panel { display: none; padding: 2rem; }
+  .panel.active { display: block; }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: #d4c4b4; margin-bottom: 2rem;
+  }
+  .stat-box { background: #fff; padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: 0.8rem; }
+  .stat-icon { font-size: 1.8rem; }
+  .stat-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .stat-value { font-size: 1.6rem; font-weight: 700; color: var(--espresso); }
+
+  /* ── SECTION HEADERS ── */
+  .section-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--espresso); }
+
+  /* ── TABLE ── */
+  .inv-table { width: 100%; border-collapse: collapse; background: #fff; }
+  .inv-table thead tr { background: var(--espresso); }
+  .inv-table th { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.6); padding: 0.9rem 1rem; text-align: left; white-space: nowrap; }
+  .inv-table td { padding: 0.85rem 1rem; font-size: 0.85rem; color: var(--text); border-bottom: 1px solid rgba(123,79,46,0.08); }
+  .inv-table tbody tr:hover { background: rgba(123,79,46,0.03); }
+  .inv-table tbody tr:last-child td { border-bottom: none; }
+
+  .qty-bar-wrap { display: flex; align-items: center; gap: 0.8rem; min-width: 120px; }
+  .qty-bar { height: 6px; background: rgba(123,79,46,0.1); flex: 1; border-radius: 3px; overflow: hidden; }
+  .qty-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+  .fill-ok   { background: var(--green); }
+  .fill-warn { background: var(--orange); }
+  .fill-low  { background: var(--red); }
+
+  .badge-level {
+    font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0.2rem 0.6rem; border-radius: 2px; white-space: nowrap;
+  }
+  .level-ok   { background: rgba(46,125,50,0.1);  color: var(--green); }
+  .level-warn { background: rgba(230,81,0,0.1);   color: var(--orange); }
+  .level-low  { background: rgba(198,40,40,0.1);  color: var(--red); }
+  .level-out  { background: rgba(198,40,40,0.15); color: var(--red); }
+
+  /* ── FORM ── */
+  .form-card { background: #fff; padding: 1.8rem; margin-bottom: 1.5rem; border-left: 4px solid var(--accent); }
+  .form-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--espresso); margin-bottom: 1.2rem; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+  .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-field label { font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  .form-field input, .form-field select {
+    padding: 0.7rem 0.8rem; border: 1px solid rgba(123,79,46,0.2);
+    font-family: 'Jost', sans-serif; font-size: 0.9rem; color: var(--text);
+    background: var(--foam); outline: none; transition: border-color 0.2s;
+  }
+  .form-field input:focus, .form-field select:focus { border-color: var(--accent); background: white; }
+  .form-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.8rem; }
+  .btn-primary { background: var(--espresso); color: #fff; border: none; padding: 0.7rem 1.5rem; font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+  .btn-primary:hover { background: var(--accent); }
+  .btn-secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 0.7rem 1.5rem; font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .btn-secondary:hover { background: var(--accent); color: white; }
+  .btn-danger { background: var(--red); color: #fff; border: none; padding: 0.6rem 1rem; font-family: 'Jost', sans-serif; font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
+  .btn-danger:hover { opacity: 0.8; }
+  .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.68rem; }
+
+  /* ── STOCK ENTRY ── */
+  .stock-entry-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .stock-item-card { background: #fff; padding: 1.2rem; border-left: 4px solid var(--accent); }
+  .stock-item-card .item-name-label { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--espresso); margin-bottom: 0.3rem; }
+  .stock-item-card .item-meta { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.8rem; }
+  .stock-qty-row { display: flex; align-items: center; gap: 0.6rem; }
+  .stock-qty-input { flex: 1; padding: 0.6rem; border: 1px solid rgba(123,79,46,0.2); font-family: 'Jost', sans-serif; font-size: 1rem; text-align: center; outline: none; }
+  .stock-qty-input:focus { border-color: var(--accent); }
+  .qty-stepper { background: var(--espresso); color: white; border: none; width: 30px; height: 36px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+  .qty-stepper:hover { background: var(--accent); }
+  .current-qty-label { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; }
+
+  /* ── LOGS ── */
+  .log-chip { font-size: 0.65rem; letter-spacing: 1px; padding: 0.15rem 0.5rem; border-radius: 2px; text-transform: uppercase; }
+  .log-restock { background: rgba(46,125,50,0.1);  color: var(--green); }
+  .log-deduct  { background: rgba(198,40,40,0.1);  color: var(--red); }
+  .log-manual  { background: rgba(123,79,46,0.1);  color: var(--caramel); }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--espresso); color: white;
+    padding: 0.9rem 2rem; font-size: 0.82rem; letter-spacing: 1px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3); z-index: 5000;
+    transition: transform 0.3s; white-space: nowrap;
+  }
+  #toast.show    { transform: translateX(-50%) translateY(0); }
+  #toast.success { background: #2e7d32; }
+  #toast.error   { background: #c62828; }
+
+  .empty-state { text-align: center; padding: 4rem; color: var(--muted); }
+  .date-label { font-size: 0.78rem; color: var(--muted); background: rgba(123,79,46,0.06); padding: 0.6rem 1rem; margin-bottom: 1rem; display: inline-block; }
+</style>
+</head>
+<body>
+
+<!-- AUTH GATE -->
+<div id="auth-gate">
+  <p>🔐 Verifying access...</p>
+  <a href="index.html" id="login-link" style="display:none">← Go to Login</a>
+</div>
+
+<header>
+  <div class="header-left">
+    <h1>☕ MACH <em style="color:#C8956C;font-style:italic">Cafe</em> — Kitchen Inventory</h1>
+    <!-- ╔══════════════════════════════════════════════════════╗
+         ║  BRANCH-SPECIFIC LINE                               ║
+         ╚══════════════════════════════════════════════════════╝ -->
+    <div class="branch-badge">
+      <span class="branch-dot"></span>
+      Guntupalli Branch
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+    <span><span class="live-dot"></span><span id="last-updated" style="font-size:0.72rem;opacity:0.5">Loading…</span></span>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('overview',this)">📊 Overview</button>
+  <button class="tab-btn" onclick="switchTab('stock-entry',this)">📝 Today's Stock Entry</button>
+  <button class="tab-btn" onclick="switchTab('manage-items',this)">⚙️ Manage Items</button>
+  <button class="tab-btn" onclick="switchTab('import-excel',this)">📥 Import Excel</button>
+  <button class="tab-btn" onclick="switchTab('logs',this)">📋 Activity Log</button>
+</div>
+
+<!-- ══ PANEL: OVERVIEW ══ -->
+<div class="panel active" id="panel-overview">
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-icon">📦</div><div><div class="stat-label">Total Items</div><div class="stat-value" id="st-total">—</div></div></div>
+    <div class="stat-box"><div class="stat-icon">✅</div><div><div class="stat-label">Well Stocked</div><div class="stat-value" id="st-ok"   style="color:var(--green)">—</div></div></div>
+    <div class="stat-box"><div class="stat-icon">⚠️</div><div><div class="stat-label">Low Stock</div>   <div class="stat-value" id="st-warn" style="color:var(--orange)">—</div></div></div>
+    <div class="stat-box"><div class="stat-icon">🚨</div><div><div class="stat-label">Out of Stock</div><div class="stat-value" id="st-out"  style="color:var(--red)">—</div></div></div>
+  </div>
+  <div class="section-hdr">
+    <h2 class="section-title">Current Stock Levels — Guntupalli</h2>
+    <button class="btn-secondary btn-sm" onclick="loadOverview()">↻ Refresh</button>
+  </div>
+  <table class="inv-table">
+    <thead>
+      <tr><th>Item</th><th>Category</th><th>Current Qty</th><th>Unit</th><th>Reorder Level</th><th>Status</th></tr>
+    </thead>
+    <tbody id="overview-body">
+      <tr><td colspan="6" class="empty-state">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ PANEL: STOCK ENTRY ══ -->
+<div class="panel" id="panel-stock-entry">
+  <div class="section-hdr">
+    <div>
+      <h2 class="section-title">Today's Stock Entry — Guntupalli</h2>
+      <span class="date-label" id="today-date-label">📅 —</span>
+    </div>
+    <button class="btn-primary" onclick="submitStockEntry()">💾 Save All Quantities</button>
+  </div>
+  <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.5rem">
+    Kitchen staff: Enter the opening quantities for each item for today. These will be saved as the starting stock for today's service.
+  </p>
+  <div class="stock-entry-grid" id="stock-entry-grid">
+    <div class="empty-state">Loading items…</div>
+  </div>
+</div>
+
+<!-- ══ PANEL: MANAGE ITEMS ══ -->
+<div class="panel" id="panel-manage-items">
+  <div class="form-card" id="add-item-form">
+    <h3 id="add-form-title">➕ Add New Kitchen Item</h3>
+    <input type="hidden" id="edit-item-id">
+    <div class="form-grid">
+      <div class="form-field"><label>Item Name</label><input type="text" id="f-name" placeholder="e.g. Milk"></div>
+      <div class="form-field">
+        <label>Category</label>
+        <select id="f-category">
+          <option value="Beverages">Beverages</option>
+          <option value="Grains & Pulses">Grains &amp; Pulses</option>
+          <option value="Vegetables">Vegetables</option>
+          <option value="Dairy">Dairy</option>
+          <option value="Spices">Spices</option>
+          <option value="Oils & Condiments">Oils &amp; Condiments</option>
+          <option value="Baked Goods">Baked Goods</option>
+          <option value="Meat & Eggs">Meat &amp; Eggs</option>
+          <option value="Frozen">Frozen</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-field"><label>Unit (kg / L / pcs…)</label><input type="text" id="f-unit" placeholder="kg"></div>
+      <div class="form-field"><label>Initial Quantity</label><input type="number" id="f-qty" placeholder="0" min="0" step="0.1"></div>
+      <div class="form-field"><label>Reorder Level</label><input type="number" id="f-reorder" placeholder="5" min="0" step="0.1"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary"   onclick="saveItem()">Save Item</button>
+      <button class="btn-secondary" onclick="resetAddForm()">Cancel</button>
+    </div>
+  </div>
+  <div class="section-hdr"><h2 class="section-title">All Items — Guntupalli</h2></div>
+  <table class="inv-table">
+    <thead>
+      <tr><th>Item</th><th>Category</th><th>Unit</th><th>Current Qty</th><th>Reorder Level</th><th>Actions</th></tr>
+    </thead>
+    <tbody id="manage-items-body">
+      <tr><td colspan="6" class="empty-state">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ══ PANEL: IMPORT EXCEL ══ -->
+<div class="panel" id="panel-import-excel">
+  <div class="form-card">
+    <h3>📥 Import Inventory from Excel</h3>
+    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.2rem">
+      Upload an <strong>.xlsx</strong> file. Required column: <code>name</code>.
+      Optional columns: <code>unit</code>, <code>currentQty</code>, <code>reorderLevel</code>, <code>category</code>.<br>
+      Existing items will be <em>updated</em>; new items will be <em>added</em> — nothing is deleted.
+    </p>
+    <div class="form-actions" style="flex-direction:column;align-items:flex-start;gap:1rem">
+      <div class="form-field">
+        <label>Choose Excel file (.xlsx)</label>
+        <input type="file" id="excel-file-input" accept=".xlsx,.xls"
+          style="padding:0.5rem;border:1px solid rgba(123,79,46,0.2);background:var(--foam);font-family:Jost,sans-serif;font-size:0.88rem;cursor:pointer;">
+      </div>
+      <button class="btn-primary" onclick="previewExcel()">👁 Preview Rows</button>
+    </div>
+  </div>
+
+  <!-- Preview table -->
+  <div id="excel-preview-wrap" style="display:none">
+    <div class="section-hdr">
+      <h2 class="section-title">Preview — <span id="excel-row-count">0</span> rows</h2>
+      <button class="btn-primary" onclick="importExcel()">💾 Import to DB</button>
+    </div>
+    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem">
+      Review the data below before importing. Items already in the DB will be updated; new ones will be added.
+    </p>
+    <table class="inv-table">
+      <thead>
+        <tr><th>#</th><th>Name</th><th>Unit</th><th>Current Qty</th><th>Reorder Level</th><th>Category</th></tr>
+      </thead>
+      <tbody id="excel-preview-body"></tbody>
+    </table>
+  </div>
+
+  <!-- Import result -->
+  <div id="excel-result" style="display:none;margin-top:1.5rem" class="form-card">
+    <h3>✅ Import Complete</h3>
+    <p id="excel-result-text" style="font-size:0.9rem;margin-top:0.5rem"></p>
+    <div class="form-actions" style="margin-top:1rem">
+      <button class="btn-secondary" onclick="resetExcel()">Import Another File</button>
+      <button class="btn-primary" onclick="switchTab('overview', document.querySelector('.tab-btn'))">View Overview</button>
+    </div>
+  </div>
+
+  <!-- Download sample template -->
+  <div style="margin-top:2rem">
+    <button class="btn-secondary btn-sm" onclick="downloadTemplate()">⬇ Download Sample Template</button>
+    <span style="font-size:0.72rem;color:var(--muted);margin-left:0.8rem">Use this template for correct column names</span>
+  </div>
+</div>
+
+<!-- ══ PANEL: LOGS ══ -->
+<div class="panel" id="panel-logs">
+  <div class="section-hdr">
+    <h2 class="section-title">Activity Log — Guntupalli</h2>
+    <div style="display:flex;gap:0.5rem;align-items:center">
+      <input type="date" id="log-date-filter"
+        style="padding:0.4rem 0.8rem;border:1px solid rgba(123,79,46,0.2);font-family:Jost,sans-serif;font-size:0.82rem;outline:none;"
+        onchange="loadLogs()">
+      <button class="btn-secondary btn-sm" onclick="document.getElementById('log-date-filter').value='';loadLogs()">Clear</button>
+    </div>
+  </div>
+  <table class="inv-table">
+    <thead>
+      <tr><th>Time</th><th>Item</th><th>Type</th><th>Change</th><th>New Qty</th><th>Note</th></tr>
+    </thead>
+    <tbody id="logs-body">
+      <tr><td colspan="6" class="empty-state">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="toast">✓ Done</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ╔══════════════════════════════════════════════════════╗
+// ║  BRANCH KEY — THE ONLY LINE TO CHANGE per branch    ║
+// ║  Guntupalli → 'guntupalli'                          ║
+// ║  Ongole     → 'ongole'                              ║
+// ║  Kodaikanal → 'kodaikanal'                          ║
+// ╚══════════════════════════════════════════════════════╝
+const BRANCH = 'guntupalli';
+
+// ═══════════════════════════════════════════════
+//  LOGOUT
+// ═══════════════════════════════════════════════
+function logout() {
+  sessionStorage.clear();
+  localStorage.removeItem('mach_token');
+  window.location.href = 'index.html';
+}
+
+// ═══════════════════════════════════════════════
+//  AUTH GUARD
+//  Allows: kitchen (matching branch), manager, owner
+// ═══════════════════════════════════════════════
+(function () {
+  const role = sessionStorage.getItem('mach_role');
+  const loc  = sessionStorage.getItem('mach_location');
+
+  if (!role) { window.location.href = 'index.html'; return; }
+
+  if (role === 'owner') {
+    const token = localStorage.getItem('mach_token');
+    if (!token) { window.location.href = 'index.html'; return; }
+  }
+
+  // Kitchen staff: must match this branch
+  if (role === 'kitchen' && loc !== BRANCH) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  document.getElementById('auth-gate').style.display = 'none';
+  init();
+})();
+
+// ═══════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════
+function switchTab(name, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  el.classList.add('active');
+  if (name === 'overview')      loadOverview();
+  if (name === 'stock-entry')   loadStockEntry();
+  if (name === 'manage-items')  loadManageItems();
+  if (name === 'logs')          loadLogs();
+  // import-excel panel is self-contained, no load call needed
+}
+
+// ═══════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + type;
+  setTimeout(() => t.className = '', 3000);
+}
+
+// ═══════════════════════════════════════════════
+//  API HELPER — always scoped to BRANCH
+// ═══════════════════════════════════════════════
+async function api(url, method = 'GET', body = null) {
+  const token = localStorage.getItem('mach_token') || '';
+  const sep   = url.includes('?') ? '&' : '?';
+  const opts  = {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token && { 'Authorization': 'Bearer ' + token })
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  // Always pass ?location=BRANCH so the server filters correctly
+  const res = await fetch(url + sep + 'location=' + BRANCH, opts);
+  return res.json();
+}
+
+// ═══════════════════════════════════════════════
+//  OVERVIEW
+// ═══════════════════════════════════════════════
+async function loadOverview() {
+  const data = await api('/api/inventory');
+  if (!data.success) return;
+  const items = data.items;
+  let ok = 0, warn = 0, out = 0;
+  items.forEach(i => {
+    if (i.currentQty <= 0)                    out++;
+    else if (i.currentQty <= i.reorderLevel)  warn++;
+    else                                       ok++;
+  });
+  document.getElementById('st-total').textContent = items.length;
+  document.getElementById('st-ok').textContent    = ok;
+  document.getElementById('st-warn').textContent  = warn;
+  document.getElementById('st-out').textContent   = out;
+  document.getElementById('last-updated').textContent =
+    'Updated ' + new Date().toLocaleTimeString('en-IN');
+
+  const tbody = document.getElementById('overview-body');
+  if (!items.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No items yet. Add items in the Manage Items tab.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = items.map(i => {
+    const pct       = i.reorderLevel > 0
+      ? Math.min(100, Math.round((i.currentQty / (i.reorderLevel * 3)) * 100))
+      : (i.currentQty > 0 ? 100 : 0);
+    const fillClass = i.currentQty <= 0            ? 'fill-low'
+                    : i.currentQty <= i.reorderLevel ? 'fill-warn' : 'fill-ok';
+    const [lvlText, lvlCls] =
+      i.currentQty <= 0            ? ['Out of Stock', 'level-out']
+    : i.currentQty <= i.reorderLevel ? ['Low Stock',   'level-warn']
+    :                                  ['OK',           'level-ok'];
+    return `<tr>
+      <td><strong>${i.name}</strong></td>
+      <td style="color:var(--muted)">${i.category || '—'}</td>
+      <td>
+        <div class="qty-bar-wrap">
+          <strong>${i.currentQty}</strong>
+          <div class="qty-bar"><div class="qty-bar-fill ${fillClass}" style="width:${pct}%"></div></div>
+        </div>
+      </td>
+      <td>${i.unit}</td>
+      <td>${i.reorderLevel}</td>
+      <td><span class="badge-level ${lvlCls}">${lvlText}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  STOCK ENTRY
+// ═══════════════════════════════════════════════
+async function loadStockEntry() {
+  document.getElementById('today-date-label').textContent =
+    '📅 ' + new Date().toLocaleDateString('en-IN', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+  const data = await api('/api/inventory');
+  if (!data.success) return;
+  const items = data.items;
+  const grid  = document.getElementById('stock-entry-grid');
+  if (!items.length) {
+    grid.innerHTML = '<div class="empty-state">No items. Add items in the Manage Items tab first.</div>';
+    return;
+  }
+  grid.innerHTML = items.map(i => `
+    <div class="stock-item-card" data-id="${i.id}">
+      <div class="item-name-label">${i.name}</div>
+      <div class="item-meta">${i.category || '—'} · Unit: ${i.unit}</div>
+      <div class="stock-qty-row">
+        <button class="qty-stepper" onclick="stepQty(${i.id}, -1)">−</button>
+        <input type="number" class="stock-qty-input" id="sq-${i.id}"
+               value="${i.currentQty}" min="0" step="0.1">
+        <button class="qty-stepper" onclick="stepQty(${i.id}, 1)">+</button>
+      </div>
+      <div class="current-qty-label">Current in DB: <strong>${i.currentQty} ${i.unit}</strong></div>
+    </div>
+  `).join('');
+}
+
+function stepQty(id, delta) {
+  const input = document.getElementById('sq-' + id);
+  input.value = Math.max(0, (parseFloat(input.value) || 0) + delta);
+}
+
+async function submitStockEntry() {
+  const cards   = document.querySelectorAll('.stock-item-card');
+  const entries = [];
+  cards.forEach(card => {
+    entries.push({
+      id:  parseInt(card.dataset.id),
+      qty: parseFloat(document.getElementById('sq-' + card.dataset.id).value) || 0
+    });
+  });
+  const data = await api('/api/inventory/stock-entry', 'POST', { entries, location: BRANCH });
+  if (data.success) {
+    showToast('✓ Stock levels saved!', 'success');
+    loadOverview();
+  } else {
+    showToast('Error: ' + (data.error || 'Failed'), 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  MANAGE ITEMS
+// ═══════════════════════════════════════════════
+async function loadManageItems() {
+  const data  = await api('/api/inventory');
+  if (!data.success) return;
+  const tbody = document.getElementById('manage-items-body');
+  if (!data.items.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No items yet. Add one above.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.items.map(i => `
+    <tr>
+      <td><strong>${i.name}</strong></td>
+      <td>${i.category || '—'}</td>
+      <td>${i.unit}</td>
+      <td>${i.currentQty}</td>
+      <td>${i.reorderLevel}</td>
+      <td style="display:flex;gap:0.4rem">
+        <button class="btn-primary btn-sm"
+          onclick="editItem(${i.id},'${escJs(i.name)}','${escJs(i.category||'')}','${escJs(i.unit)}',${i.currentQty},${i.reorderLevel})">
+          Edit
+        </button>
+        <button class="btn-danger btn-sm" onclick="deleteItem(${i.id},'${escJs(i.name)}')">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function escJs(s) { return (s || '').replace(/'/g, "\'"); }
+
+function editItem(id, name, cat, unit, qty, reorder) {
+  document.getElementById('edit-item-id').value         = id;
+  document.getElementById('f-name').value               = name;
+  document.getElementById('f-category').value           = cat;
+  document.getElementById('f-unit').value               = unit;
+  document.getElementById('f-qty').value                = qty;
+  document.getElementById('f-reorder').value            = reorder;
+  document.getElementById('add-form-title').textContent = '✏️ Edit Item — ' + name;
+  document.getElementById('add-item-form').scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetAddForm() {
+  document.getElementById('edit-item-id').value         = '';
+  document.getElementById('f-name').value               = '';
+  document.getElementById('f-unit').value               = '';
+  document.getElementById('f-qty').value                = '';
+  document.getElementById('f-reorder').value            = '';
+  document.getElementById('f-category').value           = 'Beverages';
+  document.getElementById('add-form-title').textContent = '➕ Add New Kitchen Item';
+}
+
+async function saveItem() {
+  const id      = document.getElementById('edit-item-id').value;
+  const name    = document.getElementById('f-name').value.trim();
+  const cat     = document.getElementById('f-category').value;
+  const unit    = document.getElementById('f-unit').value.trim();
+  const qty     = parseFloat(document.getElementById('f-qty').value) || 0;
+  const reorder = parseFloat(document.getElementById('f-reorder').value) || 0;
+  if (!name || !unit) { showToast('Name and unit are required', 'error'); return; }
+
+  const payload = { name, category: cat, unit, currentQty: qty, reorderLevel: reorder, location: BRANCH };
+  const data    = id
+    ? await api('/api/inventory/' + id, 'PUT',  payload)
+    : await api('/api/inventory',       'POST', payload);
+
+  if (data.success) {
+    showToast(id ? '✓ Item updated' : '✓ Item added', 'success');
+    resetAddForm();
+    loadManageItems();
+    loadOverview();
+  } else {
+    showToast('Error: ' + (data.error || 'Failed'), 'error');
+  }
+}
+
+async function deleteItem(id, name) {
+  if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+  const data = await api('/api/inventory/' + id, 'DELETE');
+  if (data.success) {
+    showToast('✓ Item deleted', 'success');
+    loadManageItems();
+    loadOverview();
+  } else {
+    showToast('Error: ' + data.error, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  LOGS
+// ═══════════════════════════════════════════════
+async function loadLogs() {
+  const df   = document.getElementById('log-date-filter')?.value;
+  const url  = '/api/inventory/logs' + (df ? '?date=' + df : '');
+  const data = await api(url);
+  if (!data.success) return;
+  const tbody = document.getElementById('logs-body');
+  if (!data.logs.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No activity found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.logs.map(l => {
+    const cls  = l.logType === 'restock'          ? 'log-restock'
+               : (l.logType === 'deduct' || l.logType === 'order_deduction') ? 'log-deduct'  : 'log-manual';
+    const sign = l.delta > 0 ? '+' : '';
+    return `<tr>
+      <td style="white-space:nowrap;color:var(--muted);font-size:0.78rem">
+        ${new Date(l.createdAt).toLocaleString('en-IN', { dateStyle:'medium', timeStyle:'short' })}
+      </td>
+      <td><strong>${l.itemName}</strong></td>
+      <td><span class="log-chip ${cls}">${l.logType}</span></td>
+      <td style="font-weight:600;color:${l.delta >= 0 ? 'var(--green)' : 'var(--red)'}">${sign}${l.delta}</td>
+      <td>${l.newQty}</td>
+      <td style="color:var(--muted);font-size:0.78rem">${l.note || '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  EXCEL IMPORT
+// ═══════════════════════════════════════════════
+let _excelRows = [];
+
+function _normaliseRows(rawRows) {
+  // Maps both "Ingredient Name" style headers (from our Excel) and plain "name" style
+  return rawRows
+    .map(r => ({
+      name:         (r['Ingredient Name'] || r.name         || r.Name         || '').toString().trim(),
+      unit:         (r['Unit']            || r.unit         || r.Unit         || 'units').toString().trim(),
+      currentQty:   parseFloat(r['Current Qty']   ?? r.currentQty ?? r.qty ?? r.Qty ?? r.CurrentQty ?? 0) || 0,
+      reorderLevel: parseFloat(r['Reorder Level'] ?? r.reorderLevel ?? r.reorder ?? r.ReorderLevel ?? 0) || 0,
+      category:     (r['Category'] || r.category || r.Category || '').toString().trim(),
+    }))
+    // Skip category header rows (no name, or name is an emoji header like "🥖 SANDWICH INGREDIENTS")
+    .filter(r => r.name && !/^[^\w]/.test(r.name));
+}
+
+function previewExcel() {
+  const fileInput = document.getElementById('excel-file-input');
+  if (!fileInput.files.length) { showToast('Please select an Excel file first', 'error'); return; }
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const wb = XLSX.read(e.target.result, { type: 'array' });
+
+      // Prefer "Stock Inventory" sheet; fall back to first sheet
+      const sheetName = wb.SheetNames.includes('Stock Inventory')
+        ? 'Stock Inventory'
+        : wb.SheetNames[0];
+      const ws = wb.Sheets[sheetName];
+
+      // Our Excel has rows 1–2 as title/subtitle and row 3 as real headers → range:2 (0-indexed)
+      // But we also support plain files where row 1 is already the header → try range:2 first,
+      // check if we got meaningful data, else fall back to range:0
+      let rawRows = XLSX.utils.sheet_to_json(ws, { defval: '', range: 2 });
+      let rows    = _normaliseRows(rawRows);
+
+      if (!rows.length) {
+        // Fallback: plain file with headers on row 1
+        rawRows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+        rows    = _normaliseRows(rawRows);
+      }
+
+      if (!rows.length) { showToast('No data rows found in file', 'error'); return; }
+
+      _excelRows = rows;   // already normalised
+      document.getElementById('excel-row-count').textContent = rows.length;
+      document.getElementById('excel-preview-body').innerHTML = rows.map((r, i) => `
+        <tr>
+          <td style="color:var(--muted)">${i + 1}</td>
+          <td><strong>${r.name || '—'}</strong></td>
+          <td>${r.unit}</td>
+          <td>${r.currentQty}</td>
+          <td>${r.reorderLevel}</td>
+          <td style="color:var(--muted)">${r.category || '—'}</td>
+        </tr>
+      `).join('');
+      document.getElementById('excel-preview-wrap').style.display = 'block';
+      document.getElementById('excel-result').style.display = 'none';
+    } catch(err) {
+      showToast('Could not read file: ' + err.message, 'error');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+async function importExcel() {
+  if (!_excelRows.length) { showToast('No rows to import', 'error'); return; }
+  showToast('Importing…');
+  // _excelRows are already normalised by _normaliseRows() during preview
+  const token = localStorage.getItem('mach_token') || '';
+  const res = await fetch('/api/inventory/import', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token && { 'Authorization': 'Bearer ' + token })
+    },
+    body: JSON.stringify({ rows: _excelRows, location: BRANCH })
+  });
+  const data = await res.json();
+  if (data.success) {
+    document.getElementById('excel-preview-wrap').style.display = 'none';
+    document.getElementById('excel-result').style.display = 'block';
+    document.getElementById('excel-result-text').innerHTML =
+      `<strong>${data.inserted}</strong> items added &nbsp;·&nbsp; <strong>${data.updated}</strong> items updated` +
+      (data.errors.length ? `<br><span style="color:var(--red)">Skipped rows: ${data.errors.join('; ')}</span>` : '');
+    showToast('✓ Import complete!', 'success');
+  } else {
+    showToast('Import failed: ' + (data.error || 'Unknown error'), 'error');
+  }
+}
+
+function resetExcel() {
+  _excelRows = [];
+  document.getElementById('excel-file-input').value = '';
+  document.getElementById('excel-preview-wrap').style.display = 'none';
+  document.getElementById('excel-result').style.display = 'none';
+}
+
+function downloadTemplate() {
+  const ws = XLSX.utils.aoa_to_sheet([
+    ['name', 'unit', 'currentQty', 'reorderLevel', 'category'],
+    ['Milk', 'ml', 5000, 500, 'Dairy'],
+    ['Espresso Beans', 'shots', 200, 50, 'Beverages'],
+    ['Sugar', 'kg', 10, 2, 'Other'],
+  ]);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Inventory');
+  XLSX.writeFile(wb, 'inventory-template.xlsx');
+}
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+function init() {
+  loadOverview();
+  setInterval(loadOverview, 15000);
+}
+</script>
+</body>
+</html>

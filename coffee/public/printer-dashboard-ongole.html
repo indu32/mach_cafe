@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MACH Cafe — Printer Dashboard · Guntupalli</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg:        #F7F2EC;
+    --surface:   #FFFFFF;
+    --espresso:  #3B1F0C;
+    --mocha:     #5A3520;
+    --caramel:   #7B4F2E;
+    --latte:     #C8956C;
+    --muted:     #8A6B55;
+    --border:    rgba(123,79,46,0.15);
+    --accent:    #7B4F2E;   /* Guntupalli — warm terracotta */
+    --accent2:   #C8956C;
+    --p1:        #616161;
+    --p2:        #1565C0;
+    --p3:        #BF360C;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Jost', sans-serif; background: var(--bg); color: var(--espresso); min-height: 100vh; }
+
+  /* ── AUTH GATE ── */
+  #auth-gate {
+    position: fixed; inset: 0; background: var(--espresso);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999; flex-direction: column; gap: 1rem;
+  }
+  #auth-gate p { color: rgba(255,255,255,0.5); font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--espresso);
+    padding: 0 2.5rem;
+    display: flex; align-items: stretch; justify-content: space-between;
+    gap: 1rem; position: sticky; top: 0; z-index: 100;
+    border-bottom: 3px solid var(--accent);
+    min-height: 64px;
+  }
+  .header-left { display: flex; align-items: center; gap: 1.2rem; }
+  .branch-pill {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: var(--accent); padding: 0.35rem 1rem;
+    font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase;
+    color: #fff; font-weight: 600; align-self: stretch;
+  }
+  .branch-pill .loc-icon { font-size: 1rem; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #fff; }
+  .header-title span { color: var(--latte); font-style: italic; }
+  .header-right { display: flex; align-items: center; gap: 1.5rem; }
+  .live-badge {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45);
+  }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #4caf50; animation: blink 1.5s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+  .last-upd { font-size: 0.68rem; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+  .btn-logout {
+    background: none; border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5); font-family: 'Jost', sans-serif;
+    font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase;
+    padding: 0.4rem 1rem; cursor: pointer; transition: all 0.2s; align-self: center;
+  }
+  .btn-logout:hover { border-color: var(--latte); color: var(--latte); }
+
+  /* ── DATE BAR ── */
+  .date-bar {
+    background: var(--mocha); padding: 0.8rem 2.5rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .date-bar label { font-size: 0.65rem; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); white-space: nowrap; }
+  .date-bar input[type="date"] {
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15);
+    color: #fff; padding: 0.35rem 0.8rem; font-family: 'Jost', sans-serif;
+    font-size: 0.82rem; outline: none; cursor: pointer;
+  }
+  .date-bar input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+  .chips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .chip {
+    font-size: 0.65rem; padding: 0.28rem 0.75rem; cursor: pointer;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase;
+    transition: all 0.2s; font-family: 'Jost', sans-serif;
+  }
+  .chip:hover { background: rgba(255,255,255,0.14); color: #fff; }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .divider { color: rgba(255,255,255,0.15); }
+  .avail-label { font-size: 0.62rem; color: rgba(255,255,255,0.3); letter-spacing: 1px; white-space: nowrap; }
+  .avail-dates { display: flex; gap: 0.3rem; flex-wrap: wrap; align-items: center; }
+
+  /* ── STATS ROW ── */
+  .stats {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 1px; background: var(--border); border-bottom: 1px solid var(--border);
+  }
+  .stat-box { background: var(--surface); padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 0.7rem; }
+  .stat-icon { font-size: 1.5rem; }
+  .stat-label { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .stat-value { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--espresso); }
+  .stat-value.upi  { color: #1565C0; }
+  .stat-value.cash { color: #2e7d32; }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex; gap: 2rem; flex-wrap: wrap; align-items: center;
+    padding: 0.6rem 2.5rem; background: var(--espresso);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; }
+  .leg-bar { width: 18px; height: 3px; border-radius: 1px; }
+
+  /* ── ORDERS ── */
+  .orders { padding: 1.5rem 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .empty, .error { text-align: center; padding: 5rem 2rem; color: var(--muted); font-size: 0.9rem; line-height: 1.8; }
+  .error { color: #c62828; }
+
+  .order-card {
+    background: var(--surface);
+    border-left: 4px solid #ccc;
+    display: grid; grid-template-columns: 1fr 140px;
+    gap: 1rem; align-items: start;
+    padding: 0;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .order-card:hover { box-shadow: 0 4px 24px rgba(59,31,12,0.1); }
+  .order-card.p1only { border-left-color: var(--p1); }
+  .order-card.p12    { border-left-color: var(--p2); }
+  .order-card.p13    { border-left-color: var(--p3); }
+  .order-card.p123   { border-left-color: #7B1FA2; }
+
+  .card-main { padding: 1.2rem 1.5rem; }
+  .order-top { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
+  .inv-no { font-weight: 600; font-size: 0.88rem; color: var(--espresso); font-family: 'Jost', sans-serif; letter-spacing: 0.5px; }
+  .table-tag { font-size: 0.65rem; background: rgba(123,79,46,0.08); padding: 0.2rem 0.6rem; color: var(--caramel); letter-spacing: 1px; }
+  .status-tag { font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.2rem 0.6rem; }
+  .status-PENDING   { background: #fff3e0; color: #e65100; }
+  .status-PAID      { background: #e8f5e9; color: #2e7d32; }
+  .status-DONE      { background: #e8f5e9; color: #2e7d32; }
+  .status-CANCELLED { background: #ffebee; color: #c62828; }
+  .status-PREPARING { background: #e3f2fd; color: #1565C0; }
+  .status-READY     { background: #f3e5f5; color: #6A1B9A; }
+  .time-tag { font-size: 0.7rem; color: var(--muted); margin-left: auto; }
+
+  .printer-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
+  .p-badge { font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; padding: 0.22rem 0.7rem; font-weight: 600; }
+  .p-badge.p1 { background: #f5f5f5; color: var(--p1); border: 1px solid #e0e0e0; }
+  .p-badge.p2 { background: #e3f2fd; color: var(--p2); border: 1px solid #bbdefb; }
+  .p-badge.p3 { background: #fbe9e7; color: var(--p3); border: 1px solid #ffccbc; }
+
+  .items-cols { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .items-col { flex: 1; min-width: 160px; }
+  .items-col h4 {
+    font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.4rem; padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .item-row { font-size: 0.78rem; color: var(--mocha); padding: 0.18rem 0; display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
+  .item-row .item-meta { color: var(--muted); font-size: 0.68rem; white-space: nowrap; }
+
+  .card-right {
+    background: rgba(123,79,46,0.04);
+    border-left: 1px solid var(--border);
+    padding: 1.2rem 1rem;
+    display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between;
+    height: 100%; min-height: 100px;
+  }
+  .grand-label { font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .grand-amount { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--caramel); }
+  .customer-name { font-size: 0.75rem; color: var(--espresso); font-weight: 500; text-align: right; margin-top: 0.6rem; }
+  .customer-phone { font-size: 0.68rem; color: var(--muted); text-align: right; }
+
+  /* ── PAYMENT MODE BADGES ── */
+  .pm-badge {
+    font-size: 0.62rem; letter-spacing: 1px; text-transform: uppercase;
+    padding: 0.18rem 0.6rem; font-weight: 600; border-radius: 2px;
+  }
+  .pm-upi   { background: #e3f2fd; color: #1565C0; border: 1px solid #bbdefb; }
+  .pm-cash  { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+  .pm-other { background: #f3e5f5; color: #6A1B9A; border: 1px solid #e1bee7; }
+
+  /* payment mode shown in card-right below grand total */
+  .pm-total {
+    font-size: 0.62rem; letter-spacing: 1px; text-transform: uppercase;
+    padding: 0.15rem 0.5rem; font-weight: 600; border-radius: 2px;
+    margin-top: 0.3rem; display: inline-block;
+  }
+</style>
+</head>
+<body>
+
+<div id="auth-gate">
+  <p>🔐 Verifying access…</p>
+</div>
+
+<header>
+  <div class="header-left">
+    <div class="branch-pill"><span class="loc-icon">🏘️</span>Ongole</div>
+    <div class="header-title">MACH <span>Cafe</span> — Printer Routing</div>
+  </div>
+  <div class="header-right">
+    <span class="last-upd" id="last-upd">Fetching…</span>
+    <div class="live-badge"><div class="live-dot"></div> Live</div>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</header>
+
+<div class="date-bar">
+  <label>Filter</label>
+  <input type="date" id="date-picker">
+  <div class="chips">
+    <div class="chip active" onclick="selectChip(this, 0)">Today</div>
+    <div class="chip" onclick="selectChip(this, 1)">Yesterday</div>
+    <div class="chip" onclick="selectChip(this, 7)">Last 7 Days</div>
+    <div class="chip" onclick="selectChip(this, -1)">All Time</div>
+  </div>
+  <span class="divider">|</span>
+  <span class="avail-label">Days with orders:</span>
+  <div class="avail-dates" id="avail-dates">—</div>
+</div>
+
+<div class="stats">
+  <div class="stat-box"><div class="stat-icon">📋</div><div><div class="stat-label">Orders</div><div class="stat-value" id="s-total">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">💰</div><div><div class="stat-label">Total Revenue</div><div class="stat-value" id="s-rev">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">📲</div><div><div class="stat-label">UPI Revenue</div><div class="stat-value upi" id="s-upi">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">💵</div><div><div class="stat-label">Cash Revenue</div><div class="stat-value cash" id="s-cash">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">🖨️</div><div><div class="stat-label">Printer 1 (Full)</div><div class="stat-value" id="s-p1">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">☕</div><div><div class="stat-label">Printer 2 (Bev)</div><div class="stat-value" id="s-p2">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">🍛</div><div><div class="stat-label">Printer 3 (Food)</div><div class="stat-value" id="s-p3">—</div></div></div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="leg-bar" style="background:var(--p1)"></div> Printer 1 only</div>
+  <div class="legend-item"><div class="leg-bar" style="background:var(--p2)"></div> Printer 1 + 2 (beverages)</div>
+  <div class="legend-item"><div class="leg-bar" style="background:var(--p3)"></div> Printer 1 + 3 (food)</div>
+  <div class="legend-item"><div class="leg-bar" style="background:#7B1FA2"></div> All 3 printers</div>
+</div>
+
+<div class="orders" id="orders"></div>
+
+<script>
+const BRANCH   = 'ongole';
+const BRANCH_LABEL = 'ongole';
+
+function logout() {
+  sessionStorage.clear();
+  localStorage.removeItem('mach_token');
+  window.location.href = 'index.html';
+}
+
+// ── Auth guard ──
+(function() {
+  const role   = sessionStorage.getItem('mach_role');
+  const access = JSON.parse(sessionStorage.getItem('mach_access') || '[]');
+  const page   = (location.pathname.split('/').pop() || 'index.html').split('?')[0];
+
+  if (!role) { window.location.href = 'index.html'; return; }
+  if (role !== 'owner' && role !== 'manager' && !access.includes(page)) {
+    window.location.href = 'index.html'; return;
+  }
+  if (role === 'owner') {
+    const token = localStorage.getItem('mach_token');
+    if (!token) { window.location.href = 'index.html'; return; }
+  }
+  document.getElementById('auth-gate').style.display = 'none';
+  init();
+})();
+
+let mode = 'today', selDate = todayStr();
+
+function todayStr() { return new Date().toISOString().slice(0, 10); }
+function subtractDays(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
+
+document.getElementById('date-picker').value = todayStr();
+document.getElementById('date-picker').addEventListener('change', function() {
+  selDate = this.value; mode = 'custom';
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  fetchOrders();
+});
+
+function selectChip(el, days) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  if (days === -1) { mode = 'all'; selDate = null; document.getElementById('date-picker').value = ''; }
+  else if (days === 7) { mode = 'week'; selDate = null; document.getElementById('date-picker').value = ''; }
+  else { mode = days === 0 ? 'today' : 'yesterday'; selDate = subtractDays(days); document.getElementById('date-picker').value = selDate; }
+  fetchOrders();
+}
+
+function jumpDate(d) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  selDate = d; mode = 'custom'; document.getElementById('date-picker').value = d; fetchOrders();
+}
+
+function cardClass(p) {
+  const has2 = p.includes(2), has3 = p.includes(3);
+  if (has2 && has3) return 'p123';
+  if (has2) return 'p12';
+  if (has3) return 'p13';
+  return 'p1only';
+}
+
+async function fetchOrders() {
+  try {
+    let url = `/api/orders/routing?location=${BRANCH}`;
+    if (mode === 'today' || mode === 'yesterday' || mode === 'custom') url += `&date=${selDate}`;
+
+    const token = localStorage.getItem('mach_token') || '';
+    const res   = await fetch(url, { headers: token ? { Authorization: 'Bearer ' + token } : {} });
+    const data  = await res.json();
+    if (!data.success) throw new Error('API error');
+
+    let orders = data.orders || [];
+    if (mode === 'week') { const cut = subtractDays(6); orders = orders.filter(o => o.timestamp.slice(0,10) >= cut); }
+
+    // ── Available date chips ──
+    const avail = document.getElementById('avail-dates');
+    avail.innerHTML = (data.availableDates || []).slice(0, 10)
+      .map(d => `<div class="chip" style="font-size:0.6rem;padding:0.2rem 0.5rem" onclick="jumpDate('${d}')">${d}</div>`)
+      .join('') || '<span style="color:rgba(255,255,255,0.25);font-size:0.7rem">None yet</span>';
+
+    document.getElementById('last-upd').textContent = new Date().toLocaleTimeString('en-IN');
+    document.getElementById('s-total').textContent  = orders.length;
+    document.getElementById('s-rev').textContent    = '₹' + orders.reduce((s,o)=>s+o.grand,0).toLocaleString('en-IN');
+
+    // UPI vs Cash breakdown
+    const upiRev  = orders.filter(o => (o.paymentMode||'').toUpperCase() === 'UPI').reduce((s,o)=>s+o.grand,0);
+    const cashRev = orders.filter(o => (o.paymentMode||'').toUpperCase() === 'CASH').reduce((s,o)=>s+o.grand,0);
+    document.getElementById('s-upi').textContent    = '₹' + upiRev.toLocaleString('en-IN');
+    document.getElementById('s-cash').textContent   = '₹' + cashRev.toLocaleString('en-IN');
+
+    document.getElementById('s-p1').textContent     = orders.filter(o=>o.printers.includes(1)).length;
+    document.getElementById('s-p2').textContent     = orders.filter(o=>o.printers.includes(2)).length;
+    document.getElementById('s-p3').textContent     = orders.filter(o=>o.printers.includes(3)).length;
+
+    const container = document.getElementById('orders');
+    if (!orders.length) {
+      const msg = mode === 'all' ? 'No orders yet.' : mode === 'week' ? 'No orders in the last 7 days.' : `No orders on ${selDate}.`;
+      container.innerHTML = `<div class="empty">📭 ${msg}</div>`; return;
+    }
+
+    container.innerHTML = orders.map(o => {
+      const pm = (o.paymentMode || 'Cash').toUpperCase();
+      const pmClass = pm === 'UPI' ? 'pm-upi' : pm === 'CASH' ? 'pm-cash' : 'pm-other';
+      const pmIcon  = pm === 'UPI' ? '📲' : pm === 'CASH' ? '💵' : '💳';
+      return `
+      <div class="order-card ${cardClass(o.printers)}">
+        <div class="card-main">
+          <div class="order-top">
+            <span class="inv-no">${o.invoiceNo}</span>
+            <span class="table-tag">${o.tableNo}</span>
+            <span class="status-tag status-${o.status}">${o.status}</span>
+            <span class="pm-badge ${pmClass}">${pmIcon} ${pm}</span>
+            <span class="time-tag">${new Date(o.timestamp).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})}</span>
+          </div>
+          <div class="printer-badges">
+            ${o.printers.map(p=>`<span class="p-badge p${p}">🖨 P${p} — ${p===1?'Full Invoice':p===2?'Beverages':'Food'}</span>`).join('')}
+          </div>
+          <div class="items-cols">
+            ${o.breakdown.beverages.length ? `<div class="items-col"><h4>☕ Beverages → P2</h4>${o.breakdown.beverages.map(i=>`<div class="item-row"><span>${i.name}</span><span class="item-meta">×${i.qty} · ₹${i.amount}</span></div>`).join('')}</div>` : ''}
+            ${o.breakdown.food.length ? `<div class="items-col"><h4>🍛 Food → P3</h4>${o.breakdown.food.map(i=>`<div class="item-row"><span>${i.name}</span><span class="item-meta">×${i.qty} · ₹${i.amount}</span></div>`).join('')}</div>` : ''}
+            ${!o.breakdown.beverages.length && !o.breakdown.food.length ? `<div class="items-col"><h4>📄 All Items → P1</h4>${o.breakdown.all.map(i=>`<div class="item-row"><span>${i.name}</span><span class="item-meta">×${i.qty} · ₹${i.amount}</span></div>`).join('')}</div>` : ''}
+          </div>
+        </div>
+        <div class="card-right">
+          <div>
+            <div class="grand-label">Grand Total</div>
+            <div class="grand-amount">₹${o.grand.toLocaleString('en-IN')}</div>
+            <div class="pm-total ${pmClass}">${pmIcon} ${pm}</div>
+          </div>
+          <div>
+            <div class="customer-name">👤 ${o.customer}</div>
+            <div class="customer-phone">📞 ${o.phone}</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+  } catch(e) {
+    document.getElementById('orders').innerHTML =
+      `<div class="error">⚠️ Could not connect to server.<br>
+       <small style="font-size:0.8rem;margin-top:0.4rem;display:block;color:#8A6B55">
+         Make sure <strong>node server.js</strong> is running at <strong>http://localhost:3000</strong>
+       </small></div>`;
+  }
+}
+
+function init() { fetchOrders(); setInterval(fetchOrders, 5000); }
+</script>
+</body>
+</html>

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu Manager — Velvet Bean</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --cream: #FFFFFF; --espresso: #3B1F0C; --mocha: #5A3520;
+  --caramel: #7B4F2E; --latte: #A0714F; --foam: #F8F8F8;
+  --text: #2A1408; --muted: #8A6B55;
+  --success: #3a7a3a; --danger: #a03030; --warn: #8a6200;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; background: var(--foam); color: var(--text); min-height: 100vh; }
+
+/* ── Top Bar ── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--espresso); padding: 1rem 3rem;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 2px solid rgba(123,79,46,0.4);
+}
+.topbar-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff; letter-spacing: 1px; text-decoration: none; }
+.topbar-logo span { color: var(--caramel); }
+.topbar-title { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+.topbar-right { display: flex; align-items: center; gap: 1rem; }
+.topbar-user { font-size: 0.75rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
+.btn-logout { background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); padding: 0.4rem 1rem; font-family: 'Jost', sans-serif; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+.btn-logout:hover { border-color: var(--caramel); color: var(--caramel); }
+
+/* ── Auth Gate ── */
+#auth-gate {
+  display: flex; align-items: center; justify-content: center;
+  min-height: calc(100vh - 60px); padding: 2rem;
+}
+.auth-box { background: #fff; width: 100%; max-width: 420px; box-shadow: 0 20px 60px rgba(44,26,14,0.15); }
+.auth-header { background: var(--espresso); padding: 2.5rem 2.5rem 2rem; }
+.auth-header h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #fff; }
+.auth-header h1 span { color: var(--caramel); font-style: italic; }
+.auth-header p { font-size: 0.78rem; color: rgba(255,255,255,0.4); letter-spacing: 2px; text-transform: uppercase; margin-top: 0.4rem; }
+.auth-body { padding: 2.5rem; }
+.auth-field { margin-bottom: 1.5rem; }
+.auth-field label { display: block; font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+.auth-field input { width: 100%; padding: 0.9rem 1rem; border: 1px solid rgba(123,79,46,0.25); font-family: 'Jost', sans-serif; font-size: 0.95rem; color: var(--espresso); background: var(--foam); outline: none; transition: border-color 0.2s; }
+.auth-field input:focus { border-color: var(--caramel); }
+.auth-err { font-size: 0.75rem; color: var(--danger); margin-top: 0.4rem; display: none; }
+.auth-err.show { display: block; }
+.btn-auth { width: 100%; padding: 1rem; background: var(--espresso); color: #fff; border: none; font-family: 'Jost', sans-serif; font-size: 0.82rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: background 0.3s; }
+.btn-auth:hover { background: var(--caramel); }
+.btn-auth:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Main Layout ── */
+#main-content { display: none; }
+.page-header { background: var(--espresso); padding: 2.5rem 3rem 2rem; }
+.page-header-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; }
+.page-tag { font-size: 0.68rem; letter-spacing: 4px; text-transform: uppercase; color: var(--caramel); margin-bottom: 0.5rem; }
+.page-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: #fff; }
+.page-title em { color: var(--caramel); font-style: italic; }
+.btn-add-new { background: var(--caramel); color: #fff; border: none; padding: 0.85rem 2rem; font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 0.6rem; white-space: nowrap; }
+.btn-add-new:hover { background: var(--mocha); }
+
+/* ── Stats Strip ── */
+.stats-strip { background: var(--mocha); padding: 1rem 3rem; }
+.stats-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 3rem; }
+.stat { display: flex; flex-direction: column; }
+.stat-val { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: #fff; }
+.stat-lbl { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-top: 0.1rem; }
+
+/* ── Filters ── */
+.filters-bar { background: #fff; border-bottom: 1px solid rgba(123,79,46,0.12); padding: 1rem 3rem; }
+.filters-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.filter-btn { background: none; border: 1px solid rgba(123,79,46,0.2); color: var(--muted); padding: 0.4rem 1.1rem; font-family: 'Jost', sans-serif; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+.filter-btn:hover, .filter-btn.active { background: var(--espresso); color: #fff; border-color: var(--espresso); }
+.search-wrap { margin-left: auto; position: relative; }
+.search-wrap input { padding: 0.5rem 1rem 0.5rem 2.2rem; border: 1px solid rgba(123,79,46,0.2); font-family: 'Jost', sans-serif; font-size: 0.82rem; color: var(--espresso); background: var(--foam); outline: none; width: 220px; transition: border-color 0.2s; }
+.search-wrap input:focus { border-color: var(--caramel); }
+.search-wrap::before { content: '⌕'; position: absolute; left: 0.6rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 1rem; pointer-events: none; }
+
+/* ── Table ── */
+.table-wrap { max-width: 1200px; margin: 2rem auto; padding: 0 3rem 4rem; }
+.items-table { width: 100%; border-collapse: collapse; background: #fff; }
+.items-table thead th { text-align: left; font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); padding: 1rem 1.2rem; border-bottom: 2px solid rgba(123,79,46,0.15); background: var(--foam); white-space: nowrap; }
+.items-table tbody tr { border-bottom: 1px solid rgba(123,79,46,0.07); transition: background 0.15s; }
+.items-table tbody tr:hover { background: rgba(248,244,240,0.8); }
+.items-table td { padding: 1rem 1.2rem; font-size: 0.88rem; color: var(--espresso); vertical-align: middle; }
+.td-emoji { font-size: 1.4rem; width: 48px; text-align: center; }
+.td-name { font-family: 'Playfair Display', serif; font-size: 1rem; }
+.td-name small { display: block; font-family: 'Jost', sans-serif; font-size: 0.75rem; color: var(--muted); font-weight: 400; margin-top: 0.15rem; max-width: 280px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.td-cat { font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.3rem 0.7rem; border-radius: 1px; display: inline-block; white-space: nowrap; }
+.cat-coffees  { background: rgba(59,31,12,0.08);   color: var(--espresso); }
+.cat-cold     { background: rgba(76,130,200,0.1);  color: #2a5eaa; }
+.cat-shakes   { background: rgba(160,113,79,0.12); color: var(--caramel); }
+.cat-food     { background: rgba(76,153,76,0.1);   color: #3a7a3a; }
+.cat-snacks   { background: rgba(180,130,60,0.1);  color: #7a5200; }
+.cat-desserts { background: rgba(180,60,130,0.1);  color: #8a2060; }
+.td-price { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--caramel); white-space: nowrap; }
+.badge-pill { font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.18rem 0.55rem; background: rgba(123,79,46,0.1); color: var(--caramel); display: inline-block; }
+.feat-pill  { font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.18rem 0.55rem; background: rgba(59,31,12,0.08); color: var(--espresso); display: inline-block; }
+.td-status { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.72rem; letter-spacing: 1px; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.dot-active   { background: #3a7a3a; }
+.dot-inactive { background: #a03030; }
+.td-actions { display: flex; gap: 0.5rem; }
+.act-btn { padding: 0.4rem 0.9rem; border: none; font-family: 'Jost', sans-serif; font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+.act-edit   { background: var(--espresso); color: #fff; }
+.act-edit:hover { background: var(--caramel); }
+.act-toggle { background: none; border: 1px solid rgba(123,79,46,0.25); color: var(--muted); }
+.act-toggle:hover { border-color: var(--espresso); color: var(--espresso); }
+.act-del { background: none; border: 1px solid rgba(160,48,48,0.25); color: #a03030; }
+.act-del:hover { background: #a03030; color: #fff; border-color: #a03030; }
+.empty-state { text-align: center; padding: 5rem 2rem; color: var(--muted); }
+.empty-state-icon { font-size: 3rem; margin-bottom: 1rem; }
+
+/* ── Drawer ── */
+.drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 400; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+.drawer-overlay.open { opacity: 1; pointer-events: auto; }
+.drawer { position: fixed; top: 0; right: -580px; width: 560px; max-width: 100vw; height: 100vh; background: var(--foam); z-index: 401; display: flex; flex-direction: column; box-shadow: -8px 0 40px rgba(0,0,0,0.2); transition: right 0.35s cubic-bezier(0.4,0,0.2,1); }
+.drawer.open { right: 0; }
+.drawer-header { background: var(--espresso); padding: 1.8rem 2rem; display: flex; align-items: flex-start; justify-content: space-between; flex-shrink: 0; }
+.drawer-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: #fff; }
+.drawer-header-sub { font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-top: 0.3rem; }
+.drawer-close { background: none; border: none; color: rgba(255,255,255,0.5); font-size: 1.4rem; cursor: pointer; transition: color 0.2s; padding: 0; line-height: 1; }
+.drawer-close:hover { color: #fff; }
+.drawer-body { flex: 1; overflow-y: auto; padding: 2rem; }
+.drawer-body::-webkit-scrollbar { width: 4px; }
+.drawer-body::-webkit-scrollbar-track { background: transparent; }
+.drawer-body::-webkit-scrollbar-thumb { background: rgba(123,79,46,0.3); }
+
+/* ── Form ── */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem; }
+.form-field { margin-bottom: 1.2rem; }
+.form-field label { display: block; font-size: 0.65rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.45rem; }
+.form-field label .req { color: var(--danger); }
+.form-field input, .form-field select, .form-field textarea {
+  width: 100%; padding: 0.8rem 1rem; border: 1px solid rgba(123,79,46,0.22);
+  font-family: 'Jost', sans-serif; font-size: 0.9rem; color: var(--espresso);
+  background: #fff; outline: none; transition: border-color 0.2s;
+  appearance: none; -webkit-appearance: none;
+}
+.form-field textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--caramel); }
+.form-field .hint { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; }
+.form-field.has-error input,
+.form-field.has-error select,
+.form-field.has-error textarea { border-color: var(--danger); }
+.form-field .field-err { font-size: 0.72rem; color: var(--danger); margin-top: 0.3rem; display: none; }
+.form-field.has-error .field-err { display: block; }
+.emoji-preview { display: flex; align-items: center; gap: 0.8rem; }
+.emoji-preview .ep-box { width: 48px; height: 48px; background: var(--foam); border: 1px solid rgba(123,79,46,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
+.emoji-preview input { flex: 1; }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: #fff; border: 1px solid rgba(123,79,46,0.15); margin-bottom: 1.2rem; }
+.toggle-row span { font-size: 0.82rem; color: var(--espresso); }
+.toggle-row small { display: block; font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+.toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; inset: 0; background: rgba(123,79,46,0.2); cursor: pointer; transition: 0.3s; }
+.slider::before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; bottom: 3px; background: #fff; transition: 0.3s; }
+.toggle input:checked + .slider { background: var(--caramel); }
+.toggle input:checked + .slider::before { transform: translateX(20px); }
+.divider { border: none; border-top: 1px solid rgba(123,79,46,0.12); margin: 1.5rem 0; }
+.section-label { font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; display: block; }
+.drawer-footer { padding: 1.5rem 2rem; background: #fff; border-top: 1px solid rgba(123,79,46,0.1); display: flex; gap: 1rem; flex-shrink: 0; }
+.btn-save { flex: 1; padding: 0.95rem; background: var(--espresso); color: #fff; border: none; font-family: 'Jost', sans-serif; font-size: 0.82rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: background 0.3s; }
+.btn-save:hover { background: var(--caramel); }
+.btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-cancel { padding: 0.95rem 1.4rem; background: none; color: var(--espresso); border: 1px solid rgba(123,79,46,0.3); font-family: 'Jost', sans-serif; font-size: 0.82rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
+.btn-cancel:hover { border-color: var(--espresso); }
+
+/* ── Toast ── */
+.toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--espresso); color: #fff; padding: 0.9rem 2rem; font-size: 0.82rem; letter-spacing: 1px; z-index: 999; opacity: 0; transition: all 0.3s; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.success { background: #2d6a2d; }
+.toast.error   { background: #8a2020; }
+
+/* ── Confirm Modal ── */
+.confirm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 600; display: none; align-items: center; justify-content: center; padding: 1rem; }
+.confirm-overlay.open { display: flex; }
+.confirm-box { background: #fff; max-width: 400px; width: 100%; }
+.confirm-header { background: var(--danger); padding: 1.5rem 2rem; }
+.confirm-header h3 { font-family: 'Playfair Display', serif; color: #fff; font-size: 1.2rem; }
+.confirm-body { padding: 1.5rem 2rem; font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+.confirm-actions { display: flex; gap: 1rem; padding: 1rem 2rem 1.5rem; }
+.btn-confirm-del { flex: 1; padding: 0.9rem; background: var(--danger); color: #fff; border: none; font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
+.btn-confirm-del:hover { opacity: 0.85; }
+.btn-confirm-cancel { padding: 0.9rem 1.4rem; background: none; color: var(--espresso); border: 1px solid rgba(123,79,46,0.3); font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
+
+@media (max-width: 768px) {
+  .topbar, .page-header, .stats-strip, .filters-bar { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .table-wrap { padding: 1rem 1.5rem 3rem; }
+  .page-header-inner { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .stats-inner { gap: 1.5rem; flex-wrap: wrap; }
+  .form-row { grid-template-columns: 1fr; }
+  .items-table thead th:nth-child(4),
+  .items-table td:nth-child(4) { display: none; }
+}
+
+.logout-btn {
+  background: none;
+  border: 1px solid rgba(212,169,106,0.3);
+  color: var(--latte);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 0.5rem 1.4rem;
+  cursor: pointer; transition: all 0.3s;
+}
+.logout-btn:hover { color: var(--caramel); border-color: var(--caramel); }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div>
+    <a href="/menu.html" class="topbar-logo">MACH<em style="color:var(--caramel);font-style:italic">Cafe</em></a>
+    <div class="topbar-title">Menu Manager</div>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-user" id="topbar-user">Owner</span>
+    <button class="btn-logout" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<!-- AUTH GATE -->
+<div id="auth-gate">
+  <div class="auth-box">
+    <div class="auth-header">
+      <h1>Owner <span>Access</span></h1>
+      <p>Menu Manager · MACH Cafe</p>
+    </div>
+    <div class="auth-body">
+      <div class="auth-field">
+        <label>Owner Password</label>
+        <input type="password" id="auth-pass" placeholder="Enter owner password"
+               onkeydown="if(event.key==='Enter') doLogin()" autofocus />
+        <div class="auth-err" id="auth-err">Incorrect password. Please try again.</div>
+      </div>
+      <button class="btn-auth" id="btn-auth" onclick="doLogin()">Access Menu Manager →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+
+  <div class="page-header">
+    <div class="page-header-inner">
+      <div>
+        <div class="page-tag">Owner Panel</div>
+        <div class="page-title">Menu <em>Manager</em></div>
+      </div>
+      <button class="btn-add-new" onclick="openDrawer()">
+        <span>＋</span> Add New Item
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stats-inner">
+      <div class="stat"><span class="stat-val" id="stat-total">—</span><span class="stat-lbl">Total Items</span></div>
+      <div class="stat"><span class="stat-val" id="stat-active">—</span><span class="stat-lbl">Active</span></div>
+      <div class="stat"><span class="stat-val" id="stat-cats">—</span><span class="stat-lbl">Categories</span></div>
+      <div class="stat"><span class="stat-val" id="stat-featured">—</span><span class="stat-lbl">Featured</span></div>
+    </div>
+  </div>
+
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+      <button class="filter-btn" onclick="setFilter('coffees', this)">☕ Coffees</button>
+      <button class="filter-btn" onclick="setFilter('cold', this)">🧊 Cold</button>
+      <button class="filter-btn" onclick="setFilter('shakes', this)">🥤 Shakes</button>
+      <button class="filter-btn" onclick="setFilter('food', this)">🍳 Food</button>
+      <button class="filter-btn" onclick="setFilter('snacks', this)">🥐 Snacks</button>
+      <button class="filter-btn" onclick="setFilter('desserts', this)">🍰 Desserts</button>
+      <div class="search-wrap">
+        <input type="text" id="search-input" placeholder="Search items…" oninput="renderTable()" />
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th style="width:48px"></th>
+          <th>Item Name</th>
+          <th>Category</th>
+          <th>Badge / Tag</th>
+          <th>Price</th>
+          <th>Status</th>
+          <th style="width:210px">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="items-tbody">
+        <tr><td colspan="7">
+          <div class="empty-state"><div class="empty-state-icon">☕</div><p>Loading menu items…</p></div>
+        </td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ITEM DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="item-drawer">
+  <div class="drawer-header">
+    <div>
+      <h2 id="drawer-title">Add New Item</h2>
+      <div class="drawer-header-sub" id="drawer-sub">Fill in the item details below</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  </div>
+  <div class="drawer-body">
+
+    <span class="section-label">Basic Info</span>
+
+    <div class="form-row">
+      <div class="form-field" id="ff-name">
+        <label>Item Name <span class="req">*</span></label>
+        <input type="text" id="f-name" placeholder="e.g. Caramel Latte" />
+        <div class="field-err">Item name is required.</div>
+      </div>
+      <div class="form-field" id="ff-category">
+        <label>Category <span class="req">*</span></label>
+        <select id="f-category">
+          <option value="">— Select category —</option>
+          <option value="coffees">☕ Hot Coffees</option>
+          <option value="cold">🧊 Cold & Iced</option>
+          <option value="shakes">🥤 Shakes & Specials</option>
+          <option value="food">🍳 Food</option>
+          <option value="snacks">🥐 Snacks</option>
+          <option value="desserts">🍰 Desserts</option>
+        </select>
+        <div class="field-err">Please select a category.</div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field" id="ff-price">
+        <label>Price (₹) <span class="req">*</span></label>
+        <input type="number" id="f-price" placeholder="e.g. 180" min="1" />
+        <div class="field-err">Enter a valid price.</div>
+      </div>
+      <div class="form-field">
+        <label>Badge Label <span style="font-size:0.6rem;opacity:0.6">(optional)</span></label>
+        <input type="text" id="f-badge" placeholder="e.g. Bestseller, New, Vegan" />
+        <div class="hint">Shown as a small tag on the menu card</div>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>Emoji Icon</label>
+      <div class="emoji-preview">
+        <div class="ep-box" id="emoji-preview-box">☕</div>
+        <input type="text" id="f-emoji" value="☕" placeholder="Paste or type emoji"
+               oninput="updateEmojiPreview()" maxlength="4" />
+      </div>
+      <div class="hint">Click the field and paste any emoji from your keyboard</div>
+    </div>
+
+    <div class="form-field">
+      <label>Description</label>
+      <textarea id="f-desc" placeholder="A short, enticing description of this item…"></textarea>
+    </div>
+
+    <hr class="divider">
+    <span class="section-label">Display Options</span>
+
+    <div class="toggle-row">
+      <div>
+        <span>Featured Item</span>
+        <small>Featured items span full width at the top of their category</small>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="f-featured" onchange="toggleFeaturedTag()" />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="form-field" id="ff-featured-tag" style="display:none">
+      <label>Featured Tag Label</label>
+      <input type="text" id="f-featured-tag" placeholder="e.g. Our Signature, House Special" />
+      <div class="hint">Small label shown above the item name on featured cards</div>
+    </div>
+
+    <div class="toggle-row">
+      <div>
+        <span>Active / Visible</span>
+        <small>Hidden items won't appear on the public menu</small>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="f-active" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+  </div>
+  <div class="drawer-footer">
+    <button class="btn-cancel" onclick="closeDrawer()">Cancel</button>
+    <button class="btn-save" id="btn-save" onclick="saveItem()">Save Item →</button>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-header"><h3>Remove Item</h3></div>
+    <div class="confirm-body" id="confirm-body">Are you sure you want to remove this item?</div>
+    <div class="confirm-actions">
+      <button class="btn-confirm-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-confirm-del" id="btn-confirm-del">Yes, Remove →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+
+  // ── AUTH GUARD — paste this at the top of every page except login ──
+(function() {
+  const role   = sessionStorage.getItem('mach_role');
+  const access = JSON.parse(sessionStorage.getItem('mach_access') || '[]');
+  const page   = location.pathname.split('/').pop() || 'index.html';
+
+  if (!role) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  // Owner token check
+  if (role === 'owner') {
+    const token = localStorage.getItem('mach_token');
+    if (!token) { window.location.href = 'index.html'; return; }
+  }
+
+  // Check this page is in the role's allowed access list
+  if (!access.includes(page)) {
+    window.location.href = 'index.html';
+  }
+})();
+
+function logout() {
+  sessionStorage.clear();
+  localStorage.removeItem('mach_token');
+  window.location.href = 'index.html';
+}
+// ── Auth ─────────────────────────────────────────────────
+let TOKEN = sessionStorage.getItem('owner_token') || '';
+
+async function doLogin() {
+  const pass = document.getElementById('auth-pass').value.trim();
+  const btn  = document.getElementById('btn-auth');
+  const err  = document.getElementById('auth-err');
+  if (!pass) return;
+  btn.disabled = true; btn.textContent = 'Verifying…';
+  err.classList.remove('show');
+  try {
+    const res  = await fetch('/api/owner/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass })
+    });
+    const data = await res.json();
+    if (data.success) {
+      TOKEN = data.token;
+      sessionStorage.setItem('owner_token', TOKEN);
+      showMain();
+    } else {
+      err.classList.add('show');
+    }
+  } catch(e) {
+    err.textContent = 'Could not reach server. Is it running?';
+    err.classList.add('show');
+  }
+  btn.disabled = false; btn.textContent = 'Access Menu Manager →';
+}
+
+async function verifyAndShow() {
+  if (!TOKEN) return;
+  try {
+    const res  = await fetch('/api/owner/verify', { headers: { 'Authorization': 'Bearer ' + TOKEN } });
+    const data = await res.json();
+    if (data.valid) showMain();
+    else { TOKEN = ''; sessionStorage.removeItem('owner_token'); }
+  } catch(e) { /* server not ready */ }
+}
+
+function showMain() {
+  document.getElementById('auth-gate').style.display    = 'none';
+  document.getElementById('main-content').style.display = 'block';
+  loadItems();
+}
+
+function logout() {
+  TOKEN = '';
+  sessionStorage.removeItem('owner_token');
+  document.getElementById('auth-gate').style.display    = 'flex';
+  document.getElementById('main-content').style.display = 'none';
+  document.getElementById('auth-pass').value = '';
+}
+
+// ── Data ─────────────────────────────────────────────────
+let allItems     = [];
+let activeFilter = 'all';
+
+async function loadItems() {
+  try {
+    const res  = await fetch('/api/menu');
+    const data = await res.json();
+    allItems = data.items || [];
+    renderStats();
+    renderTable();
+  } catch(e) {
+    console.error('Failed to load menu:', e);
+  }
+}
+
+function renderStats() {
+  const active   = allItems.filter(i => i.active).length;
+  const cats     = new Set(allItems.map(i => i.category)).size;
+  const featured = allItems.filter(i => i.featured).length;
+  document.getElementById('stat-total').textContent    = allItems.length;
+  document.getElementById('stat-active').textContent   = active;
+  document.getElementById('stat-cats').textContent     = cats;
+  document.getElementById('stat-featured').textContent = featured;
+}
+
+// ── Filters & Table ───────────────────────────────────────
+function setFilter(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function renderTable() {
+  const q    = (document.getElementById('search-input').value || '').toLowerCase();
+  const rows = allItems.filter(item => {
+    const matchCat = activeFilter === 'all' || item.category === activeFilter;
+    const matchQ   = !q || item.name.toLowerCase().includes(q) || (item.description || '').toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+
+  const CATCLS = { coffees:'cat-coffees', cold:'cat-cold', shakes:'cat-shakes', food:'cat-food', snacks:'cat-snacks', desserts:'cat-desserts' };
+  const CATLBL = { coffees:'Hot Coffees', cold:'Cold & Iced', shakes:'Shakes', food:'Food', snacks:'Snacks', desserts:'Desserts' };
+
+  if (!rows.length) {
+    document.getElementById('items-tbody').innerHTML =
+      `<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">🔍</div><p>No items found.</p></div></td></tr>`;
+    return;
+  }
+
+  document.getElementById('items-tbody').innerHTML = rows.map(item => {
+    const catCls   = CATCLS[item.category] || '';
+    const catLbl   = CATLBL[item.category] || item.category;
+    const badge    = item.badge    ? `<span class="badge-pill">${item.badge}</span>`      : '';
+    const feat     = item.featured ? `<span class="feat-pill">★ Featured</span>`          : '';
+    const badgeCell = [badge, feat].filter(Boolean).join(' ')
+                      || `<span style="color:var(--muted);font-size:0.75rem">—</span>`;
+    const statusDot = item.active
+      ? `<span class="td-status"><span class="status-dot dot-active"></span>Active</span>`
+      : `<span class="td-status"><span class="status-dot dot-inactive"></span>Hidden</span>`;
+    const toggleLbl = item.active ? 'Hide' : 'Show';
+    const safeName  = item.name.replace(/'/g, "\\'");
+    return `<tr>
+      <td class="td-emoji">${item.emoji || '☕'}</td>
+      <td class="td-name">${item.name}<small>${item.description || ''}</small></td>
+      <td><span class="td-cat ${catCls}">${catLbl}</span></td>
+      <td>${badgeCell}</td>
+      <td class="td-price">₹${(item.price || 0).toLocaleString('en-IN')}</td>
+      <td>${statusDot}</td>
+      <td>
+        <div class="td-actions">
+          <button class="act-btn act-edit"   onclick="openDrawer(${item.id})">Edit</button>
+          <button class="act-btn act-toggle" onclick="toggleActive(${item.id},${item.active})">${toggleLbl}</button>
+          <button class="act-btn act-del"    onclick="confirmDelete(${item.id},'${safeName}')">✕</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── Drawer ────────────────────────────────────────────────
+let editingId = null;
+
+function openDrawer(id) {
+  editingId = id || null;
+  clearForm();
+  if (id) {
+    const item = allItems.find(i => i.id === id);
+    if (!item) return;
+    document.getElementById('drawer-title').textContent    = 'Edit Item';
+    document.getElementById('drawer-sub').textContent      = 'Editing: ' + item.name;
+    document.getElementById('f-name').value                = item.name;
+    document.getElementById('f-category').value            = item.category;
+    document.getElementById('f-price').value               = item.price;
+    document.getElementById('f-badge').value               = item.badge || '';
+    document.getElementById('f-emoji').value               = item.emoji || '☕';
+    document.getElementById('f-desc').value                = item.description || '';
+    document.getElementById('f-featured').checked          = !!item.featured;
+    document.getElementById('f-active').checked            = !!item.active;
+    document.getElementById('f-featured-tag').value        = item.featured_tag || '';
+    updateEmojiPreview();
+    toggleFeaturedTag();
+  } else {
+    document.getElementById('drawer-title').textContent = 'Add New Item';
+    document.getElementById('drawer-sub').textContent   = 'Fill in the item details below';
+  }
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('item-drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('f-name').focus(), 350);
+}
+
+function closeDrawer() {
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('item-drawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function clearForm() {
+  ['f-name','f-badge','f-desc','f-featured-tag'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-category').value   = '';
+  document.getElementById('f-price').value      = '';
+  document.getElementById('f-emoji').value      = '☕';
+  document.getElementById('f-featured').checked = false;
+  document.getElementById('f-active').checked   = true;
+  document.getElementById('emoji-preview-box').textContent = '☕';
+  document.getElementById('ff-featured-tag').style.display = 'none';
+  ['ff-name','ff-category','ff-price'].forEach(id => document.getElementById(id).classList.remove('has-error'));
+}
+
+function updateEmojiPreview() {
+  const v = document.getElementById('f-emoji').value.trim();
+  document.getElementById('emoji-preview-box').textContent = v || '☕';
+}
+
+function toggleFeaturedTag() {
+  document.getElementById('ff-featured-tag').style.display =
+    document.getElementById('f-featured').checked ? 'block' : 'none';
+}
+
+async function saveItem() {
+  let valid = true;
+  const name  = document.getElementById('f-name').value.trim();
+  const cat   = document.getElementById('f-category').value;
+  const price = parseInt(document.getElementById('f-price').value);
+
+  if (!name)            { document.getElementById('ff-name').classList.add('has-error');     valid = false; }
+  else                    document.getElementById('ff-name').classList.remove('has-error');
+  if (!cat)             { document.getElementById('ff-category').classList.add('has-error'); valid = false; }
+  else                    document.getElementById('ff-category').classList.remove('has-error');
+  if (!price || price < 1){ document.getElementById('ff-price').classList.add('has-error');  valid = false; }
+  else                    document.getElementById('ff-price').classList.remove('has-error');
+  if (!valid) return;
+
+  const payload = {
+    name,
+    category:     cat,
+    price,
+    emoji:        document.getElementById('f-emoji').value.trim() || '☕',
+    description:  document.getElementById('f-desc').value.trim(),
+    badge:        document.getElementById('f-badge').value.trim() || null,
+    featured:     document.getElementById('f-featured').checked,
+    featured_tag: document.getElementById('f-featured-tag').value.trim() || null,
+    active:       document.getElementById('f-active').checked,
+  };
+
+  const btn = document.getElementById('btn-save');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  try {
+    const url    = editingId ? `/api/menu/${editingId}` : '/api/menu';
+    const method = editingId ? 'PUT' : 'POST';
+    const res    = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast(editingId ? '✓ Item updated successfully' : '✓ New item added to menu', 'success');
+      closeDrawer();
+      await loadItems();
+    } else {
+      showToast('Error: ' + (data.error || 'Save failed'), 'error');
+    }
+  } catch(e) {
+    showToast('Server error — check connection', 'error');
+  }
+  btn.disabled = false; btn.textContent = 'Save Item →';
+}
+
+// ── Toggle Active ─────────────────────────────────────────
+async function toggleActive(id, currentActive) {
+  const item = allItems.find(i => i.id === id);
+  if (!item) return;
+  const payload = {
+    name: item.name, category: item.category, price: item.price,
+    emoji: item.emoji, description: item.description, badge: item.badge,
+    featured: item.featured ? 1 : 0, featured_tag: item.featured_tag,
+    active: currentActive ? 0 : 1
+  };
+  try {
+    const res  = await fetch(`/api/menu/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast(currentActive ? 'Item hidden from menu' : 'Item is now visible', 'success');
+      await loadItems();
+    }
+  } catch(e) {
+    showToast('Server error', 'error');
+  }
+}
+
+// ── Delete ────────────────────────────────────────────────
+let pendingDeleteId = null;
+
+function confirmDelete(id, name) {
+  pendingDeleteId = id;
+  document.getElementById('confirm-body').textContent =
+    `Remove "${name}" from the menu? It will be hidden immediately.`;
+  document.getElementById('confirm-overlay').classList.add('open');
+  document.getElementById('btn-confirm-del').onclick = doDelete;
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-overlay').classList.remove('open');
+  pendingDeleteId = null;
+}
+
+async function doDelete() {
+  if (!pendingDeleteId) return;
+  try {
+    const res  = await fetch(`/api/menu/${pendingDeleteId}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + TOKEN }
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('Item removed from menu', 'success');
+      closeConfirm();
+      await loadItems();
+    }
+  } catch(e) {
+    showToast('Server error', 'error');
+  }
+}
+
+// ── Toast ─────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className   = `toast ${type || ''} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+// ── Init ──────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', verifyAndShow);
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+/**
+ * Velvet Bean Coffee — Backend Server
+ * Node.js + Express
+ * Handles: Order creation, Invoice generation, Invoice storage, PDF-ready invoice data
+ *
+ * Run:  node server.js
+ * URL:  http://localhost:3000
+ */
+
+const express = require('express');
+const cors    = require('cors');
+const fs      = require('fs');
+const path    = require('path');
+
+const app  = express();
+const PORT = 3000;
+
+// ── Middleware ────────────────────────────────────────────
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public'))); // serves your HTML files
+
+// ── In-memory store (swap with DB in production) ──────────
+// Each invoice looks like:
+// {
+//   invoiceNo, timestamp, status, items:[{name,qty,rate,amount}],
+//   subtotal, cgst, sgst, grand
+// }
+const invoiceStore = [];
+
+
+// ════════════════════════════════════════════════════════════
+//  HELPER: Generate Invoice Number
+//  Format: VB-YYYYMMDD-XXXX  (e.g. VB-20260502-4731)
+// ════════════════════════════════════════════════════════════
+function generateInvoiceNo() {
+  const now = new Date();
+  const date = now.toISOString().slice(0, 10).replace(/-/g, '');
+  const seq  = String(Math.floor(1000 + Math.random() * 9000));
+  return `VB-${date}-${seq}`;
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  HELPER: Calculate Billing Totals
+// ════════════════════════════════════════════════════════════
+function calculateTotals(items) {
+  // items: [{name, qty, rate}]
+  const lineItems = items.map(i => ({
+    ...i,
+    amount: i.qty * i.rate
+  }));
+  const subtotal = lineItems.reduce((s, i) => s + i.amount, 0);
+  const cgst     = Math.round(subtotal * 0.025); // 2.5%
+  const sgst     = Math.round(subtotal * 0.025); // 2.5%
+  const grand    = subtotal + cgst + sgst;
+  return { lineItems, subtotal, cgst, sgst, grand };
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  POST /api/orders
+//  Called from menu.html when user clicks "Place Order"
+//
+//  Request body:
+//  {
+//    "tableNo": "T-04",                     (optional)
+//    "customerName": "Arjun",               (optional)
+//    "items": [
+//      { "name": "Flat White",  "qty": 2, "rate": 220 },
+//      { "name": "Butter Croissant", "qty": 1, "rate": 180 }
+//    ]
+//  }
+//
+//  Response:
+//  { success: true, invoice: { ...full invoice object } }
+// ════════════════════════════════════════════════════════════
+app.post('/api/orders', (req, res) => {
+  const { items, tableNo = 'Counter', customerName = 'Guest' } = req.body;
+
+  // ── Validation ──
+  if (!items || !Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ success: false, error: 'Order must contain at least one item.' });
+  }
+  for (const item of items) {
+    if (!item.name || !item.qty || !item.rate) {
+      return res.status(400).json({ success: false, error: `Invalid item: ${JSON.stringify(item)}` });
+    }
+    if (item.qty <= 0 || item.rate <= 0) {
+      return res.status(400).json({ success: false, error: 'Qty and rate must be positive.' });
+    }
+  }
+
+  // ── Build invoice ──
+  const { lineItems, subtotal, cgst, sgst, grand } = calculateTotals(items);
+
+  const invoice = {
+    invoiceNo:    generateInvoiceNo(),
+    timestamp:    new Date().toISOString(),
+    tableNo,
+    customerName,
+    status:       'PAID',
+    items:        lineItems,
+    subtotal,
+    cgst,
+    sgst,
+    grand
+  };
+
+  // ── Persist to in-memory store ──
+  invoiceStore.push(invoice);
+
+  // ── Also write to invoices.json file ──
+  saveToFile(invoice);
+
+  // ── Log to console (your "backend view") ──
+  console.log('\n══════════════════════════════════════════');
+  console.log(`  NEW ORDER — ${invoice.invoiceNo}`);
+  console.log('══════════════════════════════════════════');
+  console.log(`  Table    : ${invoice.tableNo}`);
+  console.log(`  Customer : ${invoice.customerName}`);
+  console.log(`  Time     : ${new Date(invoice.timestamp).toLocaleString('en-IN')}`);
+  console.log('  Items:');
+  invoice.items.forEach(i =>
+    console.log(`    • ${i.name.padEnd(30)} x${i.qty}  ₹${i.amount}`)
+  );
+  console.log(`  ──────────────────────────────`);
+  console.log(`  Subtotal : ₹${invoice.subtotal}`);
+  console.log(`  CGST 2.5%: ₹${invoice.cgst}`);
+  console.log(`  SGST 2.5%: ₹${invoice.sgst}`);
+  console.log(`  GRAND    : ₹${invoice.grand}`);
+  console.log('══════════════════════════════════════════\n');
+
+  res.status(201).json({ success: true, invoice });
+});
+
+
+// ════════════════════════════════════════════════════════════
+//  GET /api/invoices
+//  Returns all invoices (for the dashboard/admin panel)
+//
+//  Query params:
+//    ?date=2026-05-02   filter by date
+//    ?limit=20          limit results (default: all)
+// ════════════════════════════════════════════════════════════
+app.get('/api/invoices', (req, res) => {
+  let results = [...invoiceStore].reverse(); // newest first
+
+  if (req.query.date) {
+    results = results.filter(inv =>
+      inv.timestamp.startsWith(req.query.date)
+    );
+  }
+  if (req.query.limit) {
+    results = results.slice(0, parseInt(req.query.limit));
+  }
+
+  const totalRevenue = results.reduce((s, i) => s + i.grand, 0);
+  const totalOrders  = results.length;
+
+  res.json({ success: true, totalOrders, totalRevenue, invoices: results });
+});
+
+
+// ════════════════════════════════════════════════════════════
+//  GET /api/invoices/:invoiceNo
+//  Returns a single invoice by invoice number
+// ════════════════════════════════════════════════════════════
+app.get('/api/invoices/:invoiceNo', (req, res) => {
+  const invoice = invoiceStore.find(i => i.invoiceNo === req.params.invoiceNo);
+  if (!invoice) {
+    return res.status(404).json({ success: false, error: 'Invoice not found.' });
+  }
+  res.json({ success: true, invoice });
+});
+
+
+// ════════════════════════════════════════════════════════════
+//  GET /api/summary
+//  Returns daily revenue summary — for the dashboard
+// ════════════════════════════════════════════════════════════
+app.get('/api/summary', (req, res) => {
+  const today = new Date().toISOString().slice(0, 10);
+
+  const todayInvoices  = invoiceStore.filter(i => i.timestamp.startsWith(today));
+  const totalInvoices  = invoiceStore;
+
+  res.json({
+    success: true,
+    today: {
+      date:     today,
+      orders:   todayInvoices.length,
+      revenue:  todayInvoices.reduce((s, i) => s + i.grand, 0),
+      itemsSold: todayInvoices.reduce((s, i) =>
+        s + i.items.reduce((ss, it) => ss + it.qty, 0), 0)
+    },
+    allTime: {
+      orders:   totalInvoices.length,
+      revenue:  totalInvoices.reduce((s, i) => s + i.grand, 0)
+    }
+  });
+});
+
+
+// ════════════════════════════════════════════════════════════
+//  FILE PERSISTENCE — writes each invoice to invoices.json
+// ════════════════════════════════════════════════════════════
+function saveToFile(invoice) {
+  const filePath = path.join(__dirname, 'invoices.json');
+  let existing = [];
+  if (fs.existsSync(filePath)) {
+    try { existing = JSON.parse(fs.readFileSync(filePath, 'utf8')); }
+    catch(e) { existing = []; }
+  }
+  existing.push(invoice);
+  fs.writeFileSync(filePath, JSON.stringify(existing, null, 2));
+}
+
+
+// ════════════════════════════════════════════════════════════
+//  START SERVER
+// ════════════════════════════════════════════════════════════
+app.listen(PORT, () => {
+  console.log(`\n☕  Velvet Bean Backend running at http://localhost:${PORT}`);
+  console.log(`    Endpoints:`);
+  console.log(`    POST   /api/orders            — Place an order, get invoice`);
+  console.log(`    GET    /api/invoices           — List all invoices`);
+  console.log(`    GET    /api/invoices/:no       — Get one invoice`);
+  console.log(`    GET    /api/summary            — Daily revenue summary\n`);
+});

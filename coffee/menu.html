@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Velvet Bean Coffee — Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --cream: #FFFFFF; --espresso: #3B1F0C; --mocha: #5A3520;
+    --caramel: #7B4F2E; --latte: #A0714F; --foam: #F8F8F8;
+    --text: #2A1408; --muted: #8A6B55;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Jost', sans-serif; background: var(--foam); color: var(--text); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(123,79,46,0.2);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--espresso); letter-spacing: 1px; text-decoration: none; }
+  .nav-logo span { color: var(--caramel); }
+  .nav-links { display: flex; gap: 0; list-style: none; }
+  .nav-links a {
+    text-decoration: none; font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--mocha);
+    padding: 0.5rem 1.4rem; transition: all 0.3s; border-bottom: 2px solid transparent;
+  }
+  .nav-links a:hover { color: var(--caramel); }
+  .nav-links a.active { color: var(--caramel); border-bottom-color: var(--caramel); }
+  .nav-reserve { background: var(--espresso); color: var(--cream) !important; padding: 0.6rem 1.6rem !important; border-bottom: none !important; }
+  .nav-reserve:hover { background: var(--mocha) !important; }
+
+  /* HERO */
+  .menu-hero {
+    min-height: 38vh; background: var(--espresso);
+    display: flex; align-items: flex-end;
+    padding: 4rem 4rem 3rem; position: relative; overflow: hidden;
+    margin-top: 0;
+  }
+  .menu-hero::before {
+    content: 'MENU'; position: absolute; right: -1rem; bottom: -2rem;
+    font-family: 'Playfair Display', serif; font-size: 22vw; font-weight: 700;
+    color: rgba(255,255,255,0.025); line-height: 1; pointer-events: none;
+  }
+  .menu-hero-content { position: relative; z-index: 2; padding-top: 5rem; }
+  .menu-tag { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; color: var(--caramel); margin-bottom: 1rem; display: block; }
+  .menu-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem,6vw,5rem); color: var(--cream); line-height: 1.05; }
+  .menu-title em { color: var(--caramel); font-style: italic; }
+  .menu-sub { color: rgba(245,239,224,0.5); font-size: 1rem; margin-top: 1rem; max-width: 500px; line-height: 1.7; }
+
+  /* STICKY NAV */
+  .menu-nav {
+    position: sticky; top: 68px; z-index: 80;
+    background: var(--espresso); padding: 0 4rem;
+    display: flex; gap: 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    overflow-x: auto;
+  }
+  .menu-nav::-webkit-scrollbar { display: none; }
+  .mnav-btn {
+    padding: 1.1rem 1.8rem; background: none; border: none; border-bottom: 3px solid transparent;
+    font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase; color: rgba(245,239,224,0.45);
+    cursor: pointer; transition: all 0.3s; white-space: nowrap;
+  }
+  .mnav-btn:hover { color: var(--cream); }
+  .mnav-btn.active { color: var(--caramel); border-bottom-color: var(--caramel); }
+
+  /* SECTION LAYOUT */
+  .menu-section { padding: 5rem 4rem; }
+  .menu-section:nth-child(odd) { background: var(--foam); }
+  .menu-section:nth-child(even) { background: var(--cream); }
+
+  .sec-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; border-bottom: 1px solid rgba(123,79,46,0.15); padding-bottom: 1.5rem; }
+  .sec-icon { font-size: 2.5rem; }
+  .sec-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--espresso); margin-left: 1rem; }
+  .sec-desc { font-size: 0.85rem; color: var(--muted); max-width: 300px; line-height: 1.6; text-align: right; }
+
+  /* ITEM GRID */
+  .items-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; }
+  .item-card {
+    background: var(--foam); padding: 2rem 1.8rem;
+    position: relative; overflow: hidden; cursor: default;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex; flex-direction: column;
+  }
+  .menu-section:nth-child(even) .item-card { background: var(--foam); }
+  .menu-section:nth-child(odd) .item-card { background: var(--cream); }
+  .item-card::before {
+    content: ''; position: absolute; left: 0; top: 0;
+    width: 4px; height: 100%; background: var(--caramel);
+    transform: scaleY(0); transform-origin: bottom; transition: transform 0.35s;
+  }
+  .item-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(44,26,14,0.1); }
+  .item-card:hover::before { transform: scaleY(1); }
+  .item-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.8rem; }
+  .item-emoji { font-size: 2rem; }
+  .item-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: flex-end; }
+  .badge {
+    font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0.2rem 0.6rem; border-radius: 1px;
+  }
+  .badge-hot { background: rgba(123,79,46,0.12); color: var(--caramel); }
+  .badge-new { background: rgba(44,26,14,0.08); color: var(--espresso); }
+  .badge-vegan { background: rgba(76,153,76,0.1); color: #3a7a3a; }
+  .badge-cold { background: rgba(76,130,200,0.1); color: #2a5eaa; }
+  .badge-limited { background: rgba(180,60,60,0.1); color: #a03030; }
+  .item-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--espresso); margin-bottom: 0.5rem; }
+  .item-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.65; flex: 1; margin-bottom: 1.2rem; }
+  .item-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(123,79,46,0.1); }
+  .item-price { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--caramel); }
+  .item-add { background: var(--espresso); color: var(--cream); border: none; width: 34px; height: 34px; cursor: pointer; font-size: 1.2rem; transition: background 0.3s; display: flex; align-items: center; justify-content: center; }
+  .item-add:hover { background: var(--caramel); }
+
+  /* FEATURED ITEM - full width */
+  .item-card.featured {
+    grid-column: span 3; flex-direction: row; align-items: center; gap: 3rem;
+    background: var(--espresso) !important; padding: 3rem;
+  }
+  .item-card.featured::before { width: 100%; height: 4px; bottom: 0; top: auto; transform: scaleX(0); transform-origin: left; }
+  .item-card.featured:hover::before { transform: scaleX(1); }
+  .featured-visual { font-size: 5rem; flex-shrink: 0; }
+  .item-card.featured .item-name { font-size: 1.8rem; color: var(--cream); margin-bottom: 0.8rem; }
+  .item-card.featured .item-desc { font-size: 0.9rem; color: rgba(245,239,224,0.55); margin-bottom: 0; }
+  .item-card.featured .item-price { font-size: 2rem; color: var(--caramel); }
+  .item-card.featured .item-footer { border-top-color: rgba(255,255,255,0.08); }
+  .item-card.featured .item-add { width: 42px; height: 42px; }
+  .featured-tag { font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--caramel); border: 1px solid rgba(123,79,46,0.3); padding: 0.3rem 0.8rem; display: inline-block; margin-bottom: 0.8rem; }
+
+  /* DRINKS AT A GLANCE TABLE */
+  .quick-table { margin-top: 3rem; }
+  .quick-table h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--espresso); margin-bottom: 1.5rem; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { text-align: left; font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); padding: 0.8rem 1rem; border-bottom: 1px solid rgba(123,79,46,0.2); }
+  tbody td { padding: 1rem; font-size: 0.87rem; color: var(--text); border-bottom: 1px solid rgba(123,79,46,0.07); }
+  tbody tr:hover td { background: rgba(123,79,46,0.04); }
+  .td-price { font-family: 'Playfair Display', serif; color: var(--caramel); font-size: 1rem; }
+  .td-badge { font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase; background: rgba(123,79,46,0.1); color: var(--caramel); padding: 0.2rem 0.6rem; }
+
+  /* DIETARY INFO */
+  .dietary { background: var(--espresso); padding: 4rem; display: flex; gap: 3rem; align-items: center; }
+  .dietary-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--cream); min-width: 280px; }
+  .dietary-title em { color: var(--caramel); font-style: italic; }
+  .dietary-tags { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+  .dtag { font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; padding: 0.5rem 1.2rem; border: 1px solid rgba(245,239,224,0.15); color: rgba(245,239,224,0.6); transition: all 0.3s; cursor: default; }
+  .dtag:hover { border-color: var(--caramel); color: var(--caramel); }
+
+  /* ── CART BUTTON ── */
+  .cart-fab {
+    position: fixed; bottom: 2rem; right: 2rem; z-index: 200;
+    background: var(--espresso); color: #fff;
+    border: none; padding: 1rem 1.6rem;
+    font-family: 'Jost', sans-serif; font-size: 0.82rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; display: flex; align-items: center; gap: 0.7rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3); transition: background 0.3s, transform 0.2s;
+  }
+  .cart-fab:hover { background: var(--caramel); transform: translateY(-2px); }
+  .cart-count {
+    background: var(--caramel); color: #fff; border-radius: 50%;
+    width: 22px; height: 22px; display: inline-flex; align-items: center;
+    justify-content: center; font-size: 0.75rem; font-weight: 700;
+  }
+  .cart-fab.hidden { display: none; }
+
+  /* ── CART PANEL ── */
+  .cart-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .cart-overlay.open { opacity: 1; pointer-events: auto; }
+  .cart-panel {
+    position: fixed; top: 0; right: -480px; width: 460px; max-width: 100vw;
+    height: 100vh; background: var(--foam); z-index: 301;
+    display: flex; flex-direction: column;
+    box-shadow: -8px 0 40px rgba(0,0,0,0.2);
+    transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  .cart-panel.open { right: 0; }
+  .cart-header {
+    padding: 1.8rem 2rem; background: var(--espresso); color: #fff;
+    display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  }
+  .cart-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; }
+  .cart-header-sub { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; margin-top: 0.2rem; }
+  .cart-close { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; opacity: 0.6; transition: opacity 0.2s; }
+  .cart-close:hover { opacity: 1; }
+  .cart-items { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; }
+  .cart-empty { text-align: center; padding: 4rem 1rem; color: var(--muted); }
+  .cart-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .cart-empty p { font-size: 0.9rem; line-height: 1.7; }
+  .cart-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: 1.2rem 0; border-bottom: 1px solid rgba(123,79,46,0.1);
+  }
+  .cart-item-emoji { font-size: 1.5rem; flex-shrink: 0; }
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-weight: 500; font-size: 0.9rem; color: var(--espresso); margin-bottom: 0.2rem; }
+  .cart-item-price { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--caramel); }
+  .cart-item-controls { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+  .qty-btn {
+    width: 26px; height: 26px; border: 1px solid rgba(123,79,46,0.25);
+    background: none; cursor: pointer; font-size: 0.9rem; color: var(--espresso);
+    display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+  }
+  .qty-btn:hover { background: var(--espresso); color: #fff; border-color: var(--espresso); }
+  .qty-val { font-size: 0.9rem; font-weight: 600; min-width: 20px; text-align: center; color: var(--espresso); }
+  .cart-item-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; margin-left: auto; padding: 0.2rem; transition: color 0.2s; }
+  .cart-item-remove:hover { color: #c0392b; }
+  .cart-footer { padding: 1.5rem 2rem; background: var(--cream); border-top: 1px solid rgba(123,79,46,0.1); flex-shrink: 0; }
+  .cart-subtotal { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .cart-tax { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--muted); margin-bottom: 0.8rem; }
+  .cart-total { display: flex; justify-content: space-between; font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--espresso); border-top: 1px solid rgba(123,79,46,0.15); padding-top: 0.8rem; margin-bottom: 1.2rem; }
+  .btn-place-order {
+    width: 100%; padding: 1.1rem; background: var(--espresso); color: #fff;
+    border: none; font-family: 'Jost', sans-serif; font-size: 0.82rem;
+    letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: background 0.3s;
+  }
+  .btn-place-order:hover { background: var(--caramel); }
+  .btn-place-order:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── INVOICE MODAL ── */
+  .invoice-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 500;
+    display: none; align-items: center; justify-content: center; padding: 1rem;
+  }
+  .invoice-overlay.open { display: flex; }
+  .invoice-modal {
+    background: #fff; width: 100%; max-width: 560px; max-height: 92vh;
+    overflow-y: auto; box-shadow: 0 20px 80px rgba(0,0,0,0.35);
+  }
+  .inv-header { background: var(--espresso); color: #fff; padding: 2rem 2.5rem; }
+  .inv-logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 0.3rem; }
+  .inv-logo span { color: var(--caramel); }
+  .inv-meta { font-size: 0.75rem; opacity: 0.5; letter-spacing: 1px; }
+  .inv-body { padding: 2rem 2.5rem; }
+  .inv-row { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+  .inv-field label { font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 0.25rem; }
+  .inv-field p { font-size: 0.9rem; color: var(--espresso); font-weight: 500; }
+  .inv-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+  .inv-table th { text-align: left; font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 0.7rem 0.5rem; border-bottom: 1px solid rgba(123,79,46,0.2); }
+  .inv-table td { padding: 0.8rem 0.5rem; font-size: 0.87rem; color: var(--espresso); border-bottom: 1px solid rgba(123,79,46,0.07); }
+  .inv-table td:last-child { text-align: right; font-family: 'Playfair Display', serif; color: var(--caramel); }
+  .inv-table th:last-child { text-align: right; }
+  .inv-totals { margin-top: 1rem; }
+  .inv-line { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .inv-grand { display: flex; justify-content: space-between; font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--espresso); border-top: 2px solid var(--espresso); padding-top: 0.8rem; margin-top: 0.8rem; }
+  .inv-footer-note { font-size: 0.78rem; color: var(--muted); text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(123,79,46,0.1); line-height: 1.6; }
+  .inv-status { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; background: rgba(76,153,76,0.1); color: #3a7a3a; padding: 0.3rem 0.8rem; margin-top: 0.5rem; }
+  .inv-actions { display: flex; gap: 1rem; padding: 1.5rem 2.5rem; background: var(--foam); border-top: 1px solid rgba(123,79,46,0.1); }
+  .inv-btn {
+    flex: 1; padding: 0.9rem; border: none; font-family: 'Jost', sans-serif;
+    font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s;
+  }
+  .inv-btn-primary { background: var(--espresso); color: #fff; }
+  .inv-btn-primary:hover { background: var(--caramel); }
+  .inv-btn-secondary { background: none; color: var(--espresso); border: 1px solid rgba(123,79,46,0.3); }
+  .inv-btn-secondary:hover { border-color: var(--espresso); }
+
+  footer { background: #180C04; padding: 3rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .f-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--cream); }
+  .f-logo span { color: var(--caramel); }
+  .f-links { display: flex; gap: 2rem; list-style: none; }
+  .f-links a { text-decoration: none; font-size: 0.75rem; color: rgba(245,239,224,0.35); letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; }
+  .f-links a:hover { color: var(--caramel); }
+  .f-copy { font-size: 0.75rem; color: rgba(245,239,224,0.25); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Velvet<span>Bean</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="menu.html" class="active">Menu</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="contact.html" class="nav-reserve">Reserve a Table</a></li>
+  </ul>
+</nav>
+
+<div class="menu-hero">
+  <div class="menu-hero-content">
+    <span class="menu-tag">Crafted with Intention</span>
+    <div class="menu-title">Our Full <em>Menu</em></div>
+    <p class="menu-sub">Every item — from our morning espresso to our evening desserts — is made in-house with obsessive attention to quality, flavour, and craft.</p>
+  </div>
+</div>
+
+<!-- STICKY CATEGORY NAV -->
+<div class="menu-nav" id="menu-nav">
+  <button class="mnav-btn active" onclick="scrollTo('coffees')">Coffees</button>
+  <button class="mnav-btn" onclick="scrollTo('cold')">Cold & Iced</button>
+  <button class="mnav-btn" onclick="scrollTo('specials')">Specials</button>
+  <button class="mnav-btn" onclick="scrollTo('food')">Food</button>
+  <button class="mnav-btn" onclick="scrollTo('pastries')">Pastries</button>
+  <button class="mnav-btn" onclick="scrollTo('desserts')">Desserts</button>
+</div>
+
+<!-- COFFEES -->
+<section class="menu-section" id="coffees">
+  <div class="sec-header">
+    <div style="display:flex;align-items:center">
+      <span class="sec-icon">☕</span>
+      <span class="sec-title">Hot Coffees</span>
+    </div>
+    <div class="sec-desc">Single-origin espresso, hand-poured with precision. All milk can be swapped to oat, almond, or coconut.</div>
+  </div>
+  <div class="items-grid">
+
+    <div class="item-card featured">
+      <div class="featured-visual">☕</div>
+      <div style="flex:1">
+        <div class="featured-tag">Our Signature</div>
+        <div class="item-name">Velvet Espresso</div>
+        <div class="item-desc">Our house blend — a double shot of Ethiopian Yirgacheffe and Colombian Huila. Rich crema, notes of dark chocolate, cherry, and a lingering sweetness that needs no sugar. The purest expression of who we are.</div>
+        <div class="item-footer"><span class="item-price">₹180</span><button class="item-add">+</button></div>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🥛</span><div class="item-badges"><span class="badge badge-hot">Bestseller</span><span class="badge badge-vegan">Oat Available</span></div></div>
+      <div class="item-name">Flat White</div>
+      <div class="item-desc">Double ristretto with microfoam whole milk. Silky, intense, and perfect for those who want their espresso to shine through the milk.</div>
+      <div class="item-footer"><span class="item-price">₹220</span><button class="item-add">+</button></div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">☁️</span><div class="item-badges"><span class="badge badge-hot">Classic</span></div></div>
+      <div class="item-name">Cappuccino</div>
+      <div class="item-desc">Equal thirds espresso, steamed milk, and thick velvety foam. Dusted with single-origin cocoa powder.</div>
+      <div class="item-footer"><span class="item-price">₹200</span><button class="item-add">+</button></div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍫</span><div class="item-badges"><span class="badge badge-hot">Indulgent</span></div></div>
+      <div class="item-name">Mocha Velvet</div>
+      <div class="item-desc">Espresso blended with Valrhona 70% dark chocolate and velvety steamed milk. Not too sweet — deeply satisfying.</div>
+      <div class="item-footer"><span class="item-price">₹280</span><button class="item-add">+</button></div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🌿</span><div class="item-badges"><span class="badge badge-new">New</span><span class="badge badge-vegan">Vegan</span></div></div>
+      <div class="item-name">Matcha Cortado</div>
+      <div class="item-desc">Ceremonial grade Uji matcha with a double ristretto shot, steamed oat milk. Earthy, smooth, and balanced.</div>
+      <div class="item-footer"><span class="item-price">₹290</span><button class="item-add">+</button></div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍬</span><div class="item-badges"><span class="badge badge-hot">Popular</span></div></div>
+      <div class="item-name">Salted Caramel Latte</div>
+      <div class="item-desc">House-made salted caramel drizzle, microfoam milk, and espresso. Topped with fleur de sel for contrast.</div>
+      <div class="item-footer"><span class="item-price">₹300</span><button class="item-add">+</button></div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🌸</span><div class="item-badges"><span class="badge badge-limited">Limited</span></div></div>
+      <div class="item-name">Rose & Cardamom Latte</div>
+      <div class="item-desc">House-made rose syrup, cardamom-infused whole milk, and our signature espresso. Floral, warm, unforgettable.</div>
+      <div class="item-footer"><span class="item-price">₹320</span><button class="item-add">+</button></div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🫖</span><div class="item-badges"><span class="badge badge-hot">Pour Over</span></div></div>
+      <div class="item-name">Single Origin Pour Over</div>
+      <div class="item-desc">Hand-poured through a V60. Ask your barista about today's origin — it changes weekly based on what's freshest from the roastery.</div>
+      <div class="item-footer"><span class="item-price">₹260</span><button class="item-add">+</button></div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍵</span><div class="item-badges"><span class="badge badge-hot">Signature</span></div></div>
+      <div class="item-name">Saffron Chai Latte</div>
+      <div class="item-desc">Slow-steeped masala chai with premium saffron threads, steamed cashew milk, and a touch of raw honey.</div>
+      <div class="item-footer"><span class="item-price">₹280</span><button class="item-add">+</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- COLD & ICED -->
+<section class="menu-section" id="cold">
+  <div class="sec-header">
+    <div style="display:flex;align-items:center">
+      <span class="sec-icon">🧊</span>
+      <span class="sec-title">Cold & Iced</span>
+    </div>
+    <div class="sec-desc">Slow-brewed for 18 hours. Nitrogen-infused. Served ice-cold, never diluted.</div>
+  </div>
+  <div class="items-grid">
+    <div class="item-card featured">
+      <div class="featured-visual">🫧</div>
+      <div style="flex:1">
+        <div class="featured-tag">Craft Special</div>
+        <div class="item-name">Nitrogen Cold Brew</div>
+        <div class="item-desc">Nitrogen-infused cold brew poured fresh from the tap. A cascading, Guinness-like pour with an impossibly smooth, creamy mouthfeel. Zero bitterness, naturally sweet. One of the finest ways to experience cold coffee.</div>
+        <div class="item-footer"><span class="item-price">₹360</span><button class="item-add">+</button></div>
+      </div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍋</span><div class="item-badges"><span class="badge badge-cold">Refreshing</span></div></div>
+      <div class="item-name">Cold Brew Tonic</div>
+      <div class="item-desc">18-hour cold brew over Indian tonic water, lemon zest, and a hint of vanilla bean. Bright, sparkling, complex.</div>
+      <div class="item-footer"><span class="item-price">₹260</span><button class="item-add">+</button></div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🫐</span><div class="item-badges"><span class="badge badge-new">Seasonal</span></div></div>
+      <div class="item-name">Blueberry Cold Brew</div>
+      <div class="item-desc">Overnight cold brew with blueberry reduction, vanilla bean, and whipped coconut cream. Dessert in a glass.</div>
+      <div class="item-footer"><span class="item-price">₹340</span><button class="item-add">+</button></div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🧊</span><div class="item-badges"><span class="badge badge-cold">Popular</span></div></div>
+      <div class="item-name">Iced Oat Latte</div>
+      <div class="item-desc">Double espresso poured over ice, topped with chilled oat milk and a caramel swirl. Clean, creamy, vegan-friendly.</div>
+      <div class="item-footer"><span class="item-price">₹240</span><button class="item-add">+</button></div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍯</span><div class="item-badges"><span class="badge badge-cold">Bestseller</span></div></div>
+      <div class="item-name">Honey Almond Iced Coffee</div>
+      <div class="item-desc">Cold brew, almond milk, raw wildflower honey, and cinnamon over crushed ice. Sweet, nutty, grounding.</div>
+      <div class="item-footer"><span class="item-price">₹280</span><button class="item-add">+</button></div>
+    </div>
+
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍫</span><div class="item-badges"><span class="badge badge-cold">Indulgent</span></div></div>
+      <div class="item-name">Iced Mocha Frappe</div>
+      <div class="item-desc">Blended cold brew with Valrhona chocolate, whole milk, and crushed ice. Topped with dark chocolate shavings.</div>
+      <div class="item-footer"><span class="item-price">₹300</span><button class="item-add">+</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECIALS -->
+<section class="menu-section" id="specials">
+  <div class="sec-header">
+    <div style="display:flex;align-items:center">
+      <span class="sec-icon">✨</span>
+      <span class="sec-title">Chef's Specials</span>
+    </div>
+    <div class="sec-desc">Rotating seasonal creations and unique experimental brews from our coffee lab.</div>
+  </div>
+  <div class="items-grid">
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍂</span><div class="item-badges"><span class="badge badge-limited">Seasonal</span></div></div>
+      <div class="item-name">Pumpkin Spice Cortado</div>
+      <div class="item-desc">Housemade pumpkin spice blend, oat milk foam, cinnamon dust, and a rich ristretto shot. Autumn in a glass.</div>
+      <div class="item-footer"><span class="item-price">₹300</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">✨</span><div class="item-badges"><span class="badge badge-hot">Experience</span></div></div>
+      <div class="item-name">Coffee Flight — Trio</div>
+      <div class="item-desc">A curated trio: one espresso, one pour-over, one experimental brew from our lab. Tasting notes card included.</div>
+      <div class="item-footer"><span class="item-price">₹480</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🌺</span><div class="item-badges"><span class="badge badge-new">New</span><span class="badge badge-vegan">Vegan</span></div></div>
+      <div class="item-name">Hibiscus Cold Brew</div>
+      <div class="item-desc">Cold brew steeped with dried hibiscus, ginger, and coconut water. Tart, floral, and utterly refreshing.</div>
+      <div class="item-footer"><span class="item-price">₹320</span><button class="item-add">+</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOD -->
+<section class="menu-section" id="food">
+  <div class="sec-header">
+    <div style="display:flex;align-items:center">
+      <span class="sec-icon">🍳</span>
+      <span class="sec-title">Food Menu</span>
+    </div>
+    <div class="sec-desc">Made in our in-house kitchen every morning. Ingredients sourced from local farms weekly.</div>
+  </div>
+  <div class="items-grid">
+    <div class="item-card featured">
+      <div class="featured-visual">🥑</div>
+      <div style="flex:1">
+        <div class="featured-tag">Kitchen Favourite</div>
+        <div class="item-name">Smashed Avocado Toast</div>
+        <div class="item-desc">24-hour sourdough, smashed Hass avo, two poached eggs, chili flakes, lemon oil, toasted pine nuts, and fresh microgreens. Seasonal and always perfect. The one dish guests reorder every single visit.</div>
+        <div class="item-footer"><span class="item-price">₹320</span><button class="item-add">+</button></div>
+      </div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🥗</span><div class="item-badges"><span class="badge badge-vegan">Vegan</span><span class="badge badge-hot">Healthy</span></div></div>
+      <div class="item-name">Ancient Grain Bowl</div>
+      <div class="item-desc">Farro, roasted seasonal vegetables, tahini dressing, pomegranate seeds, and za'atar crisp. Nourishing and beautiful.</div>
+      <div class="item-footer"><span class="item-price">₹380</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🥪</span><div class="item-badges"><span class="badge badge-vegan">Vegan</span></div></div>
+      <div class="item-name">Pulled Mushroom Panini</div>
+      <div class="item-desc">Slow-cooked pulled king oyster mushrooms, truffle aioli, aged cheddar alternative, and wild arugula on ciabatta.</div>
+      <div class="item-footer"><span class="item-price">₹340</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍳</span><div class="item-badges"><span class="badge badge-hot">Morning</span></div></div>
+      <div class="item-name">Full Breakfast Plate</div>
+      <div class="item-desc">Two eggs (any style), turkey sausage, hashbrowns, grilled cherry tomatoes, sourdough toast, and herb butter.</div>
+      <div class="item-footer"><span class="item-price">₹420</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🫙</span><div class="item-badges"><span class="badge badge-cold">Overnight</span></div></div>
+      <div class="item-name">Overnight Oat Jar</div>
+      <div class="item-desc">Rolled oats soaked in coconut milk, chia seeds, vanilla, topped with seasonal fruit compote and bee pollen.</div>
+      <div class="item-footer"><span class="item-price">₹280</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🧀</span><div class="item-badges"><span class="badge badge-hot">Lunch</span></div></div>
+      <div class="item-name">Truffle Mushroom Quesadilla</div>
+      <div class="item-desc">Crispy tortilla filled with wild mushrooms, truffle oil, gouda, and topped with sour cream and micro herbs.</div>
+      <div class="item-footer"><span class="item-price">₹360</span><button class="item-add">+</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- PASTRIES -->
+<section class="menu-section" id="pastries">
+  <div class="sec-header">
+    <div style="display:flex;align-items:center">
+      <span class="sec-icon">🥐</span>
+      <span class="sec-title">Pastries & Bakes</span>
+    </div>
+    <div class="sec-desc">Baked fresh every morning. By 10 AM, they're out — first come, first served.</div>
+  </div>
+  <div class="items-grid">
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🥐</span><div class="item-badges"><span class="badge badge-hot">Morning</span></div></div>
+      <div class="item-name">Butter Croissant</div>
+      <div class="item-desc">Flaky, golden, hand-rolled with 72-hour laminated French butter dough. Served warm with house-made jam.</div>
+      <div class="item-footer"><span class="item-price">₹180</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🧁</span><div class="item-badges"><span class="badge badge-new">New</span></div></div>
+      <div class="item-name">Cardamom Financier</div>
+      <div class="item-desc">Almond and cardamom mini cakes with crispy caramelised edges and a gooey, fragrant centre. A French classic reimagined.</div>
+      <div class="item-footer"><span class="item-price">₹160</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍞</span><div class="item-badges"><span class="badge badge-hot">Bestseller</span></div></div>
+      <div class="item-name">Cinnamon Babka Twist</div>
+      <div class="item-desc">Braided enriched dough swirled with cinnamon sugar, baked golden, and finished with a light sugar glaze.</div>
+      <div class="item-footer"><span class="item-price">₹220</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🫐</span><div class="item-badges"><span class="badge badge-vegan">Vegan</span></div></div>
+      <div class="item-name">Blueberry Bran Muffin</div>
+      <div class="item-desc">Moist, not too sweet. Wild blueberries, oat bran, and a touch of lemon zest. Vegan and gluten-free available.</div>
+      <div class="item-footer"><span class="item-price">₹150</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍪</span><div class="item-badges"><span class="badge badge-hot">Classic</span></div></div>
+      <div class="item-name">Double Choc Cookie</div>
+      <div class="item-desc">Thick, chewy, slightly under-baked. Loaded with Valrhona 70% dark chocolate chips and finished with sea salt.</div>
+      <div class="item-footer"><span class="item-price">₹140</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🥜</span><div class="item-badges"><span class="badge badge-hot">Popular</span></div></div>
+      <div class="item-name">Almond Raspberry Tart</div>
+      <div class="item-desc">Buttery shortcrust, frangipane filling, fresh raspberries, toasted flaked almonds, and a dusting of icing sugar.</div>
+      <div class="item-footer"><span class="item-price">₹240</span><button class="item-add">+</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- DESSERTS -->
+<section class="menu-section" id="desserts">
+  <div class="sec-header">
+    <div style="display:flex;align-items:center">
+      <span class="sec-icon">🍰</span>
+      <span class="sec-title">Desserts</span>
+    </div>
+    <div class="sec-desc">The grand finale. Each dessert pairs with a specific coffee we'll happily recommend.</div>
+  </div>
+  <div class="items-grid">
+    <div class="item-card featured">
+      <div class="featured-visual">🍮</div>
+      <div style="flex:1">
+        <div class="featured-tag">Must Try</div>
+        <div class="item-name">Burnt Basque Cheesecake</div>
+        <div class="item-desc">Deeply caramelised top, impossibly creamy centre, served with housemade berry compote and a fresh basil oil drizzle. No crust — just pure, velvety, barely-set cheesecake. The dessert that turns first-timers into regulars. Ask for the espresso pairing.</div>
+        <div class="item-footer"><span class="item-price">₹280</span><button class="item-add">+</button></div>
+      </div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍵</span><div class="item-badges"><span class="badge badge-new">New</span></div></div>
+      <div class="item-name">Matcha Tiramisu</div>
+      <div class="item-desc">Classic tiramisu reimagined with ceremonial matcha, mascarpone, and matcha-dipped savoiardi. Earthy and elegant.</div>
+      <div class="item-footer"><span class="item-price">₹260</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍫</span><div class="item-badges"><span class="badge badge-hot">Indulgent</span></div></div>
+      <div class="item-name">Dark Chocolate Lava Cake</div>
+      <div class="item-desc">Warm Valrhona chocolate centre that pours out when broken. Served with housemade vanilla bean ice cream.</div>
+      <div class="item-footer"><span class="item-price">₹300</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍨</span><div class="item-badges"><span class="badge badge-vegan">Vegan</span></div></div>
+      <div class="item-name">Coconut Panna Cotta</div>
+      <div class="item-desc">Silky coconut milk panna cotta, mango coulis, candied coconut flakes, and a lime zest finish. Light and tropical.</div>
+      <div class="item-footer"><span class="item-price">₹220</span><button class="item-add">+</button></div>
+    </div>
+    <div class="item-card">
+      <div class="item-card-top"><span class="item-emoji">🍰</span><div class="item-badges"><span class="badge badge-hot">Classic</span></div></div>
+      <div class="item-name">Classic Tiramisu</div>
+      <div class="item-desc">Italian tradition done faithfully — espresso-soaked ladyfingers, mascarpone, and Marsala. Dusted generously with cocoa.</div>
+      <div class="item-footer"><span class="item-price">₹240</span><button class="item-add">+</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- DIETARY INFO -->
+<div class="dietary">
+  <div class="dietary-title">We cater to <em>every</em> table.</div>
+  <div class="dietary-tags">
+    <span class="dtag">✓ Vegan Options</span>
+    <span class="dtag">✓ Gluten-Free Available</span>
+    <span class="dtag">✓ Nut-Free on Request</span>
+    <span class="dtag">✓ Dairy-Free Milk: Oat · Almond · Coconut · Soy</span>
+    <span class="dtag">✓ Sugar-Free Syrups</span>
+    <span class="dtag">✓ Diabetic-Friendly Options</span>
+    <span class="dtag">✓ Jain Menu on Request</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     CART FLOATING BUTTON
+══════════════════════════════════════════════════════════ -->
+<button class="cart-fab hidden" id="cart-fab" onclick="openCart()">
+  🛒 View Order &nbsp;<span class="cart-count" id="cart-count">0</span>
+</button>
+
+<!-- ════════════════════════════════════════════════════════
+     CART OVERLAY + PANEL
+══════════════════════════════════════════════════════════ -->
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-header">
+    <div>
+      <h2>Your Order</h2>
+      <div class="cart-header-sub">Review items before placing</div>
+    </div>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty">
+      <div class="cart-empty-icon">☕</div>
+      <p>Your order is empty.<br>Add items from the menu to get started.</p>
+    </div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-subtotal"><span>Subtotal</span><span id="cart-subtotal">₹0</span></div>
+    <div class="cart-tax"><span>GST (5%)</span><span id="cart-gst">₹0</span></div>
+    <div class="cart-total"><span>Total</span><span id="cart-total">₹0</span></div>
+    <button class="btn-place-order" id="btn-place-order" onclick="placeOrder()" disabled>Place Order & Generate Invoice →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     INVOICE MODAL
+══════════════════════════════════════════════════════════ -->
+<div class="invoice-overlay" id="invoice-overlay">
+  <div class="invoice-modal" id="invoice-modal">
+    <div class="inv-header">
+      <div class="inv-logo">Velvet<span>Bean</span> Coffee</div>
+      <div class="inv-meta">12, MG Road, Vijayawada · GSTIN: 37AAAAA0000A1Z5</div>
+      <div class="inv-status">✓ Order Confirmed</div>
+    </div>
+    <div class="inv-body">
+      <div class="inv-row">
+        <div class="inv-field">
+          <label>Invoice No.</label>
+          <p id="inv-number">—</p>
+        </div>
+        <div class="inv-field">
+          <label>Date & Time</label>
+          <p id="inv-datetime">—</p>
+        </div>
+        <div class="inv-field">
+          <label>Order Type</label>
+          <p>Dine-In</p>
+        </div>
+      </div>
+      <table class="inv-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th style="text-align:center">Qty</th>
+            <th style="text-align:right">Rate</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody id="inv-items"></tbody>
+      </table>
+      <div class="inv-totals">
+        <div class="inv-line"><span>Subtotal</span><span id="inv-subtotal">₹0</span></div>
+        <div class="inv-line"><span>CGST (2.5%)</span><span id="inv-cgst">₹0</span></div>
+        <div class="inv-line"><span>SGST (2.5%)</span><span id="inv-sgst">₹0</span></div>
+        <div class="inv-grand"><span>Grand Total</span><span id="inv-grand">₹0</span></div>
+      </div>
+      <div class="inv-footer-note">
+        Thank you for dining with Velvet Bean! ☕<br>
+        This is a computer-generated invoice. For queries: <strong>hello@velvetbean.in</strong>
+      </div>
+    </div>
+    <div class="inv-actions">
+      <button class="inv-btn inv-btn-secondary" onclick="printInvoice()">🖨 Print Invoice</button>
+      <button class="inv-btn inv-btn-primary" onclick="closeInvoice()">New Order →</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="f-logo">Velvet<span>Bean</span></div>
+  <ul class="f-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="f-copy">© 2026 Velvet Bean Coffee · Vijayawada</div>
+</footer>
+
+<script>
+/* ─── MENU SCROLL NAV ─── */
+function scrollTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.mnav-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+/* ─── CART STATE ─── */
+let cart = []; // [{name, price, qty, emoji}]
+
+function getItemData(btn) {
+  const card = btn.closest('.item-card');
+  const name = card.querySelector('.item-name').textContent.trim();
+  const priceText = card.querySelector('.item-price').textContent.trim();
+  const price = parseInt(priceText.replace(/[₹,]/g, ''), 10);
+  const emojiEl = card.querySelector('.item-emoji') || card.querySelector('.featured-visual');
+  const emoji = emojiEl ? emojiEl.textContent.trim() : '☕';
+  return { name, price, emoji };
+}
+
+function addToCart(btn) {
+  const data = getItemData(btn);
+  const existing = cart.find(i => i.name === data.name);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ ...data, qty: 1 });
+  }
+  // Button feedback
+  btn.textContent = '✓';
+  btn.style.background = 'var(--caramel)';
+  setTimeout(() => { btn.textContent = '+'; btn.style.background = ''; }, 1500);
+  updateCartUI();
+}
+
+function removeFromCart(name) {
+  cart = cart.filter(i => i.name !== name);
+  updateCartUI();
+  renderCartItems();
+}
+
+function changeQty(name, delta) {
+  const item = cart.find(i => i.name === name);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) { cart = cart.filter(i => i.name !== name); }
+  updateCartUI();
+  renderCartItems();
+}
+
+function updateCartUI() {
+  const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const gst = Math.round(subtotal * 0.05);
+  const total = subtotal + gst;
+
+  const fab = document.getElementById('cart-fab');
+  fab.classList.toggle('hidden', totalQty === 0);
+  document.getElementById('cart-count').textContent = totalQty;
+  document.getElementById('cart-subtotal').textContent = '₹' + subtotal.toLocaleString('en-IN');
+  document.getElementById('cart-gst').textContent = '₹' + gst.toLocaleString('en-IN');
+  document.getElementById('cart-total').textContent = '₹' + total.toLocaleString('en-IN');
+  document.getElementById('btn-place-order').disabled = cart.length === 0;
+}
+
+function renderCartItems() {
+  const container = document.getElementById('cart-items');
+  if (cart.length === 0) {
+    container.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">☕</div><p>Your order is empty.<br>Add items from the menu to get started.</p></div>`;
+    return;
+  }
+  container.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <span class="cart-item-emoji">${item.emoji}</span>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">₹${item.price.toLocaleString('en-IN')}</div>
+        <div class="cart-item-controls">
+          <button class="qty-btn" onclick="changeQty('${item.name.replace(/'/g,"\\'")}', -1)">−</button>
+          <span class="qty-val">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${item.name.replace(/'/g,"\\'")}', 1)">+</button>
+        </div>
+      </div>
+      <button class="cart-item-remove" onclick="removeFromCart('${item.name.replace(/'/g,"\\'")}')">✕</button>
+    </div>
+  `).join('');
+}
+
+function openCart() {
+  renderCartItems();
+  document.getElementById('cart-overlay').classList.add('open');
+  document.getElementById('cart-panel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+  document.getElementById('cart-overlay').classList.remove('open');
+  document.getElementById('cart-panel').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ─── INVOICE GENERATION ─── */
+function generateInvoiceNumber() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  return `VB-${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}-${Math.floor(1000 + Math.random() * 9000)}`;
+}
+
+function placeOrder() {
+  if (cart.length === 0) return;
+  closeCart();
+
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const cgst = Math.round(subtotal * 0.025);
+  const sgst = Math.round(subtotal * 0.025);
+  const grand = subtotal + cgst + sgst;
+
+  // Populate invoice
+  document.getElementById('inv-number').textContent = generateInvoiceNumber();
+  const now = new Date();
+  document.getElementById('inv-datetime').textContent = now.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+
+  document.getElementById('inv-items').innerHTML = cart.map(item => `
+    <tr>
+      <td>${item.emoji} ${item.name}</td>
+      <td style="text-align:center">${item.qty}</td>
+      <td style="text-align:right">₹${item.price.toLocaleString('en-IN')}</td>
+      <td>₹${(item.price * item.qty).toLocaleString('en-IN')}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('inv-subtotal').textContent = '₹' + subtotal.toLocaleString('en-IN');
+  document.getElementById('inv-cgst').textContent = '₹' + cgst.toLocaleString('en-IN');
+  document.getElementById('inv-sgst').textContent = '₹' + sgst.toLocaleString('en-IN');
+  document.getElementById('inv-grand').textContent = '₹' + grand.toLocaleString('en-IN');
+
+  // Log invoice to backend (console simulating backend call)
+  const invoiceRecord = {
+    invoiceNo: document.getElementById('inv-number').textContent,
+    timestamp: now.toISOString(),
+    items: cart.map(i => ({ name: i.name, qty: i.qty, rate: i.price, amount: i.price * i.qty })),
+    subtotal, cgst, sgst, grand
+  };
+  console.log('[BACKEND] Invoice Generated:', JSON.stringify(invoiceRecord, null, 2));
+  // In production: fetch('/api/invoices', { method:'POST', body: JSON.stringify(invoiceRecord), headers:{'Content-Type':'application/json'} })
+
+  document.getElementById('invoice-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeInvoice() {
+  cart = [];
+  updateCartUI();
+  document.getElementById('invoice-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function printInvoice() {
+  window.print();
+}
+
+/* ─── ATTACH ADD-TO-CART HANDLERS ─── */
+document.querySelectorAll('.item-add').forEach(btn => {
+  btn.addEventListener('click', function() { addToCart(this); });
+});
+</script>
+</body>
+</html>

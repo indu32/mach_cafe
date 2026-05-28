@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MACH Cafe — Staff Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --cream: #F5EFE0; --espresso: #2C1A0E; --mocha: #6B3F2A;
+    --caramel: #C8832A; --latte: #D4A96A; --foam: #FAF5EC;
+    --text: #1E110A; --muted: #7A5C44;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--espresso);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(44,26,14,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(200,131,42,0.2);
+  }
+ .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--cream); letter-spacing: 1px; text-decoration: none; }
+  .nav-logo span { color: var(--caramel); }
+  .nav-back {
+    text-decoration: none; font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--latte);
+    padding: 0.5rem 1.4rem; transition: color 0.3s;
+    border: 1px solid rgba(212,169,106,0.3);
+  }
+  .nav-back:hover { color: var(--caramel); border-color: var(--caramel); }
+  .nav-links { display: flex; gap: 0; list-style: none; }
+  .nav-links a {
+    text-decoration: none; font-size: 0.78rem; font-weight: 500;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--mocha);
+    padding: 0.5rem 1.4rem; transition: all 0.3s; border-bottom: 2px solid transparent;
+  }
+  .nav-links a:hover { color: var(--caramel); }
+  .nav-links a.active { color: var(--caramel); border-bottom-color: var(--caramel); }
+  .nav-reserve {
+    background: var(--espresso); color: var(--cream) !important;
+    padding: 0.6rem 1.6rem !important; border-bottom: none !important;
+    border-radius: 0 !important;
+  }
+  .nav-reserve:hover { background: var(--mocha) !important; }
+
+  /* ── BACKGROUND ── */
+  .bg-texture {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(200,131,42,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(107,63,42,0.12) 0%, transparent 50%),
+      var(--espresso);
+  }
+  .bg-watermark {
+    position: fixed; bottom: -6rem; right: -4rem; z-index: 0;
+    font-family: 'Playfair Display', serif; font-size: 30vw; font-weight: 700;
+    color: rgba(255,255,255,0.02); line-height: 1; user-select: none; pointer-events: none;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .page-wrap {
+    position: relative; z-index: 1;
+    padding: 7rem 2rem 4rem;
+    max-width: 1300px; margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .portal-header {
+    text-align: center; margin-bottom: 3.5rem;
+    animation: fadeUp 0.7s ease both;
+  }
+  .portal-pill {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--caramel); border: 1px solid rgba(200,131,42,0.35);
+    padding: 0.45rem 1.2rem; margin-bottom: 1.5rem;
+  }
+  .pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--caramel); animation: pulse 2s infinite; }
+  .portal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    color: var(--cream); line-height: 1.1; margin-bottom: 0.8rem;
+  }
+  .portal-title em { color: var(--caramel); font-style: italic; }
+  .portal-sub { font-size: 0.95rem; color: rgba(245,239,224,0.45); letter-spacing: 0.5px; }
+
+  /* ── ROLE GRIDS ── */
+  .roles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    max-width: 860px;
+    margin: 0 auto 2rem auto; /* centers the first two cards */
+}
+  .roles-grid-bottom {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    max-width: 860px; margin: 0 auto;
+  }
+
+  /* ── ROLE CARD ── */
+  .role-card {
+    background: rgba(250,245,236,0.04);
+    border: 1px solid rgba(200,131,42,0.15);
+    padding: 2rem;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.7s ease both;
+  }
+  .role-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px; background: var(--caramel);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .role-card:hover { background: rgba(250,245,236,0.07); border-color: rgba(200,131,42,0.35); transform: translateY(-3px); }
+  .role-card:hover::before { transform: scaleX(1); }
+  .role-card.active { background: rgba(200,131,42,0.08); border-color: rgba(200,131,42,0.5); transform: none; }
+  .role-card.active::before { transform: scaleX(1); }
+
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.2rem; }
+  .card-icon {
+    width: 48px; height: 48px;
+    background: rgba(200,131,42,0.12);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    border: 1px solid rgba(200,131,42,0.2);
+  }
+  .card-badge {
+    font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--caramel); border: 1px solid rgba(200,131,42,0.3);
+    padding: 0.3rem 0.7rem; height: fit-content;
+  }
+  .card-role {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; color: var(--cream); margin-bottom: 0.4rem;
+  }
+  .card-access {
+    font-size: 0.78rem; color: rgba(245,239,224,0.4);
+    line-height: 1.7; margin-bottom: 1.4rem;
+  }
+  .access-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
+  .access-tag {
+    font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0.25rem 0.65rem; border: 1px solid rgba(212,169,106,0.25);
+    color: var(--latte);
+  }
+  .access-tag.locked { color: rgba(245,239,224,0.3); border-color: rgba(245,239,224,0.1); }
+
+  /* ── GUEST / BRANCH LOCATION PANEL ── */
+  .guest-location-panel {
+    display: none;
+  }
+  .guest-location-panel.open {
+    display: block;
+    animation: slideDown 0.3s ease;
+  }
+  .location-label {
+    font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--caramel); margin-bottom: 0.9rem; display: block;
+  }
+  .location-options {
+    display: flex; flex-direction: column; gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+  .location-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%;
+    background: rgba(44,26,14,0.5);
+    border: 1px solid rgba(200,131,42,0.18);
+    color: var(--cream);
+    padding: 0.85rem 1.1rem;
+    font-family: 'Jost', sans-serif; font-size: 0.88rem; letter-spacing: 1px;
+    cursor: pointer; transition: all 0.25s;
+    text-align: left;
+  }
+  .location-btn:hover {
+    background: rgba(200,131,42,0.12);
+    border-color: var(--caramel);
+    color: var(--caramel);
+  }
+  .location-btn.selected {
+    background: rgba(200,131,42,0.18);
+    border-color: var(--caramel);
+    color: var(--caramel);
+  }
+  .location-btn .loc-left { display: flex; align-items: center; gap: 0.7rem; }
+  .location-btn .loc-icon { font-size: 1.1rem; }
+  .location-btn .loc-name { font-weight: 500; }
+  .location-btn .loc-state { font-size: 0.7rem; color: rgba(245,239,224,0.3); letter-spacing: 1px; }
+  .location-btn .loc-arrow { font-size: 0.85rem; opacity: 0; transition: opacity 0.2s; }
+  .location-btn:hover .loc-arrow,
+  .location-btn.selected .loc-arrow { opacity: 1; }
+
+  .btn-guest-go {
+    width: 100%;
+    background: var(--caramel); color: var(--espresso);
+    padding: 0.9rem 1.5rem;
+    font-family: 'Jost', sans-serif; font-weight: 500;
+    font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;
+    border: none; cursor: pointer; transition: all 0.3s;
+    opacity: 0.4; pointer-events: none;
+  }
+  .btn-guest-go.ready { opacity: 1; pointer-events: all; }
+  .btn-guest-go.ready:hover { background: var(--latte); }
+
+  /* click-to-expand hint shown before card opens */
+  .guest-hint {
+    font-size: 0.72rem; color: rgba(245,239,224,0.25);
+    letter-spacing: 2px; text-transform: uppercase;
+    text-align: center; margin-top: 0.5rem;
+    transition: color 0.3s;
+  }
+  .role-card:hover .guest-hint { color: var(--caramel); }
+  .role-card.active .guest-hint { display: none; }
+
+  /* ── PASSWORD FORM ── */
+  .card-form { display: none; }
+  .card-form.open { display: block; animation: slideDown 0.3s ease; }
+  .form-group { position: relative; margin-bottom: 1rem; }
+  .form-input {
+    width: 100%;
+    background: rgba(44,26,14,0.6);
+    border: 1px solid rgba(200,131,42,0.25);
+    color: var(--cream);
+    padding: 0.85rem 3rem 0.85rem 1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.9rem; letter-spacing: 1px;
+    outline: none; transition: border-color 0.3s;
+  }
+  .form-input::placeholder { color: rgba(245,239,224,0.25); letter-spacing: 1px; }
+  .form-input:focus { border-color: var(--caramel); }
+  .toggle-pw {
+    position: absolute; right: 0.9rem; top: 50%; transform: translateY(-50%);
+    background: none; border: none; cursor: pointer;
+    color: rgba(245,239,224,0.3); font-size: 1rem; transition: color 0.3s; padding: 0;
+  }
+  .toggle-pw:hover { color: var(--caramel); }
+  .error-msg {
+    font-size: 0.75rem; color: #e06060; letter-spacing: 0.5px;
+    margin-bottom: 0.8rem; min-height: 1.1rem; display: none;
+  }
+  .error-msg.show { display: block; }
+  .btn-enter {
+    width: 100%;
+    background: var(--caramel); color: var(--espresso);
+    padding: 0.9rem 1.5rem;
+    font-family: 'Jost', sans-serif; font-weight: 500;
+    font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;
+    border: none; cursor: pointer; transition: all 0.3s;
+  }
+  .btn-enter:hover { background: var(--latte); }
+  .btn-enter:active { transform: scale(0.98); }
+  .btn-enter.loading { pointer-events: none; opacity: 0.7; }
+
+  /* Select arrow for non-guest password cards */
+  .select-arrow {
+    font-size: 0.75rem; color: rgba(245,239,224,0.25);
+    letter-spacing: 2px; text-transform: uppercase;
+    text-align: center; margin-top: 0.5rem; transition: all 0.3s;
+  }
+  .role-card:hover .select-arrow { color: var(--caramel); }
+  .role-card.active .select-arrow { display: none; }
+
+  /* ── SUCCESS OVERLAY ── */
+  .success-overlay {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(44,26,14,0.95);
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.2rem;
+  }
+  .success-overlay.show { display: flex; animation: fadeIn 0.4s ease; }
+  .success-icon { font-size: 3rem; animation: bounceIn 0.5s ease; }
+  .success-role { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--cream); }
+  .success-msg { font-size: 0.85rem; color: rgba(245,239,224,0.5); letter-spacing: 2px; text-transform: uppercase; }
+  .success-bar { width: 200px; height: 2px; background: rgba(200,131,42,0.2); margin-top: 1rem; overflow: hidden; }
+  .success-bar-fill { height: 100%; background: var(--caramel); animation: fillBar 1.5s ease forwards; }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 2.5rem 0 2rem; color: rgba(245,239,224,0.2);
+    font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase;
+  }
+  .section-divider::before, .section-divider::after {
+    content: ''; flex: 1; height: 1px; background: rgba(200,131,42,0.15);
+  }
+
+  /* ── FOOTER ── */
+  .portal-footer {
+    text-align: center; margin-top: 3rem;
+    font-size: 0.72rem; color: rgba(245,239,224,0.2); letter-spacing: 1.5px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp    { from{opacity:0;transform:translateY(24px);}  to{opacity:1;transform:translateY(0);} }
+  @keyframes fadeIn    { from{opacity:0;} to{opacity:1;} }
+  @keyframes slideDown { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
+  @keyframes pulse     { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+  @keyframes bounceIn  { 0%{transform:scale(0.5);opacity:0;} 80%{transform:scale(1.1);} 100%{transform:scale(1);opacity:1;} }
+  @keyframes fillBar   { from{width:0;} to{width:100%;} }
+
+  .role-card:nth-child(1){animation-delay:.05s}
+  .role-card:nth-child(2){animation-delay:.10s}
+  .role-card:nth-child(3){animation-delay:.15s}
+  .roles-grid-bottom .role-card:nth-child(1){animation-delay:.20s}
+  .roles-grid-bottom .role-card:nth-child(2){animation-delay:.25s}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:900px) {
+    .roles-grid { grid-template-columns: 1fr 1fr; }
+    nav { padding: 1rem 1.5rem; }
+    .page-wrap { padding: 6rem 1rem 3rem; }
+  }
+  @media(max-width:600px) {
+    .roles-grid { grid-template-columns: 1fr; }
+    .roles-grid-bottom { grid-template-columns: 1fr; max-width: 100%; }
+  }
+  .logout-btn {
+  background: none;
+  border: 1px solid rgba(212,169,106,0.3);
+  color: var(--latte);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 0.5rem 1.4rem;
+  cursor: pointer;
+  transition: color 0.3s, border-color 0.3s;
+}
+.logout-btn:hover { color: var(--caramel); border-color: var(--caramel); }
+</style>
+</head>
+<body>
+
+<div class="bg-texture"></div>
+<div class="bg-watermark">M</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">MACH <span>cafe</span></a>
+  <ul class="nav-links">
+     <li><button class="logout-btn" onclick="logout()">Logout</button></li>
+  </ul>
+</nav>
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-icon">☕</div>
+  <div class="success-role" id="successRole">Welcome</div>
+  <div class="success-msg" id="successMsg">Redirecting to your dashboard…</div>
+  <div class="success-bar"><div class="success-bar-fill"></div></div>
+</div>
+
+<!-- PAGE -->
+<div class="page-wrap">
+
+  <div class="portal-header">
+    <div class="portal-pill">
+      <span class="pill-dot"></span>
+      Staff Access Portal
+    </div>
+    <h1 class="portal-title">Select Your <em>Role</em></h1>
+    <p class="portal-sub">Choose your position to access your designated workspace</p>
+  </div>
+
+  <!-- TOP ROW: 2 cards -->
+  <div class="roles-grid">
+
+ <!-- 1. KITCHEN INVENTORY — branch picker + password -->
+    <div class="role-card" id="card-kitchen" onclick="toggleKitchen()">
+      <div class="card-header">
+        <div class="card-icon">🧑‍🍳</div>
+        <span class="card-badge">Password</span>
+      </div>
+      <div class="card-role">Kitchen Inventory</div>
+      <div class="card-access">View and manage ingredient stock, reorder levels, and usage logs.</div>
+      <div class="access-tags">
+        <span class="access-tag">Kitchen Inventory</span>
+        <span class="access-tag locked">Home</span>
+        <span class="access-tag locked">Menu</span>
+      </div>
+
+      <div class="guest-location-panel" id="kitchen-branch-panel">
+        <span class="location-label">🏪 Choose Your Branch</span>
+        <div class="location-options">
+
+          <button class="location-btn" id="kbranch-guntupalli"
+            onclick="selectKitchenBranch('guntupalli', event)">
+            <span class="loc-left">
+              <span class="loc-icon">🏙️</span>
+              <span>
+                <div class="loc-name">Guntupalli</div>
+                <div class="loc-state">Andhra Pradesh</div>
+              </span>
+            </span>
+            <span class="loc-arrow">→</span>
+          </button>
+
+          <button class="location-btn" id="kbranch-ongole"
+            onclick="selectKitchenBranch('ongole', event)">
+            <span class="loc-left">
+              <span class="loc-icon">🌊</span>
+              <span>
+                <div class="loc-name">Ongole</div>
+                <div class="loc-state">Andhra Pradesh</div>
+              </span>
+            </span>
+            <span class="loc-arrow">→</span>
+          </button>
+
+          <button class="location-btn" id="kbranch-kodaikanal"
+            onclick="selectKitchenBranch('kodaikanal', event)">
+            <span class="loc-left">
+              <span class="loc-icon">⛰️</span>
+              <span>
+                <div class="loc-name">Kodaikanal</div>
+                <div class="loc-state">Tamil Nadu</div>
+              </span>
+            </span>
+            <span class="loc-arrow">→</span>
+          </button>
+
+        </div>
+
+        <div id="kitchen-pw-section" style="display:none">
+          <div class="form-group" style="margin-bottom:0.6rem">
+            <input class="form-input" id="pw-kitchen" type="password" placeholder="Enter branch password" autocomplete="off">
+            <button class="toggle-pw" onclick="togglePw('kitchen',event)" tabindex="-1">👁</button>
+          </div>
+          <div class="error-msg" id="err-kitchen">Incorrect password. Please try again.</div>
+          <button class="btn-guest-go ready" id="btn-kitchen-go" onclick="kitchenEnter(event)">
+            Enter Kitchen Portal →
+          </button>
+        </div>
+      </div>
+
+      <div class="guest-hint" id="kitchen-hint">▾ tap to choose branch</div>
+    </div>
+
+    <!-- 2. CASHIER — branch picker + password -->
+    <div class="role-card" id="card-cashier" onclick="toggleCashier()">
+      <div class="card-header">
+        <div class="card-icon">🧾</div>
+        <span class="card-badge">Password</span>
+      </div>
+      <div class="card-role">Cashier</div>
+      <div class="card-access">Manage orders, process payments, and view that branch's printer dashboard.</div>
+      <div class="access-tags">
+        <span class="access-tag">Menu</span>
+        <span class="access-tag">Printer Dashboard</span>
+        <span class="access-tag locked">Home</span>
+      </div>
+
+      <div class="guest-location-panel" id="cashier-branch-panel">
+        <span class="location-label">🏪 Choose Your Branch</span>
+        <div class="location-options">
+
+          <button class="location-btn" id="cbranch-guntupalli"
+            onclick="selectCashierBranch('guntupalli', event)">
+            <span class="loc-left">
+              <span class="loc-icon">🏘️</span>
+              <span>
+                <div class="loc-name">Guntupalli</div>
+                <div class="loc-state">Andhra Pradesh</div>
+              </span>
+            </span>
+            <span class="loc-arrow">→</span>
+          </button>
+
+          <button class="location-btn" id="cbranch-ongole"
+            onclick="selectCashierBranch('ongole', event)">
+            <span class="loc-left">
+              <span class="loc-icon">🌊</span>
+              <span>
+                <div class="loc-name">Ongole</div>
+                <div class="loc-state">Andhra Pradesh</div>
+              </span>
+            </span>
+            <span class="loc-arrow">→</span>
+          </button>
+
+          <button class="location-btn" id="cbranch-kodaikanal"
+            onclick="selectCashierBranch('kodaikanal', event)">
+            <span class="loc-left">
+              <span class="loc-icon">⛰️</span>
+              <span>
+                <div class="loc-name">Kodaikanal</div>
+                <div class="loc-state">Tamil Nadu</div>
+              </span>
+            </span>
+            <span class="loc-arrow">→</span>
+          </button>
+
+        </div>
+
+        <div id="cashier-pw-section" style="display:none">
+          <div class="form-group" style="margin-bottom:0.6rem">
+            <input class="form-input" id="pw-cashier" type="password" placeholder="Enter branch password" autocomplete="off">
+            <button class="toggle-pw" onclick="togglePw('cashier',event)" tabindex="-1">👁</button>
+          </div>
+          <div class="error-msg" id="err-cashier">Incorrect password. Please try again.</div>
+          <button class="btn-guest-go ready" id="btn-cashier-go" onclick="cashierEnter(event)">
+            Enter Cashier Portal →
+          </button>
+        </div>
+      </div>
+
+      <div class="guest-hint" id="cashier-hint">▾ tap to choose branch</div>
+    </div>
+
+  </div><!-- /roles-grid -->
+
+  <div class="section-divider">Senior Access</div>
+
+  <!-- BOTTOM ROW: 2 cards -->
+  <div class="roles-grid-bottom">
+
+    <!-- 4. MANAGER — branch picker + per-branch password -->
+    <div class="role-card" id="card-manager" onclick="toggleManager()">
+      <div class="card-header">
+        <div class="card-icon">📋</div>
+        <span class="card-badge">Password</span>
+      </div>
+      <div class="card-role">Manager</div>
+      <div class="card-access">Full operational view — all public pages plus kitchen inventory and printer dashboard for your branch.</div>
+      <div class="access-tags">
+        <span class="access-tag">Home</span>
+        <span class="access-tag">Menu</span>
+        <span class="access-tag">Contact</span>
+        <span class="access-tag">Kitchen Inventory</span>
+        <span class="access-tag">Printer Dashboard</span>
+      </div>
+
+      <!-- Branch picker panel -->
+      <div class="guest-location-panel" id="manager-branch-panel">
+        <span class="location-label">🏪 Choose Your Branch</span>
+        <div class="location-options">
+
+          <button class="location-btn" id="mbranch-guntupalli"
+            onclick="selectManagerBranch('guntupalli', event)">
+            <span class="loc-left">
+              <span class="loc-icon">🏙️</span>
+              <span>
+                <div class="loc-name">Guntupalli</div>
+                <div class="loc-state">Andhra Pradesh</div>
+              </span>
+            </span>
+            <span class="loc-arrow">→</span>
+          </button>
+
+          <button class="location-btn" id="mbranch-ongole"
+            onclick="selectManagerBranch('ongole', event)">
+            <span class="loc-left">
+              <span class="loc-icon">🌊</span>
+              <span>
+                <div class="loc-name">Ongole</div>
+                <div class="loc-state">Andhra Pradesh</div>
+              </span>
+            </span>
+            <span class="loc-arrow">→</span>
+          </button>
+
+          <button class="location-btn" id="mbranch-kodaikanal"
+            onclick="selectManagerBranch('kodaikanal', event)">
+            <span class="loc-left">
+              <span class="loc-icon">⛰️</span>
+              <span>
+                <div class="loc-name">Kodaikanal</div>
+                <div class="loc-state">Tamil Nadu</div>
+              </span>
+            </span>
+            <span class="loc-arrow">→</span>
+          </button>
+
+        </div>
+
+        <!-- Password field shown after branch is selected -->
+        <div id="manager-pw-section" style="display:none">
+          <div class="form-group" style="margin-bottom:0.6rem">
+            <input class="form-input" id="pw-manager" type="password" placeholder="Enter branch password" autocomplete="off">
+            <button class="toggle-pw" onclick="togglePw('manager',event)" tabindex="-1">👁</button>
+          </div>
+          <div class="error-msg" id="err-manager">Incorrect password. Please try again.</div>
+          <button class="btn-guest-go ready" id="btn-manager-go" onclick="managerEnter(event)">
+            Enter Manager Portal →
+          </button>
+        </div>
+      </div>
+
+      <div class="guest-hint" id="manager-hint">▾ tap to choose branch</div>
+    </div>
+
+    <!-- 5. OWNER -->
+    <div class="role-card" id="card-owner" onclick="toggleCard('owner')">
+      <div class="card-header">
+        <div class="card-icon">👑</div>
+        <span class="card-badge">Owner</span>
+      </div>
+      <div class="card-role">Owner</div>
+      <div class="card-access">Full admin access to every page — complete system control.</div>
+      <div class="access-tags">
+        <span class="access-tag">Home</span>
+        <span class="access-tag">Menu</span>
+        <span class="access-tag">Contact</span>
+        <span class="access-tag">Kitchen Inventory</span>
+        <span class="access-tag">Printer Dashboard</span>
+      </div>
+      <div class="card-form" id="form-owner">
+        <div class="form-group">
+          <input class="form-input" id="pw-owner" type="password" placeholder="Enter owner password" autocomplete="off">
+          <button class="toggle-pw" onclick="togglePw('owner',event)" tabindex="-1">👁</button>
+        </div>
+        <div class="error-msg" id="err-owner">Incorrect password. Please try again.</div>
+        <button class="btn-enter" onclick="login('owner',event)">Enter Owner Portal</button>
+      </div>
+      <div class="select-arrow" id="arrow-owner">▾ click to unlock</div>
+    </div>
+
+  </div><!-- /roles-grid-bottom -->
+
+  <div class="portal-footer">© 2026 MACH cafe · Staff Portal </div>
+
+</div><!-- /page-wrap -->
+
+<script>
+  function logout() {
+  sessionStorage.clear();
+  localStorage.removeItem('mach_token');
+  window.location.href = 'index.html';
+}
+// ═══════════════════════════════════════════════
+//  LOCATION CONFIG (Guest)
+// ═══════════════════════════════════════════════
+const LOCATIONS = {
+  vijayawada: {
+    label    : 'Vijayawada',
+    redirect : 'home.html',
+    access   : ['home.html', 'menu.html', 'contact.html'],
+  },
+  ongole: {
+    label    : 'Ongole',
+    redirect : 'home.html',
+    access   : ['home.html', 'menu.html', 'contact.html'],
+  },
+  kodaikanal: {
+    label    : 'Kodaikanal',
+    redirect : 'home.html',
+    access   : ['home.html', 'menu.html', 'contact.html'],
+  },
+};
+
+// ═══════════════════════════════════════════════
+//  ROLE CONFIG (Owner only — single password)
+// ═══════════════════════════════════════════════
+const ROLES = {
+  owner: {
+    password : 'velvetbean2024',
+    redirect : 'owner-dashboard.html',
+    label    : 'Owner',
+    useJwt   : true,
+  },
+};
+
+// ═══════════════════════════════════════════════
+//  CASHIER BRANCH CONFIG
+// ═══════════════════════════════════════════════
+const CASHIER_BRANCHES = {
+  guntupalli: {
+    label    : 'Guntupalli',
+    password : 'cashier-gnt2024',
+    redirect : 'menu.html',
+    access   : ['menu.html', 'printer-dashboard-guntupalli.html'],
+  },
+  ongole: {
+    label    : 'Ongole',
+    password : 'cashier-ong2024',
+    redirect : 'menu.html',
+    access   : ['menu.html', 'printer-dashboard-ongole.html'],
+  },
+  kodaikanal: {
+    label    : 'Kodaikanal',
+    password : 'cashier-kod2024',
+    redirect : 'menu.html',
+    access   : ['menu.html', 'printer-dashboard-kodaikanal.html'],
+  },
+};
+
+// ═══════════════════════════════════════════════
+//  KITCHEN BRANCH CONFIG
+// ═══════════════════════════════════════════════
+const KITCHEN_BRANCHES = {
+  guntupalli: {
+    label    : 'Guntupalli',
+    password : 'kitchen-gnt2024',
+    redirect : 'kitchen-inventory-guntupalli.html',
+    access   : ['kitchen-inventory-guntupalli.html'],
+  },
+  ongole: {
+    label    : 'Ongole',
+    password : 'kitchen-ong2024',
+    redirect : 'kitchen-inventory-ongole.html',
+    access   : ['kitchen-inventory-ongole.html'],
+  },
+  kodaikanal: {
+    label    : 'Kodaikanal',
+    password : 'kitchen-kod2024',
+    redirect : 'kitchen-inventory-kodaikanal.html',
+    access   : ['kitchen-inventory-kodaikanal.html'],
+  },
+};
+
+// ═══════════════════════════════════════════════
+//  MANAGER BRANCH CONFIG  ← NEW
+//  Each branch has its own password.
+//  After login, manager gets access to all pages
+//  for that specific branch only.
+// ═══════════════════════════════════════════════
+const MANAGER_BRANCHES = {
+  guntupalli: {
+    label    : 'Guntupalli',
+    password : 'manager-gnt2024',
+    redirect : 'home_m.html',
+    access   : [
+      'home_m.html', 'men_m.html', 'contact.html',
+      'kitchen-inventory-guntupalli.html',
+      'printer-dashboard-guntupalli.html',
+    ],
+  },
+  ongole: {
+    label    : 'Ongole',
+    password : 'manager-ong2024',
+    redirect : 'home_m.html',
+    access   : [
+      'home_m.html', 'men_m.html', 'contact.html',
+      'kitchen-inventory-ongole.html',
+      'printer-dashboard-ongole.html',
+    ],
+  },
+  kodaikanal: {
+    label    : 'Kodaikanal',
+    password : 'manager-kod2024',
+    redirect : 'home_m.html',
+    access   : [
+      'home_m.html', 'men_m.html', 'contact.html',
+      'kitchen-inventory-kodaikanal.html',
+      'printer-dashboard-kodaikanal.html',
+    ],
+  },
+};
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let activeCard            = null;
+let guestOpen             = false;
+let selectedLocKey        = null;
+let cashierOpen           = false;
+let selectedCashierBranch = null;
+let kitchenOpen           = false;
+let selectedKitchenBranch = null;
+let managerOpen           = false;   // ← NEW
+let selectedManagerBranch = null;    // ← NEW
+
+// ═══════════════════════════════════════════════
+//  CLOSE ALL PANELS helper
+// ═══════════════════════════════════════════════
+function closeAll() {
+  if (activeCard) {
+    document.getElementById('card-' + activeCard).classList.remove('active');
+    try { document.getElementById('form-' + activeCard).classList.remove('open'); } catch(e){}
+    try { document.getElementById('arrow-' + activeCard).style.display = ''; } catch(e){}
+    clearError(activeCard);
+    activeCard = null;
+  }
+  if (guestOpen) {
+    document.getElementById('card-guest').classList.remove('active');
+    document.getElementById('guest-location-panel').classList.remove('open');
+    document.getElementById('guest-hint').style.display = '';
+    guestOpen = false; selectedLocKey = null;
+  }
+  if (cashierOpen) {
+    document.getElementById('card-cashier').classList.remove('active');
+    document.getElementById('cashier-branch-panel').classList.remove('open');
+    document.getElementById('cashier-hint').style.display = '';
+    cashierOpen = false; selectedCashierBranch = null;
+  }
+  if (kitchenOpen) {
+    document.getElementById('card-kitchen').classList.remove('active');
+    document.getElementById('kitchen-branch-panel').classList.remove('open');
+    document.getElementById('kitchen-hint').style.display = '';
+    kitchenOpen = false; selectedKitchenBranch = null;
+  }
+  if (managerOpen) {
+    document.getElementById('card-manager').classList.remove('active');
+    document.getElementById('manager-branch-panel').classList.remove('open');
+    document.getElementById('manager-hint').style.display = '';
+    managerOpen = false; selectedManagerBranch = null;
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  GUEST — toggle location panel
+// ═══════════════════════════════════════════════
+function toggleGuest() {
+  const wasOpen = guestOpen;
+  closeAll();
+  if (wasOpen) return;
+
+  const card  = document.getElementById('card-guest');
+  const panel = document.getElementById('guest-location-panel');
+  const hint  = document.getElementById('guest-hint');
+
+  guestOpen = true;
+  card.classList.add('active');
+  panel.classList.add('open');
+  hint.style.display = 'none';
+}
+
+function selectLocation(key, e) {
+  e.stopPropagation();
+  selectedLocKey = key;
+  document.querySelectorAll('.location-btn[id^="loc-"]').forEach(b => b.classList.remove('selected'));
+  document.getElementById('loc-' + key).classList.add('selected');
+  document.getElementById('btn-guest-go').classList.add('ready');
+}
+
+function guestEnter(e) {
+  e.stopPropagation();
+  if (!selectedLocKey) return;
+  const loc = LOCATIONS[selectedLocKey];
+  sessionStorage.setItem('mach_role',     'guest');
+  sessionStorage.setItem('mach_location', selectedLocKey);
+  sessionStorage.setItem('mach_access',   JSON.stringify(loc.access));
+  showSuccess('Guest — ' + loc.label, 'Opening ' + loc.label + ' branch…');
+  setTimeout(() => { window.location.href = loc.redirect; }, 1600);
+}
+
+// ═══════════════════════════════════════════════
+//  KITCHEN — toggle branch panel
+// ═══════════════════════════════════════════════
+function toggleKitchen() {
+  const wasOpen = kitchenOpen;
+  closeAll();
+  if (wasOpen) return;
+
+  const card  = document.getElementById('card-kitchen');
+  const panel = document.getElementById('kitchen-branch-panel');
+  const hint  = document.getElementById('kitchen-hint');
+
+  kitchenOpen = true;
+  card.classList.add('active');
+  panel.classList.add('open');
+  hint.style.display = 'none';
+}
+
+function selectKitchenBranch(key, e) {
+  e.stopPropagation();
+  selectedKitchenBranch = key;
+  document.querySelectorAll('[id^="kbranch-"]').forEach(b => b.classList.remove('selected'));
+  document.getElementById('kbranch-' + key).classList.add('selected');
+  document.getElementById('kitchen-pw-section').style.display = 'block';
+  clearError('kitchen');
+  document.getElementById('pw-kitchen').value = '';
+  setTimeout(() => document.getElementById('pw-kitchen').focus(), 50);
+}
+
+function kitchenEnter(e) {
+  e.stopPropagation();
+  if (!selectedKitchenBranch) return;
+  const branch = KITCHEN_BRANCHES[selectedKitchenBranch];
+  const pw     = document.getElementById('pw-kitchen').value;
+  if (pw !== branch.password) { showError('kitchen'); return; }
+  sessionStorage.setItem('mach_role',     'kitchen');
+  sessionStorage.setItem('mach_location', selectedKitchenBranch);
+  sessionStorage.setItem('mach_access',   JSON.stringify(branch.access));
+  showSuccess('Kitchen — ' + branch.label, 'Opening ' + branch.label + ' kitchen…');
+  setTimeout(() => { window.location.href = branch.redirect; }, 1600);
+}
+
+// ═══════════════════════════════════════════════
+//  CASHIER — toggle branch panel
+// ═══════════════════════════════════════════════
+function toggleCashier() {
+  const wasOpen = cashierOpen;
+  closeAll();
+  if (wasOpen) return;
+
+  const card  = document.getElementById('card-cashier');
+  const panel = document.getElementById('cashier-branch-panel');
+  const hint  = document.getElementById('cashier-hint');
+
+  cashierOpen = true;
+  card.classList.add('active');
+  panel.classList.add('open');
+  hint.style.display = 'none';
+}
+
+function selectCashierBranch(key, e) {
+  e.stopPropagation();
+  selectedCashierBranch = key;
+  document.querySelectorAll('[id^="cbranch-"]').forEach(b => b.classList.remove('selected'));
+  document.getElementById('cbranch-' + key).classList.add('selected');
+  document.getElementById('cashier-pw-section').style.display = 'block';
+  clearError('cashier');
+  document.getElementById('pw-cashier').value = '';
+  setTimeout(() => document.getElementById('pw-cashier').focus(), 50);
+}
+
+function cashierEnter(e) {
+  e.stopPropagation();
+  if (!selectedCashierBranch) return;
+  const branch = CASHIER_BRANCHES[selectedCashierBranch];
+  const pw     = document.getElementById('pw-cashier').value;
+  if (pw !== branch.password) { showError('cashier'); return; }
+  sessionStorage.setItem('mach_role',     'cashier');
+  sessionStorage.setItem('mach_location', selectedCashierBranch);
+  sessionStorage.setItem('mach_access',   JSON.stringify(branch.access));
+  showSuccess('Cashier — ' + branch.label, 'Opening ' + branch.label + ' cashier portal…');
+  setTimeout(() => { window.location.href = branch.redirect; }, 1600);
+}
+
+// ═══════════════════════════════════════════════
+//  MANAGER — toggle branch panel  ← NEW
+// ═══════════════════════════════════════════════
+function toggleManager() {
+  const wasOpen = managerOpen;
+  closeAll();
+  if (wasOpen) return;
+
+  const card  = document.getElementById('card-manager');
+  const panel = document.getElementById('manager-branch-panel');
+  const hint  = document.getElementById('manager-hint');
+
+  managerOpen = true;
+  card.classList.add('active');
+  panel.classList.add('open');
+  hint.style.display = 'none';
+}
+
+function selectManagerBranch(key, e) {
+  e.stopPropagation();
+  selectedManagerBranch = key;
+  document.querySelectorAll('[id^="mbranch-"]').forEach(b => b.classList.remove('selected'));
+  document.getElementById('mbranch-' + key).classList.add('selected');
+  document.getElementById('manager-pw-section').style.display = 'block';
+  clearError('manager');
+  document.getElementById('pw-manager').value = '';
+  setTimeout(() => document.getElementById('pw-manager').focus(), 50);
+}
+
+function managerEnter(e) {
+  e.stopPropagation();
+  if (!selectedManagerBranch) return;
+  const branch = MANAGER_BRANCHES[selectedManagerBranch];
+  const pw     = document.getElementById('pw-manager').value;
+  if (pw !== branch.password) { showError('manager'); return; }
+  sessionStorage.setItem('mach_role',     'manager');
+  sessionStorage.setItem('mach_location', selectedManagerBranch);
+  sessionStorage.setItem('mach_access',   JSON.stringify(branch.access));
+  showSuccess('Manager — ' + branch.label, 'Opening ' + branch.label + ' manager portal…');
+  setTimeout(() => { window.location.href = branch.redirect; }, 1600);
+}
+
+// ═══════════════════════════════════════════════
+//  OWNER — single password card toggle
+// ═══════════════════════════════════════════════
+function toggleCard(role) {
+  const wasActive = (activeCard === role);
+  closeAll();
+  if (wasActive) return;
+
+  const card  = document.getElementById('card-' + role);
+  const form  = document.getElementById('form-' + role);
+  const arrow = document.getElementById('arrow-' + role);
+
+  card.classList.add('active');
+  form.classList.add('open');
+  arrow.style.display = 'none';
+  activeCard = role;
+  setTimeout(() => document.getElementById('pw-' + role).focus(), 50);
+}
+
+// ═══════════════════════════════════════════════
+//  TOGGLE PASSWORD VISIBILITY
+// ═══════════════════════════════════════════════
+function togglePw(role, e) {
+  e.stopPropagation();
+  const inp = document.getElementById('pw-' + role);
+  inp.type  = inp.type === 'password' ? 'text' : 'password';
+}
+
+// ═══════════════════════════════════════════════
+//  OWNER LOGIN (JWT)
+// ═══════════════════════════════════════════════
+async function login(role, e) {
+  e.stopPropagation();
+  const config = ROLES[role];
+  const pw     = document.getElementById('pw-' + role).value;
+  const btn    = e.target;
+
+  clearError(role);
+  btn.textContent = 'Verifying…';
+  btn.classList.add('loading');
+
+  try {
+    if (config.useJwt) {
+      const resp = await fetch('/api/owner/login', {
+        method  : 'POST',
+        headers : { 'Content-Type': 'application/json' },
+        body    : JSON.stringify({ password: pw }),
+      });
+      const data = await resp.json();
+      if (!data.success) throw new Error('wrong');
+      localStorage.setItem('mach_token', data.token);
+      sessionStorage.setItem('mach_role', 'owner');
+    } else {
+      if (pw !== config.password) throw new Error('wrong');
+      sessionStorage.setItem('mach_role', role);
+    }
+
+    sessionStorage.setItem('mach_access', JSON.stringify(getOwnerAccess()));
+    showSuccess(config.label, 'Redirecting to your dashboard…');
+    setTimeout(() => { window.location.href = config.redirect; }, 1600);
+
+  } catch {
+    showError(role);
+    btn.textContent = 'Enter Owner Portal';
+    btn.classList.remove('loading');
+  }
+}
+
+function getOwnerAccess() {
+  return [
+    'home.html', 'menu.html', 'contact.html',
+    'kitchen-inventory-guntupalli.html', 'kitchen-inventory-ongole.html', 'kitchen-inventory-kodaikanal.html',
+    'printer-dashboard-guntupalli.html', 'printer-dashboard-ongole.html', 'printer-dashboard-kodaikanal.html',
+  ];
+}
+
+// ═══════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════
+function showError(role) {
+  document.getElementById('err-' + role).classList.add('show');
+  document.getElementById('pw-'  + role).value = '';
+  document.getElementById('pw-'  + role).focus();
+}
+function clearError(role) {
+  const el = document.getElementById('err-' + role);
+  if (el) el.classList.remove('show');
+}
+function showSuccess(roleLabel, msg) {
+  document.getElementById('successRole').textContent = 'Welcome, ' + roleLabel;
+  document.getElementById('successMsg').textContent  = msg || 'Redirecting…';
+  document.getElementById('successOverlay').classList.add('show');
+}
+
+// ═══════════════════════════════════════════════
+//  ENTER KEY for password fields
+// ═══════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  // Owner card (activeCard)
+  if (activeCard) {
+    const btn = document.querySelector(`#form-${activeCard} .btn-enter`);
+    if (btn) { btn.click(); return; }
+  }
+  // Branch portals
+  if (kitchenOpen && selectedKitchenBranch) { document.getElementById('btn-kitchen-go').click(); return; }
+  if (cashierOpen && selectedCashierBranch) { document.getElementById('btn-cashier-go').click(); return; }
+  if (managerOpen && selectedManagerBranch) { document.getElementById('btn-manager-go').click(); return; }
+});
+
+// ═══════════════════════════════════════════════
+//  AUTO-REDIRECT if already logged in this session
+// ═══════════════════════════════════════════════
+(function checkExisting() {
+  const role   = sessionStorage.getItem('mach_role');
+  const locKey = sessionStorage.getItem('mach_location');
+
+  if (role === 'guest' && locKey && LOCATIONS[locKey]) {
+    const loc = LOCATIONS[locKey];
+    showSuccess('Guest — ' + loc.label, 'Opening ' + loc.label + ' branch…');
+    setTimeout(() => { window.location.href = loc.redirect; }, 1200);
+  } else if (role === 'kitchen' && locKey && KITCHEN_BRANCHES[locKey]) {
+    const branch = KITCHEN_BRANCHES[locKey];
+    showSuccess('Kitchen — ' + branch.label, 'Opening ' + branch.label + ' kitchen…');
+    setTimeout(() => { window.location.href = branch.redirect; }, 1200);
+  } else if (role === 'cashier' && locKey && CASHIER_BRANCHES[locKey]) {
+    const branch = CASHIER_BRANCHES[locKey];
+    showSuccess('Cashier — ' + branch.label, 'Opening ' + branch.label + ' cashier portal…');
+    setTimeout(() => { window.location.href = branch.redirect; }, 1200);
+  } else if (role === 'manager' && locKey && MANAGER_BRANCHES[locKey]) {
+    const branch = MANAGER_BRANCHES[locKey];
+    showSuccess('Manager — ' + branch.label, 'Opening ' + branch.label + ' manager portal…');
+    setTimeout(() => { window.location.href = branch.redirect; }, 1200);
+  } else if (role === 'owner' && ROLES['owner']) {
+    showSuccess(ROLES['owner'].label, 'Redirecting to your dashboard…');
+    setTimeout(() => { window.location.href = ROLES['owner'].redirect; }, 1200);
+  }
+})();
+</script>
+</body>
+</html>

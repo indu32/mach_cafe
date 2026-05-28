@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MACH Cafe — Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --cream: #FFFFFF; --espresso: #3B1F0C; --mocha: #5A3520;
+    --caramel: #7B4F2E; --latte: #A0714F; --foam: #F8F8F8;
+    --text: #2A1408; --muted: #8A6B55;
+  }
+
+  .logout-btn {
+  background: none;
+  border: 1px solid rgba(212,169,106,0.3);
+  color: var(--latte);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 0.5rem 1.4rem;
+  cursor: pointer; transition: all 0.3s;
+}
+.logout-btn:hover { color: var(--caramel); border-color: var(--caramel); }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Jost', sans-serif; background: var(--foam); color: var(--text); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(123,79,46,0.2);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--espresso); letter-spacing: 1px; text-decoration: none; }
+  .nav-logo span { color: var(--caramel); }
+  .nav-links { display: flex; gap: 0; list-style: none; }
+  .nav-links a { text-decoration: none; font-size: 0.78rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: var(--mocha); padding: 0.5rem 1.4rem; transition: all 0.3s; border-bottom: 2px solid transparent; }
+  .nav-links a:hover { color: var(--caramel); }
+  .nav-links a.active { color: var(--caramel); border-bottom-color: var(--caramel); }
+  .nav-reserve { background: var(--espresso); color: var(--cream) !important; padding: 0.6rem 1.6rem !important; border-bottom: none !important; }
+  .nav-reserve:hover { background: var(--mocha) !important; }
+
+  .menu-hero { min-height: 38vh; background: var(--espresso); display: flex; align-items: flex-end; padding: 4rem 4rem 3rem; position: relative; overflow: hidden; }
+  .menu-hero::before { content: 'MENU'; position: absolute; right: -1rem; bottom: -2rem; font-family: 'Playfair Display', serif; font-size: 22vw; font-weight: 700; color: rgba(255,255,255,0.025); line-height: 1; pointer-events: none; }
+  .menu-hero-content { position: relative; z-index: 2; padding-top: 5rem; }
+  .menu-tag { font-size: 0.72rem; letter-spacing: 4px; text-transform: uppercase; color: var(--caramel); margin-bottom: 1rem; display: block; }
+  .menu-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem,6vw,5rem); color: var(--cream); line-height: 1.05; }
+  .menu-title em { color: var(--caramel); font-style: italic; }
+  .menu-sub { color: rgba(245,239,224,0.5); font-size: 1rem; margin-top: 1rem; max-width: 500px; line-height: 1.7; }
+
+  .menu-nav { position: sticky; top: 68px; z-index: 80; background: var(--espresso); padding: 0 4rem; display: flex; gap: 0; border-bottom: 1px solid rgba(255,255,255,0.05); overflow-x: auto; }
+  .menu-nav::-webkit-scrollbar { display: none; }
+  .mnav-btn { padding: 1.1rem 1.8rem; background: none; border: none; border-bottom: 3px solid transparent; font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: rgba(245,239,224,0.45); cursor: pointer; transition: all 0.3s; white-space: nowrap; }
+  .mnav-btn:hover { color: var(--cream); }
+  .mnav-btn.active { color: var(--caramel); border-bottom-color: var(--caramel); }
+
+  .menu-section { padding: 5rem 4rem; }
+  .menu-section:nth-child(odd) { background: var(--foam); }
+  .menu-section:nth-child(even) { background: var(--cream); }
+  .sec-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 2.5rem; border-bottom: 1px solid rgba(123,79,46,0.15); padding-bottom: 1.5rem; }
+  .sec-icon { font-size: 2.5rem; }
+  .sec-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--espresso); margin-left: 1rem; }
+  .sec-desc { font-size: 0.85rem; color: var(--muted); max-width: 300px; line-height: 1.6; text-align: right; }
+
+  .items-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5px; }
+  .item-card { background: var(--foam); padding: 2rem 1.8rem; position: relative; overflow: hidden; cursor: default; transition: transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; }
+  .menu-section:nth-child(even) .item-card { background: var(--foam); }
+  .menu-section:nth-child(odd) .item-card { background: var(--cream); }
+  .item-card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; background: var(--caramel); transform: scaleY(0); transform-origin: bottom; transition: transform 0.35s; }
+  .item-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(44,26,14,0.1); }
+  .item-card:hover::before { transform: scaleY(1); }
+  .item-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.8rem; }
+  .item-emoji { font-size: 2rem; }
+  .item-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: flex-end; }
+  .badge { font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 1px; }
+  .badge-hot { background: rgba(123,79,46,0.12); color: var(--caramel); }
+  .badge-new { background: rgba(44,26,14,0.08); color: var(--espresso); }
+  .badge-vegan { background: rgba(76,153,76,0.1); color: #3a7a3a; }
+  .badge-cold { background: rgba(76,130,200,0.1); color: #2a5eaa; }
+  .badge-limited { background: rgba(180,60,60,0.1); color: #a03030; }
+  .item-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--espresso); margin-bottom: 0.5rem; }
+  .item-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.65; flex: 1; margin-bottom: 1.2rem; }
+  .item-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(123,79,46,0.1); }
+  .item-price { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--caramel); }
+  .item-add { background: var(--espresso); color: var(--cream); border: none; width: 34px; height: 34px; cursor: pointer; font-size: 1.2rem; transition: background 0.3s; display: flex; align-items: center; justify-content: center; }
+  .item-add:hover { background: var(--caramel); }
+  .item-card.featured { grid-column: span 3; flex-direction: row; align-items: center; gap: 3rem; background: var(--espresso) !important; padding: 3rem; }
+  .item-card.featured::before { width: 100%; height: 4px; bottom: 0; top: auto; transform: scaleX(0); transform-origin: left; }
+  .item-card.featured:hover::before { transform: scaleX(1); }
+  .featured-visual { font-size: 5rem; flex-shrink: 0; }
+  .item-card.featured .item-name { font-size: 1.8rem; color: var(--cream); margin-bottom: 0.8rem; }
+  .item-card.featured .item-desc { font-size: 0.9rem; color: rgba(245,239,224,0.55); margin-bottom: 0; }
+  .item-card.featured .item-price { font-size: 2rem; color: var(--caramel); }
+  .item-card.featured .item-footer { border-top-color: rgba(255,255,255,0.08); }
+  .item-card.featured .item-add { width: 42px; height: 42px; }
+  .featured-tag { font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--caramel); border: 1px solid rgba(123,79,46,0.3); padding: 0.3rem 0.8rem; display: inline-block; margin-bottom: 0.8rem; }
+
+  .dietary { background: var(--espresso); padding: 4rem; display: flex; gap: 3rem; align-items: center; }
+  .dietary-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--cream); min-width: 280px; }
+  .dietary-title em { color: var(--caramel); font-style: italic; }
+  .dietary-tags { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+  .dtag { font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; padding: 0.5rem 1.2rem; border: 1px solid rgba(245,239,224,0.15); color: rgba(245,239,224,0.6); transition: all 0.3s; cursor: default; }
+  .dtag:hover { border-color: var(--caramel); color: var(--caramel); }
+
+  .cart-fab { position: fixed; bottom: 2rem; right: 2rem; z-index: 200; background: var(--espresso); color: #fff; border: none; padding: 1rem 1.6rem; font-family: 'Jost', sans-serif; font-size: 0.82rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 0.7rem; box-shadow: 0 8px 32px rgba(0,0,0,0.3); transition: background 0.3s, transform 0.2s; }
+  .cart-fab:hover { background: var(--caramel); transform: translateY(-2px); }
+  .cart-count { background: var(--caramel); color: #fff; border-radius: 50%; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+  .cart-fab.hidden { display: none; }
+
+  .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .cart-overlay.open { opacity: 1; pointer-events: auto; }
+  .cart-panel { position: fixed; top: 0; right: -480px; width: 460px; max-width: 100vw; height: 100vh; background: var(--foam); z-index: 301; display: flex; flex-direction: column; box-shadow: -8px 0 40px rgba(0,0,0,0.2); transition: right 0.35s cubic-bezier(0.4,0,0.2,1); }
+  .cart-panel.open { right: 0; }
+  .cart-header { padding: 1.8rem 2rem; background: var(--espresso); color: #fff; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .cart-header h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; }
+  .cart-header-sub { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; margin-top: 0.2rem; }
+  .cart-close { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; opacity: 0.6; transition: opacity 0.2s; }
+  .cart-close:hover { opacity: 1; }
+  .cart-items { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; }
+  .cart-empty { text-align: center; padding: 4rem 1rem; color: var(--muted); }
+  .cart-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .cart-item { display: flex; gap: 1rem; align-items: flex-start; padding: 1.2rem 0; border-bottom: 1px solid rgba(123,79,46,0.1); }
+  .cart-item-emoji { font-size: 1.5rem; flex-shrink: 0; }
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-weight: 500; font-size: 0.9rem; color: var(--espresso); margin-bottom: 0.2rem; }
+  .cart-item-price { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--caramel); }
+  .cart-item-controls { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+  .qty-btn { width: 26px; height: 26px; border: 1px solid rgba(123,79,46,0.25); background: none; cursor: pointer; font-size: 0.9rem; color: var(--espresso); display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+  .qty-btn:hover { background: var(--espresso); color: #fff; border-color: var(--espresso); }
+  .qty-val { font-size: 0.9rem; font-weight: 600; min-width: 20px; text-align: center; color: var(--espresso); }
+  .cart-item-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; margin-left: auto; padding: 0.2rem; transition: color 0.2s; }
+  .cart-item-remove:hover { color: #c0392b; }
+  .cart-footer { padding: 1.5rem 2rem; background: var(--cream); border-top: 1px solid rgba(123,79,46,0.1); flex-shrink: 0; }
+  .cart-subtotal { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .cart-tax { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--muted); margin-bottom: 0.8rem; }
+  .cart-total { display: flex; justify-content: space-between; font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--espresso); border-top: 1px solid rgba(123,79,46,0.15); padding-top: 0.8rem; margin-bottom: 1.2rem; }
+  .btn-place-order { width: 100%; padding: 1.1rem; background: var(--espresso); color: #fff; border: none; font-family: 'Jost', sans-serif; font-size: 0.82rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: background 0.3s; }
+  .btn-place-order:hover { background: var(--caramel); }
+  .btn-place-order:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .cust-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 500; display: none; align-items: center; justify-content: center; padding: 1rem; }
+  .cust-overlay.open { display: flex; }
+  .cust-modal { background: #fff; width: 100%; max-width: 500px; box-shadow: 0 20px 80px rgba(0,0,0,0.35); }
+  .cust-header { background: var(--espresso); color: #fff; padding: 1.8rem 2.5rem; display: flex; align-items: center; justify-content: space-between; }
+  .cust-header h2 { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
+  .cust-sub { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; margin-top: 0.2rem; }
+  .cust-close { background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; opacity: 0.6; }
+  .cust-close:hover { opacity: 1; }
+  .cust-body { padding: 2rem 2.5rem; }
+  .cust-hint { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.6; background: rgba(123,79,46,0.06); padding: 0.8rem 1rem; border-left: 3px solid var(--caramel); }
+  .cust-field { margin-bottom: 1.2rem; }
+  .cust-field label { display: block; font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+  .cust-field input, .cust-field select { width: 100%; padding: 0.75rem 1rem; border: 1px solid rgba(123,79,46,0.25); font-family: 'Jost', sans-serif; font-size: 0.9rem; color: var(--espresso); background: var(--foam); outline: none; transition: border-color 0.2s; }
+  .cust-field input:focus, .cust-field select:focus { border-color: var(--caramel); }
+  .cust-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .field-error { font-size: 0.72rem; color: #c0392b; margin-top: 0.3rem; display: none; }
+  .cust-field.has-error .field-error { display: block; }
+  .cust-field.has-error input { border-color: #c0392b; }
+  .phone-wrap { position: relative; }
+  .phone-lookup { position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); background: var(--espresso); color: #fff; border: none; padding: 0.3rem 0.7rem; font-size: 0.68rem; letter-spacing: 1px; cursor: pointer; }
+  .phone-lookup:hover { background: var(--caramel); }
+  .returning-tag { font-size: 0.72rem; color: #3a7a3a; background: rgba(76,153,76,0.1); padding: 0.4rem 0.8rem; display: none; margin-top: 0.4rem; }
+  .cust-actions { display: flex; gap: 1rem; padding: 1.5rem 2.5rem; background: var(--foam); border-top: 1px solid rgba(123,79,46,0.1); }
+  .cust-submit { flex: 1; padding: 1rem; background: var(--espresso); color: #fff; border: none; font-family: 'Jost', sans-serif; font-size: 0.82rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: background 0.3s; }
+  .cust-submit:hover { background: var(--caramel); }
+  .cust-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .cust-cancel { padding: 1rem 1.4rem; background: none; color: var(--espresso); border: 1px solid rgba(123,79,46,0.3); font-family: 'Jost', sans-serif; font-size: 0.82rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
+  .cust-cancel:hover { border-color: var(--espresso); }
+
+  .invoice-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 600; display: none; align-items: center; justify-content: center; padding: 1rem; }
+  .invoice-overlay.open { display: flex; }
+  .invoice-modal { background: #fff; width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 80px rgba(0,0,0,0.35); }
+  .inv-header { background: var(--espresso); color: #fff; padding: 2rem 2.5rem; }
+  .inv-logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 0.3rem; }
+  .inv-logo span { color: var(--caramel); }
+  .inv-meta { font-size: 0.75rem; opacity: 0.5; letter-spacing: 1px; }
+  .inv-status { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; background: rgba(76,153,76,0.15); color: #5aaa5a; padding: 0.3rem 0.8rem; margin-top: 0.5rem; }
+  .inv-body { padding: 2rem 2.5rem; }
+  .inv-row { display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; }
+  .inv-field label { font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 0.25rem; }
+  .inv-field p { font-size: 0.9rem; color: var(--espresso); font-weight: 500; }
+  .inv-cust-box { background: rgba(123,79,46,0.05); border: 1px solid rgba(123,79,46,0.12); padding: 1rem 1.2rem; margin-bottom: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  .inv-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+  .inv-table th { text-align: left; font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 0.7rem 0.5rem; border-bottom: 1px solid rgba(123,79,46,0.2); }
+  .inv-table td { padding: 0.8rem 0.5rem; font-size: 0.87rem; color: var(--espresso); border-bottom: 1px solid rgba(123,79,46,0.07); }
+  .inv-table td:last-child { text-align: right; font-family: 'Playfair Display', serif; color: var(--caramel); }
+  .inv-table th:last-child { text-align: right; }
+  .inv-line { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .inv-grand { display: flex; justify-content: space-between; font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--espresso); border-top: 2px solid var(--espresso); padding-top: 0.8rem; margin-top: 0.8rem; }
+  .inv-note { font-size: 0.78rem; color: var(--muted); text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(123,79,46,0.1); line-height: 1.6; }
+  .inv-actions { display: flex; gap: 1rem; padding: 1.5rem 2.5rem; background: var(--foam); border-top: 1px solid rgba(123,79,46,0.1); }
+  .inv-btn { flex: 1; padding: 0.9rem; border: none; font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; }
+  .inv-btn-primary { background: var(--espresso); color: #fff; }
+  .inv-btn-primary:hover { background: var(--caramel); }
+  .inv-btn-secondary { background: none; color: var(--espresso); border: 1px solid rgba(123,79,46,0.3); }
+  .inv-btn-secondary:hover { border-color: var(--espresso); }
+
+  footer { background: #180C04; padding: 3rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+  .f-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--cream); }
+  .f-logo span { color: var(--caramel); }
+  .f-links { display: flex; gap: 2rem; list-style: none; }
+  .f-links a { text-decoration: none; font-size: 0.75rem; color: rgba(245,239,224,0.35); letter-spacing: 2px; text-transform: uppercase; transition: color 0.3s; }
+  .f-links a:hover { color: var(--caramel); }
+  .f-copy { font-size: 0.75rem; color: rgba(245,239,224,0.25); }
+
+/* ── Owner Quick Access Bar ── */
+.owner-bar { position: fixed; bottom: 2rem; left: 2rem; z-index: 200; display: flex; flex-direction: column; gap: 0.5rem; }
+.owner-bar-btn { display: flex; align-items: center; gap: 0.6rem; padding: 0.7rem 1.2rem; background: rgba(59,31,12,0.92); backdrop-filter: blur(8px); color: #fff; border: 1px solid rgba(255,255,255,0.1); font-family: 'Jost', sans-serif; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: background 0.2s, transform 0.2s; white-space: nowrap; }
+.owner-bar-btn:hover { background: rgba(123,79,46,0.95); transform: translateX(4px); }
+.owner-bar-btn .btn-icon { font-size: 1rem; }
+.owner-bar-toggle { width: 42px; height: 42px; background: var(--espresso); border: none; color: #fff; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); transition: background 0.2s; align-self: flex-start; }
+.owner-bar-toggle:hover { background: var(--caramel); }
+.owner-links { display: flex; flex-direction: column; gap: 0.5rem; overflow: hidden; max-height: 0; transition: max-height 0.35s ease, opacity 0.3s; opacity: 0; }
+.owner-links.open { max-height: 300px; opacity: 1; }
+
+/* ── Excel Upload Banner ── */
+#excel-banner {
+  background: linear-gradient(135deg, #3B1F0C 0%, #5A3520 100%);
+  border-bottom: 3px solid var(--caramel);
+  padding: 1rem 4rem;
+  display: flex; align-items: center; gap: 1.5rem;
+  flex-wrap: wrap;
+  position: relative; z-index: 90;
+}
+#excel-banner.hidden { display: none; }
+.excel-banner-icon { font-size: 1.8rem; flex-shrink: 0; }
+.excel-banner-text { flex: 1; }
+.excel-banner-title { font-family: 'Playfair Display', serif; font-size: 1rem; color: #fff; margin-bottom: 0.15rem; }
+.excel-banner-sub { font-size: 0.75rem; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
+.excel-upload-btn {
+  background: var(--caramel); color: #fff; border: none;
+  padding: 0.65rem 1.5rem; font-family: 'Jost', sans-serif;
+  font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase;
+  cursor: pointer; transition: background 0.3s; white-space: nowrap;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.excel-upload-btn:hover { background: #9B6040; }
+.excel-status {
+  font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 0.4rem 0.9rem; border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.7); white-space: nowrap;
+}
+.excel-status.ok { border-color: #5aaa5a; color: #7acc7a; }
+.excel-status.err { border-color: #c05a5a; color: #e07a7a; }
+#excel-file-input { display: none; }
+
+
+/* ── Nav Excel Upload Button ── */
+.nav-excel-btn {
+  display: flex; align-items: center; gap: 0.5rem;
+  background: var(--caramel); color: #fff; border: none;
+  padding: 0.5rem 1.2rem; font-family: 'Jost', sans-serif;
+  font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase;
+  cursor: pointer; transition: background 0.25s; white-space: nowrap;
+}
+.nav-excel-btn:hover { background: var(--mocha); }
+.nav-excel-status {
+  font-size: 0.72rem; letter-spacing: 1px;
+  color: var(--caramel); white-space: nowrap; padding: 0 0.5rem;
+  display: none;
+}
+.nav-excel-status.show { display: inline; }
+/* ── Out-of-stock overlay ── */
+.item-card.oos { opacity: 0.55; pointer-events: none; }
+.item-card.oos .item-add { background: #999; cursor: not-allowed; }
+.oos-badge {
+  font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase;
+  background: rgba(180,60,60,0.13); color: #a03030;
+  padding: 0.2rem 0.6rem; border-radius: 1px; margin-left: 0.4rem;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="home.html" class="nav-logo">MACH <em style="color:var(--caramel);font-style:italic">Cafe</em></a>
+  <ul class="nav-links">
+    <!--<li><a href="home.html">Home</a></li>
+    <li><a href="menu.html" class="active">Menu</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="contact.html" class="nav-reserve">Reserve a Table</a></li> -->
+    <li>
+      <input type="file" id="nav-excel-input" accept=".xlsx,.xls" style="display:none" onchange="handleExcelUpload(event)" />
+      <button class="nav-excel-btn" onclick="document.getElementById('nav-excel-input').click()" title="Upload Excel to replace all menu items in DB. Only needed when your menu changes.">
+        📊 Update Menu
+      </button>
+      <span class="nav-excel-status" id="nav-excel-status"></span>
+    </li>
+    <li><button class="logout-btn" onclick="logout()">Logout</button></li>
+  </ul>
+</nav>
+
+<div class="menu-hero">
+  <div class="menu-hero-content">
+    <span class="menu-tag">Crafted with Intention</span>
+    <div class="menu-title">Our Full <em>Menu</em></div>
+    <p class="menu-sub">Every cup, every bite — made in-house with obsessive attention to quality, flavour, and craft. From your first morning espresso to the last dessert of the evening.</p>
+  </div>
+</div>
+
+<div class="menu-nav" id="menu-nav">
+  <button class="mnav-btn active" onclick="scrollToSection('coffees', this)">Coffees</button>
+  <button class="mnav-btn" onclick="scrollToSection('cold', this)">Cold & Iced</button>
+  <button class="mnav-btn" onclick="scrollToSection('shakes', this)">Shakes & Specials</button>
+  <button class="mnav-btn" onclick="scrollToSection('food', this)">Food</button>
+  <button class="mnav-btn" onclick="scrollToSection('snacks', this)">Snacks</button>
+  <button class="mnav-btn" onclick="scrollToSection('desserts', this)">Desserts</button>
+</div>
+
+<!-- ▼▼▼ EXCEL UPLOAD BANNER — Upload your menu Excel file here ▼▼▼ -->
+<div id="excel-banner">
+  <span class="excel-banner-icon">📊</span>
+  <div class="excel-banner-text">
+    <div class="excel-banner-title">Load Menu from Excel</div>
+    <div class="excel-banner-sub">One-time upload — items save permanently to DB. No need to re-upload every visit.</div>
+  </div>
+  <input type="file" id="excel-file-input" accept=".xlsx,.xls" onchange="handleExcelUpload(event)" />
+  <button class="excel-upload-btn" onclick="document.getElementById('excel-file-input').click()">
+    📂 Choose Excel File
+  </button>
+  <span class="excel-status" id="excel-status">No file loaded</span>
+</div>
+<!-- ▲▲▲ END EXCEL UPLOAD BANNER ▲▲▲ -->
+
+
+<!-- keep the section tag, empty the inside.... makes to load data from db -->
+<section class="menu-section" id="coffees"></section>
+<section class="menu-section" id="cold"></section>
+<section class="menu-section" id="shakes"></section>
+<section class="menu-section" id="food"></section>
+<section class="menu-section" id="snacks"></section>
+<section class="menu-section" id="desserts"></section>
+
+
+<div class="dietary">
+  <div class="dietary-title">We cater to <em>every</em> table.</div>
+  <div class="dietary-tags">
+    <span class="dtag">✓ Vegan Options</span>
+    <span class="dtag">✓ Gluten-Free Available</span>
+    <span class="dtag">✓ Nut-Free on Request</span>
+    <span class="dtag">✓ Dairy-Free Milk: Oat · Almond · Coconut · Soy</span>
+    <span class="dtag">✓ Sugar-Free Syrups</span>
+    <span class="dtag">✓ Diabetic-Friendly Options</span>
+  </div>
+</div>
+
+<!-- CART BUTTON -->
+<button class="cart-fab hidden" id="cart-fab" onclick="openCart()">
+  🛒 View Order &nbsp;<span class="cart-count" id="cart-count">0</span>
+</button>
+
+<!-- CART PANEL -->
+<div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-header">
+    <div><h2>Your Order</h2><div class="cart-header-sub">Review items before placing</div></div>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items">
+    <div class="cart-empty"><div class="cart-empty-icon">☕</div><p>Your order is empty.<br>Add items from the menu.</p></div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-subtotal"><span>Subtotal</span><span id="cart-subtotal">₹0</span></div>
+    <div class="cart-tax"><span>GST (5%)</span><span id="cart-gst">₹0</span></div>
+    <div class="cart-total"><span>Total</span><span id="cart-total">₹0</span></div>
+    <button class="btn-place-order" id="btn-place-order" onclick="placeOrder()" disabled>Place Order & Generate Invoice →</button>
+  </div>
+</div>
+
+<!-- CUSTOMER DETAILS MODAL -->
+<div class="cust-overlay" id="cust-overlay">
+  <div class="cust-modal">
+    <div class="cust-header">
+      <div><h2>Customer Details</h2><div class="cust-sub">Fill in before we confirm your order</div></div>
+      <button class="cust-close" onclick="closeCustomerModal()">✕</button>
+    </div>
+    <div class="cust-body">
+      <div class="cust-hint">Enter your phone number — if you've ordered before, we'll auto-fill your details.</div>
+      <div class="cust-field" id="field-phone">
+        <label>Phone Number <span style="color:#c0392b">*</span></label>
+        <div class="phone-wrap">
+          <input type="tel" id="cust-phone" placeholder="10-digit mobile number" maxlength="10" oninput="onPhoneInput(this)" />
+          <button class="phone-lookup" onclick="lookupCustomer()">Look Up</button>
+        </div>
+        <div class="returning-tag" id="returning-tag">✓ Returning customer — details filled!</div>
+        <div class="field-error">Please enter a valid 10-digit phone number.</div>
+      </div>
+      <div class="cust-row">
+        <div class="cust-field" id="field-name">
+          <label>Full Name <span style="color:#c0392b">*</span></label>
+          <input type="text" id="cust-name" placeholder="Your name" />
+          <div class="field-error">Name is required.</div>
+        </div>
+        <div class="cust-field">
+          <label>Email (optional)</label>
+          <input type="email" id="cust-email" placeholder="you@email.com" />
+        </div>
+      </div>
+      <div class="cust-row">
+        <div class="cust-field">
+          <label>Table No. (optional)</label>
+          <input type="text" id="cust-table" placeholder="e.g. T-04 or Counter" />
+        </div>
+        <div class="cust-field">
+          <label>Payment Mode</label>
+          <select id="cust-payment">
+            <option value="Cash">Cash</option>
+            <option value="UPI">UPI</option>
+            <option value="Card">Card / POS</option>
+            <option value="Wallet">Wallet</option>
+          </select>
+        </div>
+      </div>
+      <div class="cust-field">
+        <label>Address (optional)</label>
+        <input type="text" id="cust-address" placeholder="For delivery or records" />
+      </div>
+    </div>
+    <div class="cust-actions">
+      <button class="cust-cancel" onclick="closeCustomerModal()">Cancel</button>
+      <button class="cust-submit" id="btn-confirm-order" onclick="confirmOrder()">Confirm & Generate Invoice →</button>
+    </div>
+  </div>
+</div>
+
+<!-- INVOICE MODAL -->
+<div class="invoice-overlay" id="invoice-overlay">
+  <div class="invoice-modal">
+    <div class="inv-header">
+      <div class="inv-logo">Velvet<span>Bean</span> Coffee</div>
+      <div class="inv-meta">12, MG Road, Vijayawada · GSTIN: 37AAAAA0000A1Z5</div>
+      <div class="inv-status">✓ Order Confirmed &amp; Saved</div>
+    </div>
+    <div class="inv-body">
+      <div class="inv-row">
+        <div class="inv-field"><label>Invoice No.</label><p id="inv-number">—</p></div>
+        <div class="inv-field"><label>Date &amp; Time</label><p id="inv-datetime">—</p></div>
+        <div class="inv-field"><label>Table</label><p id="inv-table">—</p></div>
+      </div>
+      <div class="inv-cust-box">
+        <div class="inv-field"><label>Customer</label><p id="inv-cust-name">—</p></div>
+        <div class="inv-field"><label>Phone</label><p id="inv-cust-phone">—</p></div>
+        <div class="inv-field"><label>Email</label><p id="inv-cust-email">—</p></div>
+        <div class="inv-field"><label>Payment</label><p id="inv-payment">—</p></div>
+      </div>
+      <table class="inv-table">
+        <thead><tr><th>Item</th><th style="text-align:center">Qty</th><th style="text-align:right">Rate</th><th>Amount</th></tr></thead>
+        <tbody id="inv-items"></tbody>
+      </table>
+      <div class="inv-line"><span>Subtotal</span><span id="inv-subtotal">₹0</span></div>
+      <div class="inv-line"><span>CGST (2.5%)</span><span id="inv-cgst">₹0</span></div>
+      <div class="inv-line"><span>SGST (2.5%)</span><span id="inv-sgst">₹0</span></div>
+      <div class="inv-grand"><span>Grand Total</span><span id="inv-grand">₹0</span></div>
+      <div class="inv-note" id="inv-note">Thank you for visiting MACH Cafe! ☕<br>For queries: <strong>hello@mach.in</strong></div>
+    </div>
+    <div class="inv-actions">
+      <button class="inv-btn inv-btn-secondary" onclick="window.print()">🖨 Print Invoice</button>
+      <button class="inv-btn inv-btn-primary" onclick="closeInvoice()">New Order →</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="f-logo">MACH <em style="color:var(--caramel);font-style:italic">Cafe</em></div>
+  <!--<ul class="f-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="menu.html">Menu</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>-->
+  <div class="f-copy">© 2026 MACH Cafe ·</div>
+</footer>
+
+<script>
+// ════════════════════════════════════════════════════════
+//  MACH Cafe — menu.html script
+//  Menu items are loaded from the database via /api/menu.
+//  Cart is purely front-end until order confirmation.
+//  On confirm → POST /api/orders → server deducts
+//  ingredient quantities and marks items out-of-stock.
+// ════════════════════════════════════════════════════════
+
+
+
+// ── AUTH GUARD — paste this at the top of every page except login ──
+(function() {
+  const role   = sessionStorage.getItem('mach_role');
+  const access = JSON.parse(sessionStorage.getItem('mach_access') || '[]');
+  // Normalize: strip query/hash, default empty segment to 'index.html'
+  const page   = (location.pathname.split('/').pop() || 'index.html').split('?')[0].split('#')[0];
+
+  if (!role) {
+    window.location.href = 'index.html';
+    return;
+  }
+
+  // Owner token check
+  if (role === 'owner') {
+    const token = localStorage.getItem('mach_token');
+    if (!token) { window.location.href = 'index.html'; return; }
+  }
+
+  // Check this page is in the role's allowed access list
+  if (!access.includes(page)) {
+    window.location.href = 'index.html';
+  }
+})();
+
+function logout() {
+  sessionStorage.clear();
+  localStorage.removeItem('mach_token');
+  window.location.href = 'index.html';
+}
+// ── Menu nav scroll ──────────────────────────────────────
+function scrollToSection(id, btn) {
+  document.getElementById(id)?.scrollIntoView({ behavior:'smooth', block:'start' });
+  document.querySelectorAll('.mnav-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── Section config ───────────────────────────────────────
+const SECTION_META = {
+  coffees:  { icon:'☕', title:'Hot Coffees',       desc:'Single-origin espresso, hand-pulled with precision every morning.' },
+  cold:     { icon:'🧊', title:'Cold & Iced',        desc:'Brewed slow and served cold. Never diluted, always refreshing.' },
+  shakes:   { icon:'🥤', title:'Shakes & Specials',  desc:'Thick, indulgent shakes and our exclusive house specials.' },
+  food:     { icon:'🍳', title:'Food Menu',           desc:'Prepared fresh in our kitchen. Comfort food done with care.' },
+  snacks:   { icon:'🥐', title:'Snacks & Bakes',     desc:'Baked fresh every morning. Best enjoyed warm, straight from the oven.' },
+  desserts: { icon:'🍰', title:'Desserts',            desc:'The grand finale. Each dessert pairs perfectly with our espresso.' },
+};
+
+// ── Cart state ────────────────────────────────────────────
+let cart = [];
+let MENU_MAP = {};   // name → item object from DB
+
+// ── Load menu from Excel file ─────────────────────────────
+// ════════════════════════════════════════════════════════
+// EXCEL FORMAT — your spreadsheet must have these columns:
+//   name        (required)  — Item name, e.g. "Cappuccino"
+//   price       (required)  — Number, e.g. 120
+//   section     (required)  — One of: coffees | cold | shakes | food | snacks | desserts
+//   description (optional)  — Short description text
+//   emoji       (optional)  — Single emoji, e.g. ☕
+//   badge       (optional)  — Label like "New" or "Chef's Pick"
+//   isAvailable (optional)  — TRUE/FALSE or 1/0  (default: TRUE)
+//   isFeatured  (optional)  — TRUE/FALSE or 1/0  (default: FALSE)
+//   category    (optional)  — "beverage" or "food" (used for invoice grouping)
+// ════════════════════════════════════════════════════════
+
+function handleExcelUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // Reset the file input so same file can be re-uploaded
+  event.target.value = '';
+
+  const navStatus = document.getElementById('nav-excel-status');
+  function setStatus(msg, type) {
+    if (navStatus) { navStatus.textContent = msg; navStatus.className = 'nav-excel-status show'; }
+    document.getElementById('excel-status').textContent = msg;
+    document.getElementById('excel-status').className   = 'excel-status' + (type ? ' ' + type : '');
+    console.log('[Excel Upload]', msg);
+  }
+
+  setStatus('📖 Reading file…');
+
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    try {
+      // ── 1. Parse Excel ───────────────────────────────────────────
+      const workbook = XLSX.read(e.target.result, { type: 'array' });
+      const sheet    = workbook.Sheets[workbook.SheetNames[0]];
+      const rows     = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+      if (!rows.length) throw new Error('Excel sheet is empty');
+
+      // Count valid rows (support both your format and generic format)
+      const validRows = rows.filter(r =>
+        (r['Item Name'] || r.name || r.Name || '').toString().trim() &&
+        (r['Price (INR)'] || r.price || r.Price || 0)
+      );
+      if (!validRows.length) throw new Error('No valid rows found — check column names');
+
+      setStatus('💾 Saving ' + validRows.length + ' items to database…');
+
+      // ── 2. POST to server — clears old items & inserts new ones ─
+      let resp, result;
+      try {
+        resp   = await fetch('/api/menu/import-excel', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ rows })
+        });
+        result = await resp.json();
+      } catch (netErr) {
+        throw new Error('Cannot reach server: ' + netErr.message);
+      }
+
+      if (!resp.ok || !result.success) {
+        throw new Error('Server error: ' + (result.error || resp.status));
+      }
+
+      const inserted = result.inserted || validRows.length;
+      if (result.errors && result.errors.length) {
+        console.warn('Skipped rows:', result.errors);
+      }
+
+      // ── 3. Reload menu from DB so page shows the new items ──────
+      setStatus('🔄 Reloading menu…');
+      await loadMenu();
+
+      setStatus('✓ ' + inserted + ' items saved & loaded!', 'ok');
+
+      // Fade banner after 6s
+      setTimeout(() => {
+        const banner = document.getElementById('excel-banner');
+        if (banner) { banner.style.transition = 'opacity 0.6s'; banner.style.opacity = '0.35'; }
+      }, 6000);
+
+    } catch (err) {
+      setStatus('✕ ' + err.message, 'err');
+      console.error('[Excel Upload Error]', err);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+function parseBool(val, defaultVal) {
+  if (val === undefined || val === null || val === '') return defaultVal;
+  if (typeof val === 'boolean') return val;
+  if (typeof val === 'number')  return val !== 0;
+  const s = String(val).trim().toLowerCase();
+  return s === 'true' || s === '1' || s === 'yes';
+}
+
+// ── loadMenu: tries server API first, falls back gracefully ──
+async function loadMenu() {
+  try {
+    const location = sessionStorage.getItem('mach_location') || 'guntupalli';
+    const res  = await fetch(`/api/menu?location=${encodeURIComponent(location)}`);
+    if (!res.ok) throw new Error('No server');
+    const data = await res.json();
+    if (!data.success) throw new Error('API error');
+
+    // Build lookup map
+    MENU_MAP = {};
+    data.items.forEach(i => { MENU_MAP[i.name] = i; });
+    renderAllSections(data.items);
+
+    // Banner hidden — menu auto-loads from DB every time, no Excel needed
+    // Excel button in nav is only for when you want to UPDATE the menu
+  } catch (e) {
+    // Server not available — show the Excel upload banner
+    console.info('Server menu not available, using Excel upload mode.');
+    // Attach handlers to any static + buttons already in DOM
+    document.querySelectorAll('.item-add').forEach(btn =>
+      btn.addEventListener('click', function() { addToCart(this); })
+    );
+  }
+}
+
+function renderAllSections(items) {
+  // Group by section
+  const bySection = {};
+  for (const id of Object.keys(SECTION_META)) bySection[id] = [];
+  items.forEach(i => { if (bySection[i.section]) bySection[i.section].push(i); });
+
+  for (const [secId, secItems] of Object.entries(bySection)) {
+    const section = document.getElementById(secId);
+    if (!section || !secItems.length) continue;
+
+    const meta = SECTION_META[secId];
+    section.innerHTML = `
+      <div class="sec-header">
+        <div style="display:flex;align-items:center">
+          <span class="sec-icon">${meta.icon}</span>
+          <span class="sec-title">${meta.title}</span>
+        </div>
+        <div class="sec-desc">${meta.desc}</div>
+      </div>
+      <div class="items-grid" id="grid-${secId}"></div>
+    `;
+
+    const grid = document.getElementById(`grid-${secId}`);
+    secItems.forEach(item => grid.insertAdjacentHTML('beforeend', buildCard(item)));
+  }
+
+  // Attach click handlers to all + buttons
+  document.querySelectorAll('.item-add').forEach(btn =>
+    btn.addEventListener('click', function() { addToCart(this); })
+  );
+}
+
+function buildCard(item) {
+  const oos = !item.isAvailable;
+  const oosClass = oos ? ' oos' : '';
+  const oosBadge = oos ? '<span class="badge badge-limited">Out of Stock</span>' : '';
+  const badgeHtml = item.badge
+    ? `<span class="badge badge-hot">${item.badge}</span>`
+    : '';
+
+  if (item.isFeatured) {
+    return `
+      <div class="item-card featured${oosClass}" data-name="${item.name}">
+        <div class="featured-visual">${item.emoji}</div>
+        <div style="flex:1">
+          <div class="featured-tag">${item.badge || 'Featured'}</div>
+          <div class="item-name">${item.name}</div>
+          <div class="item-desc">${item.description || ''}</div>
+          <div class="item-footer">
+            <span class="item-price">₹${item.price.toLocaleString('en-IN')}</span>
+            <button class="item-add" ${oos ? 'disabled title="Out of stock"' : ''}>
+              ${oos ? '✕' : '+'}
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  return `
+    <div class="item-card${oosClass}" data-name="${item.name}">
+      <div class="item-card-top">
+        <span class="item-emoji">${item.emoji}</span>
+        <div class="item-badges">${badgeHtml}${oosBadge}</div>
+      </div>
+      <div class="item-name">${item.name}</div>
+      <div class="item-desc">${item.description || ''}</div>
+      <div class="item-footer">
+        <span class="item-price">₹${item.price.toLocaleString('en-IN')}</span>
+        <button class="item-add" ${oos ? 'disabled title="Out of stock"' : ''}>
+          ${oos ? '✕' : '+'}
+        </button>
+      </div>
+    </div>`;
+}
+
+// ── Cart functions ────────────────────────────────────────
+
+function getItemCategory(name) {
+  return MENU_MAP[name]?.category || 'other';
+}
+
+function addToCart(btn) {
+  const card  = btn.closest('.item-card');
+  const name  = card.dataset.name;
+  const item  = MENU_MAP[name];
+  if (!item || !item.isAvailable) return;
+
+  const existing = cart.find(i => i.name === name);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ name, price: item.price, emoji: item.emoji, qty: 1 });
+  }
+
+  // Flash feedback on the button
+  btn.textContent = '✓';
+  btn.style.background = 'var(--caramel)';
+  setTimeout(() => { btn.textContent = '+'; btn.style.background = ''; }, 1200);
+
+  updateCartUI();
+}
+
+function removeFromCart(name) {
+  cart = cart.filter(i => i.name !== name);
+  updateCartUI();
+  renderCartItems();
+}
+
+function changeQty(name, delta) {
+  const item = cart.find(i => i.name === name);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) cart = cart.filter(i => i.name !== name);
+  updateCartUI();
+  renderCartItems();
+}
+
+function updateCartUI() {
+  const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const gst      = Math.round(subtotal * 0.05);
+
+  document.getElementById('cart-fab').classList.toggle('hidden', totalQty === 0);
+  document.getElementById('cart-count').textContent    = totalQty;
+  document.getElementById('cart-subtotal').textContent = '₹' + subtotal.toLocaleString('en-IN');
+  document.getElementById('cart-gst').textContent      = '₹' + gst.toLocaleString('en-IN');
+  document.getElementById('cart-total').textContent    = '₹' + (subtotal + gst).toLocaleString('en-IN');
+  document.getElementById('btn-place-order').disabled  = cart.length === 0;
+}
+
+function renderCartItems() {
+  const container = document.getElementById('cart-items');
+  if (!cart.length) {
+    container.innerHTML = `
+      <div class="cart-empty">
+        <div class="cart-empty-icon">☕</div>
+        <p>Your order is empty.<br>Add items from the menu.</p>
+      </div>`;
+    return;
+  }
+  container.innerHTML = cart.map(i => `
+    <div class="cart-item">
+      <span class="cart-item-emoji">${i.emoji}</span>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${i.name}</div>
+        <div class="cart-item-price">₹${i.price.toLocaleString('en-IN')}</div>
+        <div class="cart-item-controls">
+          <button class="qty-btn" onclick="changeQty('${esc(i.name)}',-1)">−</button>
+          <span class="qty-val">${i.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${esc(i.name)}',1)">+</button>
+        </div>
+      </div>
+      <button class="cart-item-remove" onclick="removeFromCart('${esc(i.name)}')">✕</button>
+    </div>`).join('');
+}
+
+function esc(s) { return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+function openCart()  {
+  renderCartItems();
+  document.getElementById('cart-overlay').classList.add('open');
+  document.getElementById('cart-panel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCart() {
+  document.getElementById('cart-overlay').classList.remove('open');
+  document.getElementById('cart-panel').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function placeOrder() {
+  if (!cart.length) return;
+  closeCart();
+  document.getElementById('cust-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('cust-phone').focus();
+}
+
+function closeCustomerModal() {
+  document.getElementById('cust-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.querySelectorAll('.cust-field').forEach(f => f.classList.remove('has-error'));
+}
+
+function onPhoneInput(el) {
+  el.value = el.value.replace(/\D/g,'').slice(0,10);
+  document.getElementById('returning-tag').style.display = 'none';
+  document.getElementById('field-phone').classList.remove('has-error');
+}
+
+async function lookupCustomer() {
+  const phone = document.getElementById('cust-phone').value.trim();
+  if (phone.length !== 10) { document.getElementById('field-phone').classList.add('has-error'); return; }
+  try {
+    const res = await fetch(`/api/customers/${phone}`);
+    if (res.ok) {
+      const { customer: c } = await res.json();
+      document.getElementById('cust-name').value    = c.name    || '';
+      document.getElementById('cust-email').value   = c.email   || '';
+      document.getElementById('cust-address').value = c.address || '';
+      document.getElementById('returning-tag').style.display = 'block';
+    }
+  } catch(e) {}
+}
+
+function validate() {
+  let ok = true;
+  const phone = document.getElementById('cust-phone').value.trim();
+  const name  = document.getElementById('cust-name').value.trim();
+  ['field-phone','field-name'].forEach(id => document.getElementById(id).classList.remove('has-error'));
+  if (!/^\d{10}$/.test(phone)) { document.getElementById('field-phone').classList.add('has-error'); ok = false; }
+  if (!name)                   { document.getElementById('field-name').classList.add('has-error');  ok = false; }
+  return ok;
+}
+
+async function confirmOrder() {
+  if (!validate()) return;
+  const btn = document.getElementById('btn-confirm-order');
+  btn.disabled = true;
+  btn.textContent = 'Placing Order…';
+
+  const customer = {
+    name:    document.getElementById('cust-name').value.trim(),
+    phone:   document.getElementById('cust-phone').value.trim(),
+    email:   document.getElementById('cust-email').value.trim()   || null,
+    address: document.getElementById('cust-address').value.trim() || null,
+  };
+  const tableNo     = document.getElementById('cust-table').value.trim() || 'Counter';
+  const paymentMode = document.getElementById('cust-payment').value;
+
+  try {
+    const res  = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        customerName:    customer.name,
+        customerPhone:   customer.phone,
+        customerEmail:   customer.email   || null,
+        customerAddress: customer.address || null,
+        location: sessionStorage.getItem('mach_location') || 'guntupalli',
+        tableNo, paymentMode,
+        items: cart.map(i => ({
+          name:     i.name,
+          qty:      i.qty,
+          rate:     i.price,
+          emoji:    i.emoji,
+          category: getItemCategory(i.name),
+        })),
+      }),
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      // Refresh menu so newly-OOS items are greyed out
+      await loadMenu();
+      closeCustomerModal();
+      // Build invoice: server returns full object; fall back to cart data if missing
+      const inv = data.invoice || {
+        invoiceNo:   data.invoiceNo,
+        timestamp:   new Date().toISOString(),
+        tableNo,
+        paymentMode,
+        customer:    { name: customer.name, phone: customer.phone, email: customer.email },
+        items:       cart.map(i => ({ name: i.name, qty: i.qty, rate: i.price, amount: i.price * i.qty, emoji: i.emoji })),
+        subtotal:    cart.reduce((s, i) => s + i.price * i.qty, 0),
+        cgst:        Math.round(cart.reduce((s, i) => s + i.price * i.qty, 0) * 0.025),
+        sgst:        Math.round(cart.reduce((s, i) => s + i.price * i.qty, 0) * 0.025),
+        grand:       data.grand,
+      };
+      showInvoice(inv);
+    } else {
+      alert('Order failed: ' + data.error);
+    }
+  } catch (e) {
+    // Offline fallback
+    const subtotal = cart.reduce((s,i) => s + i.price*i.qty, 0);
+    const cgst = Math.round(subtotal*0.025), sgst = Math.round(subtotal*0.025);
+    closeCustomerModal();
+    showInvoice({
+      invoiceNo: `VB-OFFLINE-${Math.floor(1000+Math.random()*9000)}`,
+      timestamp: new Date().toISOString(), tableNo, paymentMode, customer,
+      items: cart.map(i => ({ name:i.name, qty:i.qty, rate:i.price, amount:i.price*i.qty, emoji:i.emoji })),
+      subtotal, cgst, sgst, grand: subtotal+cgst+sgst,
+      printerRouting: { labels:['Billing Counter'] },
+    });
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Confirm & Generate Invoice →';
+}
+
+function showInvoice(inv) {
+  document.getElementById('inv-number').textContent   = inv.invoiceNo;
+  document.getElementById('inv-datetime').textContent =
+    new Date(inv.timestamp).toLocaleString('en-IN', { dateStyle:'medium', timeStyle:'short' });
+  document.getElementById('inv-table').textContent    = inv.tableNo   || 'Counter';
+  const c = inv.customer || {};
+  document.getElementById('inv-cust-name').textContent  = c.name  || '—';
+  document.getElementById('inv-cust-phone').textContent = c.phone || '—';
+  document.getElementById('inv-cust-email').textContent = c.email || '—';
+  document.getElementById('inv-payment').textContent    = inv.paymentMode || 'Cash';
+
+  const bevs  = inv.items.filter(i => getItemCategory(i.name) === 'beverage');
+  const foods = inv.items.filter(i => getItemCategory(i.name) !== 'beverage');
+  let rows = '';
+  if (bevs.length) {
+    rows += `<tr><td colspan="4" style="padding:.6rem .5rem;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid rgba(123,79,46,.15);background:rgba(123,79,46,.04)">☕ Beverages</td></tr>`;
+    rows += bevs.map(i => `<tr><td>${i.emoji||''}  ${i.name}</td><td style="text-align:center">${i.qty}</td><td style="text-align:right">₹${i.rate.toLocaleString('en-IN')}</td><td style="text-align:right">₹${i.amount.toLocaleString('en-IN')}</td></tr>`).join('');
+  }
+  if (foods.length) {
+    rows += `<tr><td colspan="4" style="padding:.6rem .5rem;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid rgba(123,79,46,.15);background:rgba(123,79,46,.04)">🍳 Food & Snacks</td></tr>`;
+    rows += foods.map(i => `<tr><td>${i.emoji||''}  ${i.name}</td><td style="text-align:center">${i.qty}</td><td style="text-align:right">₹${i.rate.toLocaleString('en-IN')}</td><td style="text-align:right">₹${i.amount.toLocaleString('en-IN')}</td></tr>`).join('');
+  }
+  document.getElementById('inv-items').innerHTML = rows;
+  document.getElementById('inv-subtotal').textContent = '₹' + inv.subtotal.toLocaleString('en-IN');
+  document.getElementById('inv-cgst').textContent     = '₹' + inv.cgst.toLocaleString('en-IN');
+  document.getElementById('inv-sgst').textContent     = '₹' + inv.sgst.toLocaleString('en-IN');
+  document.getElementById('inv-grand').textContent    = '₹' + inv.grand.toLocaleString('en-IN');
+  document.getElementById('invoice-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (inv.printerRouting)
+    document.getElementById('inv-note').innerHTML =
+      `Thank you for visiting MACH Cafe! ☕<br>
+       <small style="color:#7B4F2E;letter-spacing:1px">
+         🖨 Sent to: ${inv.printerRouting.labels.join(' &amp; ')}
+       </small>`;
+}
+
+function closeInvoice() {
+  cart = [];
+  updateCartUI();
+  ['cust-phone','cust-name','cust-email','cust-table','cust-address'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('cust-payment').value = 'Cash';
+  document.getElementById('returning-tag').style.display = 'none';
+  document.getElementById('invoice-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── Owner bar ─────────────────────────────────────────────
+function toggleOwnerBar() {
+  const links  = document.getElementById('owner-links');
+  const toggle = document.getElementById('owner-toggle');
+  links.classList.toggle('open');
+  toggle.textContent = links.classList.contains('open') ? '✕' : '⚙️';
+}
+function ownerNav(page) {
+  const token = sessionStorage.getItem('owner_token');
+  if (!token) { sessionStorage.setItem('owner_redirect', page); window.location.href='/owner-login.html'; return; }
+  fetch('/api/owner/verify', { headers:{ Authorization:'Bearer '+token } })
+    .then(r=>r.json()).then(d => {
+      if (d.valid) window.location.href='/'+page;
+      else { sessionStorage.removeItem('owner_token'); window.location.href='/owner-login.html'; }
+    }).catch(()=>{ window.location.href='/owner-login.html'; });
+}
+
+// ── Printer Dashboard — navigate to location-specific file ──
+function openPrinterDashboard() {
+  const loc = (sessionStorage.getItem('mach_location') || 'guntupalli').toLowerCase().trim();
+  const dashboardMap = {
+    'guntupalli': 'printer-dashboard-guntupalli.html',
+    'ongole':     'printer-dashboard-ongole.html',
+    'kodaikanal': 'printer-dashboard-kodaikanal.html',
+  };
+  window.location.href = dashboardMap[loc] || 'printer-dashboard-guntupalli.html';
+}
+
+// ── Add out-of-stock style ────────────────────────────────
+const style = document.createElement('style');
+style.textContent = `
+  .item-card.out-of-stock { opacity: .5; }
+  .item-card.out-of-stock .item-add { background: #999 !important; cursor: not-allowed; }
+`;
+document.head.appendChild(style);
+
+// ── Boot ──────────────────────────────────────────────────
+loadMenu();
+</script>
+
+<!-- Owner Quick Access -->
+<!-- Owner Quick Access -->
+<!-- Owner Quick Access -->
+<div class="owner-bar">
+  <div class="owner-links" id="owner-links">
+    <a class="owner-bar-btn" onclick="openPrinterDashboard()" style="cursor:pointer">
+      <span class="btn-icon">🖨️</span> Printer Dashboard
+    </a>
+    <!--<a class="owner-bar-btn" href="/kitchen-inventory.html">
+      <span class="btn-icon">📦</span> Kitchen Inventory
+    </a>
+    <a class="owner-bar-btn" onclick="ownerNav('menu-manager.html')" style="cursor:pointer">
+      <span class="btn-icon">🍽️</span> Menu Manager
+    </a>
+    <a class="owner-bar-btn" href="/owner-login.html">
+      <span class="btn-icon">🔐</span> Owner Login
+    </a> -->
+  </div>
+  <button class="owner-bar-toggle" onclick="toggleOwnerBar()" id="owner-toggle" title="Owner Access">
+    ⚙️
+  </button>
+</div>
+
+</body>
+</html>

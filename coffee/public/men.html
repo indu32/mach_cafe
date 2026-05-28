@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>MACH Cafe — Menu</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+:root{
+  --cream:#FFFFFF;
+  --espresso:#3B1F0C;
+  --mocha:#5A3520;
+  --caramel:#7B4F2E;
+  --latte:#A0714F;
+  --foam:#F8F8F8;
+  --text:#2A1408;
+  --muted:#8A6B55;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:'Jost',sans-serif;
+  background:var(--foam);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* NAVBAR */
+
+nav{
+  position:fixed;
+  top:0;
+  width:100%;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:1.2rem 4rem;
+  background:rgba(255,255,255,0.97);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(123,79,46,0.2);
+}
+
+.nav-logo{
+  font-family:'Playfair Display',serif;
+  font-size:1.5rem;
+  color:var(--espresso);
+  text-decoration:none;
+}
+
+.nav-links{
+  display:flex;
+  list-style:none;
+  gap:1rem;
+  align-items:center;
+}
+
+.nav-links a{
+  text-decoration:none;
+  font-size:0.78rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--mocha);
+  transition:0.3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+  color:var(--caramel);
+}
+
+.logout-btn{
+  background:none;
+  border:1px solid rgba(212,169,106,0.3);
+  color:var(--latte);
+  padding:0.5rem 1.2rem;
+  cursor:pointer;
+  font-size:0.75rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.logout-btn:hover{
+  border-color:var(--caramel);
+  color:var(--caramel);
+}
+
+/* HERO */
+
+.menu-hero{
+  min-height:38vh;
+  background:var(--espresso);
+  display:flex;
+  align-items:flex-end;
+  padding:4rem;
+  position:relative;
+  overflow:hidden;
+}
+
+.menu-hero::before{
+  content:'MENU';
+  position:absolute;
+  right:-1rem;
+  bottom:-2rem;
+  font-family:'Playfair Display',serif;
+  font-size:22vw;
+  font-weight:700;
+  color:rgba(255,255,255,0.03);
+}
+
+.menu-hero-content{
+  position:relative;
+  z-index:2;
+  padding-top:5rem;
+}
+
+.menu-tag{
+  font-size:0.72rem;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:var(--caramel);
+  margin-bottom:1rem;
+  display:block;
+}
+
+.menu-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2.5rem,6vw,5rem);
+  color:white;
+}
+
+.menu-title em{
+  color:var(--caramel);
+}
+
+.menu-sub{
+  color:rgba(255,255,255,0.55);
+  max-width:550px;
+  margin-top:1rem;
+  line-height:1.7;
+}
+
+/* MENU NAV */
+
+.menu-nav{
+  position:sticky;
+  top:75px;
+  z-index:90;
+  background:var(--espresso);
+  padding:0 4rem;
+  display:flex;
+  overflow-x:auto;
+}
+
+.menu-nav::-webkit-scrollbar{
+  display:none;
+}
+
+.mnav-btn{
+  padding:1rem 1.5rem;
+  background:none;
+  border:none;
+  color:rgba(255,255,255,0.5);
+  cursor:pointer;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  font-size:0.75rem;
+  border-bottom:3px solid transparent;
+  transition:0.3s;
+}
+
+.mnav-btn:hover,
+.mnav-btn.active{
+  color:var(--caramel);
+  border-bottom-color:var(--caramel);
+}
+
+/* SECTIONS */
+
+.menu-section{
+  padding:5rem 4rem;
+}
+
+.menu-section:nth-child(odd){
+  background:var(--foam);
+}
+
+.menu-section:nth-child(even){
+  background:white;
+}
+
+.sec-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  margin-bottom:2.5rem;
+  border-bottom:1px solid rgba(123,79,46,0.15);
+  padding-bottom:1.5rem;
+}
+
+.sec-icon{
+  font-size:2.5rem;
+}
+
+.sec-title{
+  font-family:'Playfair Display',serif;
+  font-size:2rem;
+  margin-left:1rem;
+  color:var(--espresso);
+}
+
+.sec-desc{
+  font-size:0.85rem;
+  color:var(--muted);
+  max-width:320px;
+  text-align:right;
+  line-height:1.6;
+}
+
+/* CARDS */
+
+.items-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1.5rem;
+}
+
+.item-card{
+  background:white;
+  padding:2rem;
+  transition:0.3s;
+  border-left:4px solid transparent;
+}
+
+.item-card:hover{
+  transform:translateY(-5px);
+  border-left-color:var(--caramel);
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.item-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:1rem;
+}
+
+.item-emoji{
+  font-size:2rem;
+}
+
+.item-name{
+  font-family:'Playfair Display',serif;
+  font-size:1.2rem;
+  color:var(--espresso);
+  margin-bottom:0.6rem;
+}
+
+.item-desc{
+  font-size:0.85rem;
+  color:var(--muted);
+  line-height:1.7;
+  margin-bottom:1rem;
+}
+
+.item-price{
+  font-family:'Playfair Display',serif;
+  font-size:1.5rem;
+  color:var(--caramel);
+}
+
+/* FOOTER */
+
+footer{
+  background:#180C04;
+  padding:3rem 4rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.f-logo{
+  font-family:'Playfair Display',serif;
+  color:white;
+  font-size:1.3rem;
+}
+
+.f-links{
+  display:flex;
+  gap:2rem;
+  list-style:none;
+}
+
+.f-links a{
+  color:rgba(255,255,255,0.4);
+  text-decoration:none;
+  font-size:0.75rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.f-links a:hover{
+  color:var(--caramel);
+}
+
+.f-copy{
+  color:rgba(255,255,255,0.25);
+  font-size:0.75rem;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:992px){
+
+  .items-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  nav,
+  .menu-section,
+  .menu-nav,
+  footer{
+    padding-left:2rem;
+    padding-right:2rem;
+  }
+}
+
+@media(max-width:700px){
+
+  .items-grid{
+    grid-template-columns:1fr;
+  }
+
+  nav{
+    flex-direction:column;
+    gap:1rem;
+  }
+
+  .sec-header{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:1rem;
+  }
+
+  .sec-desc{
+    text-align:left;
+  }
+
+  footer{
+    flex-direction:column;
+    gap:1.5rem;
+    text-align:center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <a href="/home.html" class="nav-logo">
+    MACH <em style="color:var(--caramel)">Cafe</em>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="/home.html">Home</a></li>
+    <li><a href="/men.html" class="active">Menu</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+    <li><button class="logout-btn" onclick="logout()">Logout</button></li>
+  </ul>
+</nav>
+
+<div class="menu-hero">
+  <div class="menu-hero-content">
+    <span class="menu-tag">Crafted with Intention</span>
+
+    <div class="menu-title">
+      Our Full <em>Menu</em>
+    </div>
+
+    <p class="menu-sub">
+      Every cup, every bite — made with attention to flavour,
+      quality, and comfort.
+    </p>
+  </div>
+</div>
+
+<div class="menu-nav">
+  <button class="mnav-btn active" onclick="scrollToSection('coffees',this)">Coffees</button>
+  <button class="mnav-btn" onclick="scrollToSection('cold',this)">Cold & Iced</button>
+  <button class="mnav-btn" onclick="scrollToSection('shakes',this)">Shakes</button>
+  <button class="mnav-btn" onclick="scrollToSection('food',this)">Food</button>
+  <button class="mnav-btn" onclick="scrollToSection('desserts',this)">Desserts</button>
+</div>
+
+<!-- MENU SECTIONS -->
+<section class="menu-section" id="coffees"></section>
+<section class="menu-section" id="cold"></section>
+<section class="menu-section" id="shakes"></section>
+<section class="menu-section" id="food"></section>
+<section class="menu-section" id="desserts"></section>
+
+<footer>
+  <div class="f-logo">
+    MACH <em style="color:var(--caramel)">Cafe</em>
+  </div>
+
+  <ul class="f-links">
+    <li><a href="/home.html">Home</a></li>
+    <li><a href="/men.html">Menu</a></li>
+    <li><a href="/contact.html">Contact</a></li>
+  </ul>
+
+  <div class="f-copy">
+    © 2026 MACH Cafe ·
+  </div>
+</footer>
+
+<script>
+// AUTH CHECK
+(function () {
+
+  const role = sessionStorage.getItem('mach_role');
+
+  if (!role) {
+    window.location.href = '/index.html';
+  }
+
+})();
+
+function logout() {
+  sessionStorage.clear();
+  localStorage.removeItem('mach_token');
+  window.location.href = '/index.html';
+}
+
+// SCROLL
+function scrollToSection(id, btn) {
+
+  document.getElementById(id)?.scrollIntoView({
+    behavior:'smooth'
+  });
+
+  document.querySelectorAll('.mnav-btn')
+    .forEach(b => b.classList.remove('active'));
+
+  btn.classList.add('active');
+}
+
+// SECTION DETAILS
+const SECTION_META = {
+
+  coffees:{
+    icon:'☕',
+    title:'Hot Coffees',
+    desc:'Single-origin espresso and handcrafted coffee.'
+  },
+
+  cold:{
+    icon:'🧊',
+    title:'Cold & Iced',
+    desc:'Cold brews and refreshing iced beverages.'
+  },
+
+  shakes:{
+    icon:'🥤',
+    title:'Shakes & Specials',
+    desc:'Creamy shakes and signature house drinks.'
+  },
+
+  food:{
+    icon:'🍳',
+    title:'Food Menu',
+    desc:'Freshly prepared comfort meals and sandwiches.'
+  },
+
+  desserts:{
+    icon:'🍰',
+    title:'Desserts',
+    desc:'Sweet endings crafted daily in-house.'
+  }
+};
+
+// LOAD MENU FROM DATABASE
+async function loadMenu() {
+
+  try {
+
+    const res = await fetch('/api/menu');
+
+    const data = await res.json();
+
+    if (!data.success) {
+      throw new Error('Menu API failed');
+    }
+
+    renderSections(data.items);
+
+  } catch(err) {
+
+    console.error('Error loading menu:', err);
+
+  }
+}
+
+// RENDER ALL SECTIONS
+function renderSections(items) {
+
+  const grouped = {};
+
+  Object.keys(SECTION_META).forEach(sec => {
+    grouped[sec] = [];
+  });
+
+  items.forEach(item => {
+
+    if (grouped[item.section]) {
+      grouped[item.section].push(item);
+    }
+
+  });
+
+  for (const sec in grouped) {
+
+    const section = document.getElementById(sec);
+
+    if (!section) continue;
+
+    const meta = SECTION_META[sec];
+
+    section.innerHTML = `
+      <div class="sec-header">
+
+        <div style="display:flex;align-items:center;">
+          <span class="sec-icon">${meta.icon}</span>
+          <span class="sec-title">${meta.title}</span>
+        </div>
+
+        <div class="sec-desc">
+          ${meta.desc}
+        </div>
+
+      </div>
+
+      <div class="items-grid">
+        ${grouped[sec].map(buildCard).join('')}
+      </div>
+    `;
+  }
+}
+
+// BUILD CARD
+function buildCard(item){
+
+  return `
+    <div class="item-card">
+
+      <div class="item-top">
+        <div class="item-emoji">
+          ${item.emoji || '☕'}
+        </div>
+      </div>
+
+      <div class="item-name">
+        ${item.name}
+      </div>
+
+      <div class="item-desc">
+        ${item.description || 'Freshly prepared with premium ingredients.'}
+      </div>
+
+      <div class="item-price">
+        ₹${item.price}
+      </div>
+
+    </div>
+  `;
+}
+
+// START
+loadMenu();
+</script>
+
+</body>
+</html>
