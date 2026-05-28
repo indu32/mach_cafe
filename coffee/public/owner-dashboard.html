@@ -298,6 +298,30 @@
     .branch-card:nth-child(3) { grid-column: auto; max-width: 100%; }
     .nav-badge { display: none; }
   }
+
+  @media(max-width:480px) {
+    nav { padding: 0.9rem 1rem; }
+    .nav-logo { font-size: 1.25rem; }
+    .nav-back { padding: 0.4rem 0.9rem; font-size: 0.7rem; letter-spacing: 1px; }
+    .page-wrap { padding: 5.5rem 0.75rem 2.5rem; }
+    .portal-header { margin-bottom: 2rem; }
+    .portal-sub { font-size: 0.82rem; padding: 0 0.5rem; }
+    .stats-bar { gap: 0.8rem; padding: 1rem 0.75rem; justify-content: space-around; }
+    .stat-divider { display: none; }
+    .stat-value { font-size: 1.3rem; }
+    .stat-label { font-size: 0.6rem; letter-spacing: 2px; }
+    .card-body { padding: 1.2rem; }
+    .card-branch-name { font-size: 1.2rem; }
+    .card-img-band { height: 90px; }
+    .band-icon { font-size: 2.4rem; }
+  }
+
+  @media(max-width:360px) {
+    .nav-logo { font-size: 1.1rem; }
+    .nav-back { letter-spacing: 0; font-size: 0.68rem; }
+    .stats-bar { flex-direction: column; align-items: center; gap: 0.6rem; }
+    .page-wrap { padding: 5rem 0.5rem 2rem; }
+  }
 </style>
 </head>
 <body>
