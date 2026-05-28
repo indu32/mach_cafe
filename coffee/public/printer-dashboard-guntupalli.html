@@ -191,6 +191,57 @@
     padding: 0.15rem 0.5rem; font-weight: 600; border-radius: 2px;
     margin-top: 0.3rem; display: inline-block;
   }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .stats { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    header { padding: 0 1rem; }
+    .header-title { display: none; }
+    .last-upd { display: none; }
+    .date-bar { padding: 0.7rem 1rem; gap: 0.6rem; }
+    .legend { padding: 0.5rem 1rem; gap: 1rem; }
+    .orders { padding: 1rem; }
+    .stats { grid-template-columns: repeat(4, 1fr); }
+    .order-card { grid-template-columns: 1fr; }
+    .card-right {
+      border-left: none;
+      border-top: 1px solid var(--border);
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      height: auto;
+      min-height: unset;
+      padding: 0.85rem 1.2rem;
+    }
+    .customer-name,
+    .customer-phone { text-align: left; margin-top: 0; }
+    .grand-amount { font-size: 1.2rem; }
+  }
+
+  @media (max-width: 480px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .branch-pill { font-size: 0.6rem; letter-spacing: 2px; padding: 0.3rem 0.7rem; }
+    .btn-logout { padding: 0.3rem 0.7rem; font-size: 0.6rem; letter-spacing: 1px; }
+    .live-badge { display: none; }
+    .order-top { gap: 0.4rem; }
+    .time-tag { margin-left: 0; width: 100%; order: 5; }
+    .stat-box { padding: 0.85rem 0.9rem; gap: 0.5rem; }
+    .stat-icon { font-size: 1.2rem; }
+    .stat-value { font-size: 1.25rem; }
+    .card-main { padding: 1rem; }
+  }
+
+  @media (max-width: 360px) {
+    header { min-height: 52px; }
+    .branch-pill { letter-spacing: 1px; font-size: 0.58rem; }
+    .btn-logout { display: none; }
+    .stat-box { padding: 0.7rem 0.6rem; }
+    .stat-label { font-size: 0.55rem; letter-spacing: 1.5px; }
+  }
+
 </style>
 </head>
 <body>
