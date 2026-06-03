@@ -727,7 +727,7 @@ footer{
 .thermal-size-btn:hover:not(.active) { border-color: var(--caramel); color: var(--caramel); }
 
 </style>
-<script src="/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -774,12 +774,14 @@ footer{
 </div>
 
 <div class="menu-nav">
-  <button class="mnav-btn active" onclick="scrollToSection('coffees',this)">Hot Coffees& Beverages</button>
-  <button class="mnav-btn" onclick="scrollToSection('cold',this)">Juices</button>
-  <button class="mnav-btn" onclick="scrollToSection('shakes',this)">MOjitos</button>
-  <button class="mnav-btn" onclick="scrollToSection('desserts',this)">Shakes</button>
-  <button class="mnav-btn" onclick="scrollToSection('Icecreams',this)">Ice Creams</button>
-  <button class="mnav-btn" onclick="scrollToSection('Biscuits',this)">Falooda&Lassi</button>
+  <button class="mnav-btn active" onclick="scrollToSection('coffees',this)">☕ Beverages</button>
+  <button class="mnav-btn" onclick="scrollToSection('cold',this)">🥤 Juices &amp; Detox</button>
+  <button class="mnav-btn" onclick="scrollToSection('cold-mojitos',this)">🍹 Mojitos</button>
+  <button class="mnav-btn" onclick="scrollToSection('shakes',this)">🥤 Shakes</button>
+  <button class="mnav-btn" onclick="scrollToSection('shakes-falooda',this)">🍨 Falooda &amp; Lassi</button>
+  <button class="mnav-btn" onclick="scrollToSection('desserts',this)">🍫 Desserts</button>
+  <button class="mnav-btn" onclick="scrollToSection('Icecreams',this)">🍦 Ice Creams</button>
+  <button class="mnav-btn" onclick="scrollToSection('Biscuits',this)">🍪 Biscuits</button>
 </div>
 
 <!-- ▼▼▼ EXCEL UPLOAD BANNER — Upload your menu Excel file here ▼▼▼ -->
@@ -800,7 +802,9 @@ footer{
 <!-- MENU SECTIONS -->
 <section class="menu-section" id="coffees"></section>
 <section class="menu-section" id="cold"></section>
+<section class="menu-section" id="cold-mojitos"></section>
 <section class="menu-section" id="shakes"></section>
+<section class="menu-section" id="shakes-falooda"></section>
 <section class="menu-section" id="desserts"></section>
 <section class="menu-section" id="Icecreams"></section>
 <section class="menu-section" id="Biscuits"></section>
@@ -1033,32 +1037,44 @@ const SECTION_META = {
 
   coffees:{
     icon:'☕',
-    title:'Hot Coffees & Beverages',
-    desc:'Single-origin espresso and handcrafted coffee.'
+    title:'Beverages',
+    desc:'Hot coffees, tea, filter coffee and warm drinks.'
   },
 
   cold:{
-    icon:'🧊',
-    title:'Juices & Mojitos',
-    desc:'Cold pressed juices, detox blends and refreshing mojitos.'
+    icon:'🥛',
+    title:'Juices & Detox',
+    desc:'Fresh fruit juices with milk, without milk, and detox blends.'
+  },
+
+  'cold-mojitos':{
+    icon:'🍹',
+    title:'Mojitos',
+    desc:'Refreshing chilled mojitos and lemonades.'
   },
 
   shakes:{
     icon:'🥤',
-    title:'Shakes, Falooda & Lassi',
-    desc:'Creamy shakes, oreo specials, falooda and chilled lassi.'
+    title:'Shakes & Oreo Shakes',
+    desc:'Creamy shakes, oreo specials and coffee shakes.'
+  },
+
+  'shakes-falooda':{
+    icon:'🍨',
+    title:'Falooda & Lassi',
+    desc:'Chilled falooda in assorted flavours and rich creamy lassi.'
   },
 
   desserts:{
-    icon:'🍰',
+    icon:'🍫',
     title:'Desserts',
     desc:'Sundaes and brownies crafted daily in-house.'
   },
 
   Icecreams:{
     icon:'🍦',
-    title:'Icecreams',
-    desc:'Scoops and cones of your favourite flavours.'
+    title:'Ice Creams',
+    desc:'Scoops of your favourite flavours.'
   },
 
   Biscuits:{
@@ -1212,6 +1228,13 @@ async function loadMenu() {
 }
 
 function renderAllSections(items) {
+  // Remap mojitos and falooda/lassi into dedicated sub-sections
+  items = items.map(item => {
+    if (item.section === 'cold' && item.description === 'Mojitos') return { ...item, section: 'cold-mojitos' };
+    if (item.section === 'shakes' && (item.description === 'Falooda' || item.description === 'Lassi')) return { ...item, section: 'shakes-falooda' };
+    return item;
+  });
+
   // Collect all unique sections from items (preserve order: SECTION_META first, then any extras)
   const sectionOrder = [...Object.keys(SECTION_META)];
   items.forEach(i => { if (!sectionOrder.includes(i.section)) sectionOrder.push(i.section); });
