@@ -393,8 +393,7 @@ body{
   .hold-table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; }
   .hold-table th { text-align: left; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 0.5rem 0.4rem; border-bottom: 1px solid rgba(123,79,46,0.2); }
   .hold-table td { padding: 0.6rem 0.4rem; font-size: 0.82rem; color: var(--espresso); border-bottom: 1px solid rgba(123,79,46,0.07); }
-  .hold-table td:last-child { text-align: right; font-family: 'Playfair Display', serif; color: var(--caramel); }
-  .hold-table th:last-child { text-align: right; }
+  .hold-table th:last-child { text-align: center; }
   .hold-subtotal { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--muted); margin-top: 0.8rem; }
   .hold-note { font-size: 0.75rem; color: var(--muted); text-align: center; margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid rgba(123,79,46,0.1); line-height: 1.6; }
   .hold-actions { display: flex; gap: 1rem; padding: 1.2rem 2rem; background: var(--foam); border-top: 1px solid rgba(123,79,46,0.1); }
@@ -820,10 +819,10 @@ footer{
     <div class="hold-body">
       <div class="hold-info" id="hold-info">Table — · Hold Token: —</div>
       <table class="hold-table">
-        <thead><tr><th>Item</th><th style="text-align:center">Qty</th><th>Amount</th></tr></thead>
+        <thead><tr><th>Item</th><th style="text-align:center">Qty</th></tr></thead>
         <tbody id="hold-items-body"></tbody>
       </table>
-      <div class="hold-subtotal"><span>Subtotal (incl. 5% GST)</span><span id="hold-grand">₹0</span></div>
+      <div class="hold-subtotal" id="hold-grand-row" style="display:none"><span>Subtotal (incl. 5% GST)</span><span id="hold-grand">₹0</span></div>
       <div class="hold-note">This is a hold slip — not a final invoice.<br>Final invoice will be printed after order is complete.</div>
     </div>
     <div class="hold-actions">
@@ -978,6 +977,10 @@ function logout() {
   localStorage.removeItem('mach_token');
   window.location.href = 'home.html';
 }
+
+// ── Tracks items already in cart when a parked order is resumed,
+//    so hold slip can show only the NEW items added in this round.
+let cartSnapshotAtResume = [];   // [{name, qty}] snapshot taken at resume time
 
 // SCROLL
 function scrollToSection(id, btn) {
@@ -1563,6 +1566,7 @@ function showInvoice(inv) {
 
 function closeInvoice() {
   cart = [];
+  cartSnapshotAtResume = [];   // reset snapshot on new order
   updateCartUI();
   ['cust-phone','cust-name','cust-email','cust-table','cust-address'].forEach(id => {
     const el = document.getElementById(id);
@@ -1669,30 +1673,41 @@ async function parkOrder() {
   // ── 3. Close cart panel ────────────────────────────────────────────────────
   closeCart();
 
-  // ── 4. Show hold slip modal ────────────────────────────────────────────────
-  showHoldSlip(parkedOrder);
+  // ── 4. Compute only the NEW items added since last resume (for hold slip) ──
+  //    If this is a fresh park (no prior resume), all items are "new".
+  const newItems = cart.map(i => {
+    const snap = cartSnapshotAtResume.find(s => s.name === i.name);
+    const newQty = snap ? i.qty - snap.qty : i.qty;
+    return newQty > 0 ? { name: i.name, emoji: i.emoji, qty: newQty } : null;
+  }).filter(Boolean);
 
-  // ── 5. Clear current cart ──────────────────────────────────────────────────
+  // Reset snapshot for next round
+  cartSnapshotAtResume = [];
+
+  // ── 5. Show hold slip modal (only new items, no price) ────────────────────
+  showHoldSlip(parkedOrder, newItems.length ? newItems : cart.map(i => ({ name: i.name, emoji: i.emoji, qty: i.qty })));
+
+  // ── 6. Clear current cart ──────────────────────────────────────────────────
   cart = [];
   updateCartUI();
 }
 
-function showHoldSlip(order) {
+function showHoldSlip(order, newItems) {
   // Info line
   document.getElementById('hold-info').textContent =
     `Table ${order.tableNo} · Hold Token: ${order.token} · ${new Date(order.timestamp).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`;
 
-  // Items table
+  // Items table — show only the newly ordered items, name + qty only (no price)
+  const displayItems = newItems || order.items;
   const tbody = document.getElementById('hold-items-body');
-  tbody.innerHTML = order.items.map(i => `
+  tbody.innerHTML = displayItems.map(i => `
     <tr>
       <td>${i.emoji || ''} ${i.name}</td>
       <td style="text-align:center">${i.qty}</td>
-      <td>₹${(i.price * i.qty).toLocaleString('en-IN')}</td>
     </tr>`).join('');
 
-  // Grand total
-  document.getElementById('hold-grand').textContent = '₹' + order.grand.toLocaleString('en-IN');
+  // Hide grand total on hold slip (it's a kitchen/hold copy, not a bill)
+  document.getElementById('hold-grand-row').style.display = 'none';
 
   // Show modal
   document.getElementById('hold-overlay').classList.add('open');
@@ -1770,6 +1785,10 @@ function resumeParkedOrder(idx) {
       cart.push({ ...parkedItem });
     }
   }
+
+  // Snapshot the cart AFTER merging the resumed order,
+  // so parkOrder() can compute only the NEW items added after this resume.
+  cartSnapshotAtResume = cart.map(i => ({ name: i.name, qty: i.qty }));
 
   // Remove from parked list
   parkedOrders.splice(idx, 1);
