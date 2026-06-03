@@ -422,7 +422,7 @@ body{
 .owner-links { display: flex; flex-direction: column; gap: 0.5rem; overflow: hidden; max-height: 0; transition: max-height 0.35s ease, opacity 0.3s; opacity: 0; }
 .owner-links.open { max-height: 300px; opacity: 1; }
 
-/* ── Excel Upload Banner ── 
+/* ── Excel Upload Banner ── */
 #excel-banner {
   background: linear-gradient(135deg, #3B1F0C 0%, #5A3520 100%);
   border-bottom: 3px solid var(--caramel);
@@ -451,10 +451,10 @@ body{
 }
 .excel-status.ok { border-color: #5aaa5a; color: #7acc7a; }
 .excel-status.err { border-color: #c05a5a; color: #e07a7a; }
-#excel-file-input { display: none; }*/
+#excel-file-input { display: none; }
 
 
-/* ── Nav Excel Upload Button ── 
+/* ── Nav Excel Upload Button ── */
 .nav-excel-btn {
   display: flex; align-items: center; gap: 0.5rem;
   background: var(--caramel); color: #fff; border: none;
@@ -468,7 +468,7 @@ body{
   color: var(--caramel); white-space: nowrap; padding: 0 0.5rem;
   display: none;
 }
-.nav-excel-status.show { display: inline; } */
+.nav-excel-status.show { display: inline; }
 /* ── Out-of-stock overlay ── */
 .item-card.oos { opacity: 0.55; pointer-events: none; }
 .item-card.oos .item-add { background: #999; cursor: not-allowed; }
@@ -952,7 +952,7 @@ footer{
 
   <ul class="f-links">
     <li><a href="/home_m.html">Home</a></li>
-    <li><a href="/menu.html">Menu</a></li>
+    <li><a href="/men_m.html">Menu</a></li>
     <li><a href="/contact_m.html">Contact</a></li>
   </ul>
 
@@ -1050,7 +1050,7 @@ let MENU_MAP = {};   // name → item object from DB
 let parkedOrders = []; // [{id, token, tableNo, items, subtotal, grand, timestamp}]
 
 
-/*function handleExcelUpload(event) {
+function handleExcelUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
 
@@ -1153,7 +1153,7 @@ let parkedOrders = []; // [{id, token, tableNo, items, subtotal, grand, timestam
     }
   };
   reader.readAsArrayBuffer(file);
-} */
+}
 function parseBool(val, defaultVal) {
   if (val === undefined || val === null || val === '') return defaultVal;
   if (typeof val === 'boolean') return val;
@@ -1512,7 +1512,7 @@ async function confirmOrder() {
     const cgst = Math.round(subtotal*0.025), sgst = Math.round(subtotal*0.025);
     closeCustomerModal();
     showInvoice({
-      invoiceNo: `VB-OFFLINE-${Math.floor(1000+Math.random()*9000)}`,
+      invoiceNo: (() => { const d=new Date(); const yy=String(d.getFullYear()-2000).padStart(2,'0'); const mm=String(d.getMonth()+1).padStart(2,'0'); const dd=String(d.getDate()).padStart(2,'0'); return `MACH-${yy}${mm}${dd}-${Math.floor(1000+Math.random()*9000)}`; })(),
       timestamp: new Date().toISOString(), tableNo, paymentMode, customer,
       items: cart.map(i => ({ name:i.name, qty:i.qty, rate:i.price, amount:i.price*i.qty, emoji:i.emoji })),
       subtotal, cgst, sgst, grand: subtotal+cgst+sgst,
