@@ -218,57 +218,47 @@ body{
   line-height:1.6;
 }
 
-/* CARDS */
+/* CARDS GRID */
+.items-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5px; }
+.menu-section:nth-child(even) .item-card { background:var(--foam); }
+.menu-section:nth-child(odd) .item-card { background:var(--cream); }
 
-.items-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1.5rem;
+/* BADGES */
+.item-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 0.8rem; }
+.item-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; justify-content: flex-end; }
+.badge { font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.2rem 0.6rem; }
+.badge-hot { background: rgba(123,79,46,0.12); color: var(--caramel); }
+.badge-new { background: rgba(44,26,14,0.08); color: var(--espresso); }
+.badge-vegan { background: rgba(76,153,76,0.1); color: #3a7a3a; }
+.badge-cold { background: rgba(76,130,200,0.1); color: #2a5eaa; }
+.badge-limited { background: rgba(180,60,60,0.1); color: #a03030; }
+
+/* ITEM CARD UPDATES */
+.item-card{ background:white; padding:2rem; transition:0.3s; position:relative; overflow:hidden; display:flex; flex-direction:column; }
+.item-card::before { content:''; position:absolute; left:0; top:0; width:4px; height:100%; background:var(--caramel); transform:scaleY(0); transform-origin:bottom; transition:transform 0.35s; }
+.item-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(44,26,14,0.1); border-left-color:var(--caramel); }
+.item-card:hover::before { transform:scaleY(1); }
+.item-footer { display:flex; align-items:center; justify-content:space-between; margin-top:auto; padding-top:1rem; border-top:1px solid rgba(123,79,46,0.1); }
+
+/* FEATURED */
+.item-card.featured { grid-column:span 3; flex-direction:row; align-items:center; gap:3rem; background:var(--espresso) !important; padding:3rem; }
+.item-card.featured::before { width:100%; height:4px; bottom:0; top:auto; transform:scaleX(0); transform-origin:left; }
+.item-card.featured:hover::before { transform:scaleX(1); }
+.featured-visual { font-size:5rem; flex-shrink:0; }
+.featured-tag { font-size:0.68rem; letter-spacing:3px; text-transform:uppercase; color:var(--caramel); border:1px solid rgba(123,79,46,0.3); padding:0.3rem 0.8rem; display:inline-block; margin-bottom:0.8rem; }
+.item-card.featured .item-name { font-size:1.8rem; color:var(--cream); margin-bottom:0.8rem; }
+.item-card.featured .item-desc { font-size:0.9rem; color:rgba(245,239,224,0.55); margin-bottom:0; }
+.item-card.featured .item-price { font-size:2rem; color:var(--caramel); }
+.item-card.featured .item-footer { border-top-color:rgba(255,255,255,0.08); }
+
+/* OUT OF STOCK */
+.item-card.oos { opacity:0.55; }
+.oos-badge { font-size:0.62rem; letter-spacing:1.5px; text-transform:uppercase; background:rgba(180,60,60,0.13); color:#a03030; padding:0.2rem 0.6rem; }
+
+@media(max-width:700px){
+  .item-card.featured { grid-column:span 1; flex-direction:column; gap:1.5rem; }
 }
 
-.item-card{
-  background:white;
-  padding:2rem;
-  transition:0.3s;
-  border-left:4px solid transparent;
-}
-
-.item-card:hover{
-  transform:translateY(-5px);
-  border-left-color:var(--caramel);
-  box-shadow:0 10px 30px rgba(0,0,0,0.08);
-}
-
-.item-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  margin-bottom:1rem;
-}
-
-.item-emoji{
-  font-size:2rem;
-}
-
-.item-name{
-  font-family:'Playfair Display',serif;
-  font-size:1.2rem;
-  color:var(--espresso);
-  margin-bottom:0.6rem;
-}
-
-.item-desc{
-  font-size:0.85rem;
-  color:var(--muted);
-  line-height:1.7;
-  margin-bottom:1rem;
-}
-
-.item-price{
-  font-family:'Playfair Display',serif;
-  font-size:1.5rem;
-  color:var(--caramel);
-}
 
 /* FOOTER */
 
@@ -488,19 +478,21 @@ footer{
 </div>
 
 <div class="menu-nav">
-  <button class="mnav-btn active" onclick="scrollToSection('coffees',this)">Coffees</button>
-  <button class="mnav-btn" onclick="scrollToSection('cold',this)">Cold & Iced</button>
-  <button class="mnav-btn" onclick="scrollToSection('shakes',this)">Shakes</button>
-  <button class="mnav-btn" onclick="scrollToSection('food',this)">Food</button>
-  <button class="mnav-btn" onclick="scrollToSection('desserts',this)">Desserts</button>
+  <button class="mnav-btn active" onclick="scrollToSection('coffees',this)">Hot Coffees &amp; Beverages</button>
+  <button class="mnav-btn" onclick="scrollToSection('cold',this)">Juices</button>
+  <button class="mnav-btn" onclick="scrollToSection('shakes',this)">Mojitos</button>
+  <button class="mnav-btn" onclick="scrollToSection('desserts',this)">Shakes</button>
+  <button class="mnav-btn" onclick="scrollToSection('Icecreams',this)">Ice Creams</button>
+  <button class="mnav-btn" onclick="scrollToSection('Biscuits',this)">Falooda &amp; Lassi</button>
 </div>
 
 <!-- MENU SECTIONS -->
 <section class="menu-section" id="coffees"></section>
 <section class="menu-section" id="cold"></section>
 <section class="menu-section" id="shakes"></section>
-<section class="menu-section" id="food"></section>
 <section class="menu-section" id="desserts"></section>
+<section class="menu-section" id="Icecreams"></section>
+<section class="menu-section" id="Biscuits"></section>
 
 <footer>
   <div class="f-logo">
@@ -521,145 +513,144 @@ footer{
 <script>
 // SCROLL
 function scrollToSection(id, btn) {
-
-  document.getElementById(id)?.scrollIntoView({
-    behavior:'smooth'
-  });
-
-  document.querySelectorAll('.mnav-btn')
-    .forEach(b => b.classList.remove('active'));
-
+  document.getElementById(id)?.scrollIntoView({ behavior:'smooth' });
+  document.querySelectorAll('.mnav-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 }
 
-// SECTION DETAILS
+// SECTION DETAILS — matches menu.html exactly
 const SECTION_META = {
-
   coffees:{
     icon:'☕',
-    title:'Hot Coffees',
+    title:'Hot Coffees & Beverages',
     desc:'Single-origin espresso and handcrafted coffee.'
   },
-
   cold:{
     icon:'🧊',
-    title:'Cold & Iced',
-    desc:'Cold brews and refreshing iced beverages.'
+    title:'Juices',
+    desc:'Cold pressed juices and detox blends.'
   },
-
   shakes:{
     icon:'🥤',
-    title:'Shakes & Specials',
-    desc:'Creamy shakes and signature house drinks.'
+    title:'Mojitos',
+    desc:'Refreshing house-made mojitos in every flavour.'
   },
-
-  food:{
-    icon:'🍳',
-    title:'Food Menu',
-    desc:'Freshly prepared comfort meals and sandwiches.'
-  },
-
   desserts:{
     icon:'🍰',
-    title:'Desserts',
-    desc:'Sweet endings crafted daily in-house.'
+    title:'Shakes',
+    desc:'Creamy shakes, oreo specials and chilled lassi.'
+  },
+  Icecreams:{
+    icon:'🍦',
+    title:'Ice Creams',
+    desc:'Scoops and cones of your favourite flavours.'
+  },
+  Biscuits:{
+    icon:'🥛',
+    title:'Falooda & Lassi',
+    desc:'Classic falooda, chilled lassi and biscuit accompaniments.'
   }
 };
 
 // LOAD MENU FROM DATABASE
 async function loadMenu() {
-
   try {
-
-    const res = await fetch('/api/menu');
-
+    const res  = await fetch('/api/menu');
     const data = await res.json();
-
-    if (!data.success) {
-      throw new Error('Menu API failed');
-    }
-
-    renderSections(data.items);
-
+    if (!data.success) throw new Error('Menu API failed');
+    renderAllSections(data.items);
   } catch(err) {
-
     console.error('Error loading menu:', err);
-
   }
 }
 
 // RENDER ALL SECTIONS
-function renderSections(items) {
+function renderAllSections(items) {
+  const sectionOrder = [...Object.keys(SECTION_META)];
+  items.forEach(i => { if (!sectionOrder.includes(i.section)) sectionOrder.push(i.section); });
 
-  const grouped = {};
-
-  Object.keys(SECTION_META).forEach(sec => {
-    grouped[sec] = [];
+  const bySection = {};
+  sectionOrder.forEach(id => bySection[id] = []);
+  items.forEach(i => {
+    if (!bySection[i.section]) bySection[i.section] = [];
+    bySection[i.section].push(i);
   });
 
-  items.forEach(item => {
+  for (const secId of sectionOrder) {
+    const secItems = bySection[secId];
+    let section = document.getElementById(secId);
 
-    if (grouped[item.section]) {
-      grouped[item.section].push(item);
+    if (!section && secItems && secItems.length) {
+      section = document.createElement('section');
+      section.className = 'menu-section';
+      section.id = secId;
+      const footer = document.querySelector('footer');
+      footer.parentNode.insertBefore(section, footer);
     }
 
-  });
+    if (!section || !secItems || !secItems.length) continue;
 
-  for (const sec in grouped) {
-
-    const section = document.getElementById(sec);
-
-    if (!section) continue;
-
-    const meta = SECTION_META[sec];
+    const meta = SECTION_META[secId] || {
+      icon: secItems[0]?.emoji || '🍽️',
+      title: secId,
+      desc: ''
+    };
 
     section.innerHTML = `
       <div class="sec-header">
-
-        <div style="display:flex;align-items:center;">
+        <div style="display:flex;align-items:center">
           <span class="sec-icon">${meta.icon}</span>
           <span class="sec-title">${meta.title}</span>
         </div>
-
-        <div class="sec-desc">
-          ${meta.desc}
-        </div>
-
+        <div class="sec-desc">${meta.desc}</div>
       </div>
-
-      <div class="items-grid">
-        ${grouped[sec].map(buildCard).join('')}
-      </div>
+      <div class="items-grid" id="grid-${secId}"></div>
     `;
+
+    const grid = document.getElementById(`grid-${secId}`);
+    secItems.forEach(item => grid.insertAdjacentHTML('beforeend', buildCard(item)));
   }
 }
 
-// BUILD CARD
-function buildCard(item){
+// BUILD CARD — display-only (no add-to-cart button)
+function buildCard(item) {
+  const oos      = item.isAvailable === false;
+  const oosClass = oos ? ' oos' : '';
+  const oosBadge = oos ? '<span class="badge oos-badge">Out of Stock</span>' : '';
+  const badgeHtml = item.badge ? `<span class="badge badge-hot">${item.badge}</span>` : '';
+
+  const displayPrice = (item.rawPrice && item.rawPrice !== String(item.price))
+    ? '₹' + item.rawPrice
+    : '₹' + Number(item.price).toLocaleString('en-IN');
+
+  if (item.isFeatured) {
+    return `
+      <div class="item-card featured${oosClass}" data-name="${item.name}">
+        <div class="featured-visual">${item.emoji || '☕'}</div>
+        <div style="flex:1">
+          <div class="featured-tag">${item.badge || 'Featured'}</div>
+          <div class="item-name">${item.name}</div>
+          <div class="item-desc">${item.description || ''}</div>
+          <div class="item-footer">
+            <span class="item-price">${displayPrice}</span>
+            ${oosBadge}
+          </div>
+        </div>
+      </div>`;
+  }
 
   return `
-    <div class="item-card">
-
-      <div class="item-top">
-        <div class="item-emoji">
-          ${item.emoji || '☕'}
-        </div>
+    <div class="item-card${oosClass}" data-name="${item.name}">
+      <div class="item-card-top">
+        <span class="item-emoji">${item.emoji || '☕'}</span>
+        <div class="item-badges">${badgeHtml}${oosBadge}</div>
       </div>
-
-      <div class="item-name">
-        ${item.name}
+      <div class="item-name">${item.name}</div>
+      <div class="item-desc">${item.description || 'Freshly prepared with premium ingredients.'}</div>
+      <div class="item-footer">
+        <span class="item-price">${displayPrice}</span>
       </div>
-
-      <div class="item-desc">
-        ${item.description || 'Freshly prepared with premium ingredients.'}
-      </div>
-
-      <div class="item-price">
-        ₹${item.price}
-      </div>
-
-    </div>
-  `;
+    </div>`;
 }
 
 // HAMBURGER
