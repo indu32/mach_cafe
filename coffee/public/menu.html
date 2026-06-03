@@ -422,7 +422,7 @@ body{
 .owner-links { display: flex; flex-direction: column; gap: 0.5rem; overflow: hidden; max-height: 0; transition: max-height 0.35s ease, opacity 0.3s; opacity: 0; }
 .owner-links.open { max-height: 300px; opacity: 1; }
 
-/* ── Excel Upload Banner ── */
+/* ── Excel Upload Banner ── 
 #excel-banner {
   background: linear-gradient(135deg, #3B1F0C 0%, #5A3520 100%);
   border-bottom: 3px solid var(--caramel);
@@ -451,10 +451,10 @@ body{
 }
 .excel-status.ok { border-color: #5aaa5a; color: #7acc7a; }
 .excel-status.err { border-color: #c05a5a; color: #e07a7a; }
-#excel-file-input { display: none; }
+#excel-file-input { display: none; }*/
 
 
-/* ── Nav Excel Upload Button ── */
+/* ── Nav Excel Upload Button ── 
 .nav-excel-btn {
   display: flex; align-items: center; gap: 0.5rem;
   background: var(--caramel); color: #fff; border: none;
@@ -468,7 +468,7 @@ body{
   color: var(--caramel); white-space: nowrap; padding: 0 0.5rem;
   display: none;
 }
-.nav-excel-status.show { display: inline; }
+.nav-excel-status.show { display: inline; } */
 /* ── Out-of-stock overlay ── */
 .item-card.oos { opacity: 0.55; pointer-events: none; }
 .item-card.oos .item-add { background: #999; cursor: not-allowed; }
@@ -711,7 +711,7 @@ footer{
 }
 
 </style>
-<script src="/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 
 <body>
@@ -752,12 +752,14 @@ footer{
 </div>
 
 <div class="menu-nav">
-  <button class="mnav-btn active" onclick="scrollToSection('coffees',this)">Hot Coffees& Beverages</button>
-  <button class="mnav-btn" onclick="scrollToSection('cold',this)">Juices</button>
-  <button class="mnav-btn" onclick="scrollToSection('shakes',this)">MOjitos</button>
-  <button class="mnav-btn" onclick="scrollToSection('desserts',this)">Shakes</button>
-  <button class="mnav-btn" onclick="scrollToSection('Icecreams',this)">Ice Creams</button>
-  <button class="mnav-btn" onclick="scrollToSection('Biscuits',this)">Falooda&Lassi</button>
+  <button class="mnav-btn active" onclick="scrollToSection('coffees',this)">☕ Beverages</button>
+  <button class="mnav-btn" onclick="scrollToSection('cold',this)">🥤 Juices & Detox</button>
+  <button class="mnav-btn" onclick="scrollToSection('cold-mojitos',this)">🍹 Mojitos</button>
+  <button class="mnav-btn" onclick="scrollToSection('shakes',this)">🥤 Shakes</button>
+  <button class="mnav-btn" onclick="scrollToSection('shakes-falooda',this)">🍨 Falooda & Lassi</button>
+  <button class="mnav-btn" onclick="scrollToSection('desserts',this)">🍫 Desserts</button>
+  <button class="mnav-btn" onclick="scrollToSection('Icecreams',this)">🍦 Ice Creams</button>
+  <button class="mnav-btn" onclick="scrollToSection('Biscuits',this)">🍪 Biscuits</button>
 </div>
 
 <!-- ▼▼▼ EXCEL UPLOAD BANNER — Upload your menu Excel file here ▼▼▼ -->
@@ -767,7 +769,9 @@ footer{
 <!-- MENU SECTIONS -->
 <section class="menu-section" id="coffees"></section>
 <section class="menu-section" id="cold"></section>
+<section class="menu-section" id="cold-mojitos"></section>
 <section class="menu-section" id="shakes"></section>
+<section class="menu-section" id="shakes-falooda"></section>
 <section class="menu-section" id="desserts"></section>
 <section class="menu-section" id="Icecreams"></section>
 <section class="menu-section" id="Biscuits"></section>
@@ -948,7 +952,7 @@ footer{
 
   <ul class="f-links">
     <li><a href="/home_m.html">Home</a></li>
-    <li><a href="/men_m.html">Menu</a></li>
+    <li><a href="/menu.html">Menu</a></li>
     <li><a href="/contact_m.html">Contact</a></li>
   </ul>
 
@@ -993,32 +997,44 @@ const SECTION_META = {
 
   coffees:{
     icon:'☕',
-    title:'Hot Coffees & Beverages',
-    desc:'Single-origin espresso and handcrafted coffee.'
+    title:'Beverages',
+    desc:'Hot coffees, tea, filter coffee and warm drinks.'
   },
 
   cold:{
-    icon:'🧊',
-    title:'Juices & Mojitos',
-    desc:'Cold pressed juices, detox blends and refreshing mojitos.'
+    icon:'🥛',
+    title:'Juices & Detox',
+    desc:'Fresh fruit juices with milk, without milk, and detox blends.'
+  },
+
+  'cold-mojitos':{
+    icon:'🍹',
+    title:'Mojitos',
+    desc:'Refreshing chilled mojitos and lemonades.'
   },
 
   shakes:{
     icon:'🥤',
-    title:'Shakes, Falooda & Lassi',
-    desc:'Creamy shakes, oreo specials, falooda and chilled lassi.'
+    title:'Shakes & Oreo Shakes',
+    desc:'Creamy shakes, oreo specials and coffee shakes.'
+  },
+
+  'shakes-falooda':{
+    icon:'🍨',
+    title:'Falooda & Lassi',
+    desc:'Chilled falooda in assorted flavours and rich creamy lassi.'
   },
 
   desserts:{
-    icon:'🍰',
+    icon:'🍫',
     title:'Desserts',
     desc:'Sundaes and brownies crafted daily in-house.'
   },
 
   Icecreams:{
     icon:'🍦',
-    title:'Icecreams',
-    desc:'Scoops and cones of your favourite flavours.'
+    title:'Ice Creams',
+    desc:'Scoops of your favourite flavours.'
   },
 
   Biscuits:{
@@ -1034,7 +1050,7 @@ let MENU_MAP = {};   // name → item object from DB
 let parkedOrders = []; // [{id, token, tableNo, items, subtotal, grand, timestamp}]
 
 
-function handleExcelUpload(event) {
+/*function handleExcelUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
 
@@ -1137,7 +1153,7 @@ function handleExcelUpload(event) {
     }
   };
   reader.readAsArrayBuffer(file);
-}
+} */
 function parseBool(val, defaultVal) {
   if (val === undefined || val === null || val === '') return defaultVal;
   if (typeof val === 'boolean') return val;
@@ -1172,14 +1188,26 @@ async function loadMenu() {
 }
 
 function renderAllSections(items) {
+  // Split 'cold' items: Mojitos go to 'cold-mojitos'; rest stay in 'cold'
+  // Split 'shakes' items: Falooda & Lassi go to 'shakes-falooda'; rest stay in 'shakes'
+  const remappedItems = items.map(item => {
+    if (item.section === 'cold' && item.description === 'Mojitos') {
+      return { ...item, section: 'cold-mojitos' };
+    }
+    if (item.section === 'shakes' && (item.description === 'Falooda' || item.description === 'Lassi')) {
+      return { ...item, section: 'shakes-falooda' };
+    }
+    return item;
+  });
+
   // Collect all unique sections from items (preserve order: SECTION_META first, then any extras)
   const sectionOrder = [...Object.keys(SECTION_META)];
-  items.forEach(i => { if (!sectionOrder.includes(i.section)) sectionOrder.push(i.section); });
+  remappedItems.forEach(i => { if (!sectionOrder.includes(i.section)) sectionOrder.push(i.section); });
 
   // Group by section
   const bySection = {};
   sectionOrder.forEach(id => bySection[id] = []);
-  items.forEach(i => {
+  remappedItems.forEach(i => {
     if (!bySection[i.section]) bySection[i.section] = [];
     bySection[i.section].push(i);
   });
@@ -1226,7 +1254,6 @@ function renderAllSections(items) {
     btn.addEventListener('click', function() { addToCart(this); })
   );
 }
-
 function buildCard(item) {
   const oos = !item.isAvailable;
   const oosClass = oos ? ' oos' : '';
