@@ -3,26 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MACH Cafe — Kitchen Inventory · Guntupalli</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<title>MACH Cafe — Printer Dashboard · Guntupalli</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-
-  @font-face {
+@font-face {
   font-family: 'Lastica';
   src: url('/fonts/NobodyTalks-oZo4.ttf') format('truetype');
 }
+
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --cream: #FFFFFF; --espresso: #3B1F0C; --mocha: #5A3520;
-    --caramel: #7B4F2E; --latte: #A0714F; --foam: #F8F8F8;
-    --text: #2A1408; --muted: #8A6B55;
-    --green: #2e7d32; --red: #c62828; --orange: #e65100;
-    --accent: #C8956C;
-    --accent-light: #C8956C;
-    --accent-bg: rgba(200,149,108,0.2);
-    --accent-border: rgba(200,149,108,0.5);
+    --bg:        #F7F2EC;
+    --surface:   #FFFFFF;
+    --espresso:  #3B1F0C;
+    --mocha:     #5A3520;
+    --caramel:   #7B4F2E;
+    --latte:     #C8956C;
+    --muted:     #8A6B55;
+    --border:    rgba(123,79,46,0.15);
+    --accent:    #7B4F2E;   /* Guntupalli — warm brown */
+    --accent2:   #C8956C;
+    --p1:        #616161;
+    --p2:        #1565C0;
+    --p3:        #BF360C;
   }
-  body { font-family: 'Jost', sans-serif; background: var(--foam); color: var(--text); }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Jost', sans-serif; background: var(--bg); color: var(--espresso); min-height: 100vh; }
 
   /* ── AUTH GATE ── */
   #auth-gate {
@@ -30,1105 +36,417 @@
     display: flex; align-items: center; justify-content: center;
     z-index: 9999; flex-direction: column; gap: 1rem;
   }
-  #auth-gate p { color: rgba(255,255,255,0.5); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; }
-  #auth-gate a { color: var(--accent-light); text-decoration: none; font-size: 0.85rem; border-bottom: 1px solid var(--accent-light); padding-bottom: 2px; }
+  #auth-gate p { color: rgba(255,255,255,0.5); font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; }
 
+  /* ── HEADER ── */
   header {
-    background: var(--espresso); color: #fff;
-    padding: 1.2rem 2rem;
-    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
-    position: sticky; top: 0; z-index: 100;
+    background: var(--espresso);
+    padding: 0 2.5rem;
+    display: flex; align-items: stretch; justify-content: space-between;
+    gap: 1rem; position: sticky; top: 0; z-index: 100;
+    border-bottom: 3px solid var(--accent);
+    min-height: 64px;
   }
-  .header-left { display: flex; flex-direction: column; gap: 0.3rem; }
-  header h1 { font-family: 'Playfair Display', serif; font-size: 1.3rem; }
-
-  /* ── BRANCH BADGE ── */
-  .branch-badge {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: var(--accent-bg); border: 1px solid var(--accent-border);
-    color: var(--accent-light); font-size: 0.68rem; letter-spacing: 2px;
-    text-transform: uppercase; padding: 0.28rem 0.8rem; width: fit-content;
+  .header-left { display: flex; align-items: center; gap: 1.2rem; }
+  .branch-pill {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: var(--accent); padding: 0.35rem 1rem;
+    font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase;
+    color: #fff; font-weight: 600; align-self: stretch;
   }
-  .branch-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 1.5s infinite; }
-  .live-dot { display: inline-block; width: 10px; height: 10px; background: #4caf50; border-radius: 50%; margin-right: 0.4rem; animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .branch-pill .loc-icon { font-size: 1rem; }
+  .header-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #fff; }
+  .header-title span { color: var(--latte); font-style: italic; }
+  .header-right { display: flex; align-items: center; gap: 1.5rem; }
+  .live-badge {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45);
+  }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #4caf50; animation: blink 1.5s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+  .last-upd { font-size: 0.68rem; color: rgba(255,255,255,0.3); letter-spacing: 1px; }
+  .btn-logout {
+    background: none; border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.5); font-family: 'Jost', sans-serif;
+    font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase;
+    padding: 0.4rem 1rem; cursor: pointer; transition: all 0.2s; align-self: center;
+  }
+  .btn-logout:hover { border-color: var(--latte); color: var(--latte); }
 
-  .btn-logout { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 0.4rem 1rem; font-family: 'Jost', sans-serif; font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
-  .btn-logout:hover { background: rgba(255,255,255,0.2); }
-
-  /* TABS */
-  .tabs {
-    background: var(--mocha); display: flex; padding: 0 2rem; overflow-x: auto;
+  /* ── DATE BAR ── */
+  .date-bar {
+    background: var(--mocha); padding: 0.8rem 2.5rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
     border-bottom: 1px solid rgba(255,255,255,0.05);
   }
-  .tabs::-webkit-scrollbar { display: none; }
-  .tab-btn {
-    padding: 1rem 1.6rem; background: none; border: none;
-    border-bottom: 3px solid transparent;
-    font-family: 'Jost', sans-serif; font-size: 0.78rem; font-weight: 500;
-    letter-spacing: 2px; text-transform: uppercase;
-    color: rgba(255,255,255,0.45); cursor: pointer;
-    transition: all 0.3s; white-space: nowrap;
+  .date-bar label { font-size: 0.65rem; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); white-space: nowrap; }
+  .date-bar input[type="date"] {
+    background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.15);
+    color: #fff; padding: 0.35rem 0.8rem; font-family: 'Jost', sans-serif;
+    font-size: 0.82rem; outline: none; cursor: pointer;
   }
-  .tab-btn:hover { color: #fff; }
-  .tab-btn.active { color: var(--accent-light); border-bottom-color: var(--accent); }
-
-  /* PANELS */
-  .panel { display: none; padding: 2rem; }
-  .panel.active { display: block; }
+  .date-bar input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+  .chips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .chip {
+    font-size: 0.65rem; padding: 0.28rem 0.75rem; cursor: pointer;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.5); letter-spacing: 1px; text-transform: uppercase;
+    transition: all 0.2s; font-family: 'Jost', sans-serif;
+  }
+  .chip:hover { background: rgba(255,255,255,0.14); color: #fff; }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .divider { color: rgba(255,255,255,0.15); }
+  .avail-label { font-size: 0.62rem; color: rgba(255,255,255,0.3); letter-spacing: 1px; white-space: nowrap; }
+  .avail-dates { display: flex; gap: 0.3rem; flex-wrap: wrap; align-items: center; }
 
   /* ── STATS ROW ── */
-  .stats-row {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 1px; background: #d4c4b4; margin-bottom: 2rem;
+  .stats {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 1px; background: var(--border); border-bottom: 1px solid var(--border);
   }
-  .stat-box { background: #fff; padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: 0.8rem; }
-  .stat-icon { font-size: 1.8rem; }
-  .stat-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
-  .stat-value { font-size: 1.6rem; font-weight: 700; color: var(--espresso); }
+  .stat-box { background: var(--surface); padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 0.7rem; }
+  .stat-icon { font-size: 1.5rem; }
+  .stat-label { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .stat-value { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--espresso); }
+  .stat-value.upi  { color: #1565C0; }
+  .stat-value.cash { color: #2e7d32; }
 
-  /* ── SECTION HEADERS ── */
-  .section-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem; }
-  .section-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--espresso); }
-
-  /* ── TABLE ── */
-  .inv-table { width: 100%; border-collapse: collapse; background: #fff; }
-  .inv-table thead tr { background: var(--espresso); }
-  .inv-table th { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.6); padding: 0.9rem 1rem; text-align: left; white-space: nowrap; }
-  .inv-table td { padding: 0.85rem 1rem; font-size: 0.85rem; color: var(--text); border-bottom: 1px solid rgba(123,79,46,0.08); }
-  .inv-table tbody tr:hover { background: rgba(123,79,46,0.03); }
-  .inv-table tbody tr:last-child td { border-bottom: none; }
-
-  .qty-bar-wrap { display: flex; align-items: center; gap: 0.8rem; min-width: 120px; }
-  .qty-bar { height: 6px; background: rgba(123,79,46,0.1); flex: 1; border-radius: 3px; overflow: hidden; }
-  .qty-bar-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
-  .fill-ok   { background: var(--green); }
-  .fill-warn { background: var(--orange); }
-  .fill-low  { background: var(--red); }
-
-  .badge-level {
-    font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase;
-    padding: 0.2rem 0.6rem; border-radius: 2px; white-space: nowrap;
+  /* ── LEGEND ── */
+  .legend {
+    display: flex; gap: 2rem; flex-wrap: wrap; align-items: center;
+    padding: 0.6rem 2.5rem; background: var(--espresso);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
   }
-  .level-ok   { background: rgba(46,125,50,0.1);  color: var(--green); }
-  .level-warn { background: rgba(230,81,0,0.1);   color: var(--orange); }
-  .level-low  { background: rgba(198,40,40,0.1);  color: var(--red); }
-  .level-out  { background: rgba(198,40,40,0.15); color: var(--red); }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 1px; text-transform: uppercase; }
+  .leg-bar { width: 18px; height: 3px; border-radius: 1px; }
 
-  /* ── FORM ── */
-  .form-card { background: #fff; padding: 1.8rem; margin-bottom: 1.5rem; border-left: 4px solid var(--accent); }
-  .form-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--espresso); margin-bottom: 1.2rem; }
-  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
-  .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
-  .form-field label { font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
-  .form-field input, .form-field select {
-    padding: 0.7rem 0.8rem; border: 1px solid rgba(123,79,46,0.2);
-    font-family: 'Jost', sans-serif; font-size: 0.9rem; color: var(--text);
-    background: var(--foam); outline: none; transition: border-color 0.2s;
+  /* ── ORDERS ── */
+  .orders { padding: 1.5rem 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .empty, .error { text-align: center; padding: 5rem 2rem; color: var(--muted); font-size: 0.9rem; line-height: 1.8; }
+  .error { color: #c62828; }
+
+  .order-card {
+    background: var(--surface);
+    border-left: 4px solid #ccc;
+    display: grid; grid-template-columns: 1fr 140px;
+    gap: 1rem; align-items: start;
+    padding: 0;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
   }
-  .form-field input:focus, .form-field select:focus { border-color: var(--accent); background: white; }
-  .form-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.8rem; }
-  .btn-primary { background: var(--espresso); color: #fff; border: none; padding: 0.7rem 1.5rem; font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
-  .btn-primary:hover { background: var(--accent); }
-  .btn-secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 0.7rem 1.5rem; font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
-  .btn-secondary:hover { background: var(--accent); color: white; }
-  .btn-danger { background: var(--red); color: #fff; border: none; padding: 0.6rem 1rem; font-family: 'Jost', sans-serif; font-size: 0.72rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: opacity 0.2s; }
-  .btn-danger:hover { opacity: 0.8; }
-  .btn-sm { padding: 0.35rem 0.7rem; font-size: 0.68rem; }
+  .order-card:hover { box-shadow: 0 4px 24px rgba(59,31,12,0.1); }
+  .order-card.p1only { border-left-color: var(--p1); }
+  .order-card.p12    { border-left-color: var(--p2); }
+  .order-card.p13    { border-left-color: var(--p3); }
+  .order-card.p123   { border-left-color: #7B1FA2; }
 
-  /* ── STOCK ENTRY ── */
-  .stock-entry-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-  .stock-item-card { background: #fff; padding: 1.2rem; border-left: 4px solid var(--accent); }
-  .stock-item-card .item-name-label { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--espresso); margin-bottom: 0.3rem; }
-  .stock-item-card .item-meta { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.8rem; }
-  .stock-qty-row { display: flex; align-items: center; gap: 0.6rem; }
-  .stock-qty-input { flex: 1; padding: 0.6rem; border: 1px solid rgba(123,79,46,0.2); font-family: 'Jost', sans-serif; font-size: 1rem; text-align: center; outline: none; }
-  .stock-qty-input:focus { border-color: var(--accent); }
-  .qty-stepper { background: var(--espresso); color: white; border: none; width: 30px; height: 36px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
-  .qty-stepper:hover { background: var(--accent); }
-  .current-qty-label { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; }
+  .card-main { padding: 1.2rem 1.5rem; }
+  .order-top { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
+  .inv-no { font-weight: 600; font-size: 0.88rem; color: var(--espresso); font-family: 'Jost', sans-serif; letter-spacing: 0.5px; }
+  .table-tag { font-size: 0.65rem; background: rgba(123,79,46,0.08); padding: 0.2rem 0.6rem; color: var(--caramel); letter-spacing: 1px; }
+  .status-tag { font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase; padding: 0.2rem 0.6rem; }
+  .status-PENDING   { background: #fff3e0; color: #e65100; }
+  .status-PAID      { background: #e8f5e9; color: #2e7d32; }
+  .status-DONE      { background: #e8f5e9; color: #2e7d32; }
+  .status-CANCELLED { background: #ffebee; color: #c62828; }
+  .status-PREPARING { background: #e3f2fd; color: #1565C0; }
+  .status-READY     { background: #f3e5f5; color: #6A1B9A; }
+  .time-tag { font-size: 0.7rem; color: var(--muted); margin-left: auto; }
 
-  /* ── LOGS ── */
-  .log-chip { font-size: 0.65rem; letter-spacing: 1px; padding: 0.15rem 0.5rem; border-radius: 2px; text-transform: uppercase; }
-  .log-restock { background: rgba(46,125,50,0.1);  color: var(--green); }
-  .log-deduct  { background: rgba(198,40,40,0.1);  color: var(--red); }
-  .log-manual  { background: rgba(123,79,46,0.1);  color: var(--caramel); }
+  .printer-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.9rem; }
+  .p-badge { font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; padding: 0.22rem 0.7rem; font-weight: 600; }
+  .p-badge.p1 { background: #f5f5f5; color: var(--p1); border: 1px solid #e0e0e0; }
+  .p-badge.p2 { background: #e3f2fd; color: var(--p2); border: 1px solid #bbdefb; }
+  .p-badge.p3 { background: #fbe9e7; color: var(--p3); border: 1px solid #ffccbc; }
 
-  /* ── TOAST ── */
-  #toast {
-    position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: var(--espresso); color: white;
-    padding: 0.9rem 2rem; font-size: 0.82rem; letter-spacing: 1px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3); z-index: 5000;
-    transition: transform 0.3s; white-space: nowrap;
+  .items-cols { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .items-col { flex: 1; min-width: 160px; }
+  .items-col h4 {
+    font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.4rem; padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--border);
   }
-  #toast.show    { transform: translateX(-50%) translateY(0); }
-  #toast.success { background: #2e7d32; }
-  #toast.error   { background: #c62828; }
+  .item-row { font-size: 0.78rem; color: var(--mocha); padding: 0.18rem 0; display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; }
+  .item-row .item-meta { color: var(--muted); font-size: 0.68rem; white-space: nowrap; }
 
-  .empty-state { text-align: center; padding: 4rem; color: var(--muted); }
-  .date-label { font-size: 0.78rem; color: var(--muted); background: rgba(123,79,46,0.06); padding: 0.6rem 1rem; margin-bottom: 1rem; display: inline-block; }
+  .card-right {
+    background: rgba(123,79,46,0.04);
+    border-left: 1px solid var(--border);
+    padding: 1.2rem 1rem;
+    display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between;
+    height: 100%; min-height: 100px;
+  }
+  .grand-label { font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .grand-amount { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--caramel); }
+  .customer-name { font-size: 0.75rem; color: var(--espresso); font-weight: 500; text-align: right; margin-top: 0.6rem; }
+  .customer-phone { font-size: 0.68rem; color: var(--muted); text-align: right; }
 
-  /* ── MOBILE RESPONSIVE ── */
-  @media (max-width: 768px) {
-    /* HEADER */
-    header { padding: 1rem 1.2rem; }
-    header h1 { font-size: 1.05rem; }
+  /* ── PAYMENT MODE BADGES ── */
+  .pm-badge {
+    font-size: 0.62rem; letter-spacing: 1px; text-transform: uppercase;
+    padding: 0.18rem 0.6rem; font-weight: 600; border-radius: 2px;
+  }
+  .pm-upi   { background: #e3f2fd; color: #1565C0; border: 1px solid #bbdefb; }
+  .pm-cash  { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+  .pm-other { background: #f3e5f5; color: #6A1B9A; border: 1px solid #e1bee7; }
 
-    /* TABS */
-    .tabs { padding: 0 0.5rem; }
-    .tab-btn { padding: 0.85rem 0.9rem; font-size: 0.7rem; letter-spacing: 1px; }
+  .pm-total {
+    font-size: 0.62rem; letter-spacing: 1px; text-transform: uppercase;
+    padding: 0.15rem 0.5rem; font-weight: 600; border-radius: 2px;
+    margin-top: 0.3rem; display: inline-block;
+  }
 
-    /* PANELS */
-    .panel { padding: 1.2rem; }
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .stats { grid-template-columns: repeat(4, 1fr); }
+  }
 
-    /* STATS ROW */
-    .stats-row { grid-template-columns: 1fr 1fr; }
-
-    /* SECTION HEADER */
-    .section-hdr { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
-
-    /* TABLES — make scrollable horizontally */
-    .inv-table { font-size: 0.78rem; }
-    .inv-table th, .inv-table td { padding: 0.7rem 0.6rem; }
-    /* Wrap tables in a scroll container */
-    .panel > table.inv-table,
-    .panel > div > table.inv-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-    /* FORM */
-    .form-card { padding: 1.2rem; }
-    .form-grid { grid-template-columns: 1fr; }
-    .form-actions { flex-direction: column; }
-    .btn-primary, .btn-secondary { width: 100%; text-align: center; }
-
-    /* STOCK ENTRY GRID */
-    .stock-entry-grid { grid-template-columns: 1fr; }
-
-    /* LOGS section-hdr filters */
-    .section-hdr > div { flex-wrap: wrap; width: 100%; }
-    #log-date-filter { flex: 1; min-width: 0; }
-
-    /* IMPORT panel form actions */
-    #panel-import-excel .form-actions { flex-direction: column; }
+  @media (max-width: 640px) {
+    header { padding: 0 1rem; }
+    .header-title { display: none; }
+    .last-upd { display: none; }
+    .date-bar { padding: 0.7rem 1rem; gap: 0.6rem; }
+    .legend { padding: 0.5rem 1rem; gap: 1rem; }
+    .orders { padding: 1rem; }
+    .stats { grid-template-columns: repeat(4, 1fr); }
+    .order-card { grid-template-columns: 1fr; }
+    .card-right {
+      border-left: none;
+      border-top: 1px solid var(--border);
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      height: auto;
+      min-height: unset;
+      padding: 0.85rem 1.2rem;
+    }
+    .customer-name,
+    .customer-phone { text-align: left; margin-top: 0; }
+    .grand-amount { font-size: 1.2rem; }
   }
 
   @media (max-width: 480px) {
-    .stats-row { grid-template-columns: 1fr 1fr; }
-    .stat-box { padding: 0.9rem 0.8rem; gap: 0.5rem; }
-    .stat-icon { font-size: 1.4rem; }
-    .stat-value { font-size: 1.3rem; }
-    .tab-btn { padding: 0.75rem 0.6rem; font-size: 0.65rem; }
-    header h1 { font-size: 0.95rem; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .branch-pill { font-size: 0.6rem; letter-spacing: 2px; padding: 0.3rem 0.7rem; }
+    .btn-logout { padding: 0.3rem 0.7rem; font-size: 0.6rem; letter-spacing: 1px; }
+    .live-badge { display: none; }
+    .order-top { gap: 0.4rem; }
+    .time-tag { margin-left: 0; width: 100%; order: 5; }
+    .stat-box { padding: 0.85rem 0.9rem; gap: 0.5rem; }
+    .stat-icon { font-size: 1.2rem; }
+    .stat-value { font-size: 1.25rem; }
+    .card-main { padding: 1rem; }
   }
+
+  @media (max-width: 360px) {
+    header { min-height: 52px; }
+    .branch-pill { letter-spacing: 1px; font-size: 0.58rem; }
+    .btn-logout { display: none; }
+    .stat-box { padding: 0.7rem 0.6rem; }
+    .stat-label { font-size: 0.55rem; letter-spacing: 1.5px; }
+  }
+
 </style>
 </head>
 <body>
 
-<!-- AUTH GATE -->
 <div id="auth-gate">
-  <p>🔐 Verifying access...</p>
-  <a href="index.html" id="login-link" style="display:none">← Go to Login</a>
+  <p>🔐 Verifying access…</p>
 </div>
 
 <header>
   <div class="header-left">
-    <h1>
-  <span style="font-family: 'Lastica', sans-serif; color:antiquewhite">MACH </span>
-  <em style="font-family: 'italic'; color: var(--caramel); font-style: italic;">Cafe</em>
- — Kitchen Inventory</h1>
-    <!-- ╔══════════════════════════════════════════════════════╗
-         ║  BRANCH-SPECIFIC LINE                               ║
-         ╚══════════════════════════════════════════════════════╝ -->
-    <div class="branch-badge">
-      <span class="branch-dot"></span>
-      Guntupalli Branch
-    </div>
+    <div class="branch-pill"><span class="loc-icon">🏡</span> Guntupalli</div>
+    <div class="header-title"><span style="font-family: 'Lastica', sans-serif; color:#3a2010">MACH </span>
+  <em style="font-family: 'italic'; color: var(--caramel); font-style: italic;">Cafe</em> — Printer Routing</div>
   </div>
-  <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-    <span><span class="live-dot"></span><span id="last-updated" style="font-size:0.72rem;opacity:0.5">Loading…</span></span>
+  <div class="header-right">
+    <span class="last-upd" id="last-upd">Fetching…</span>
+    <div class="live-badge"><div class="live-dot"></div> Live</div>
     <button class="btn-logout" onclick="logout()">Logout</button>
   </div>
 </header>
 
-<!-- TABS -->
-<div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('overview',this)">📊 Overview</button>
-  <button class="tab-btn" onclick="switchTab('stock-entry',this)">📝 Today's Stock Entry</button>
-  <button class="tab-btn" onclick="switchTab('manage-items',this)">⚙️ Manage Items</button>
-  <button class="tab-btn" onclick="switchTab('recipes',this)">🍳 Recipes</button>
-  <button class="tab-btn" onclick="switchTab('import-excel',this)">📥 Import Excel</button>
-  <button class="tab-btn" onclick="switchTab('logs',this)">📋 Activity Log</button>
+<div class="date-bar">
+  <label>Filter</label>
+  <input type="date" id="date-picker">
+  <div class="chips">
+    <div class="chip active" onclick="selectChip(this, 0)">Today</div>
+    <div class="chip" onclick="selectChip(this, 1)">Yesterday</div>
+    <div class="chip" onclick="selectChip(this, 7)">Last 7 Days</div>
+    <div class="chip" onclick="selectChip(this, -1)">All Time</div>
+  </div>
+  <span class="divider">|</span>
+  <span class="avail-label">Days with orders:</span>
+  <div class="avail-dates" id="avail-dates">—</div>
 </div>
 
-<!-- ══ PANEL: OVERVIEW ══ -->
-<div class="panel active" id="panel-overview">
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-icon">📦</div><div><div class="stat-label">Total Items</div><div class="stat-value" id="st-total">—</div></div></div>
-    <div class="stat-box"><div class="stat-icon">✅</div><div><div class="stat-label">Well Stocked</div><div class="stat-value" id="st-ok"   style="color:var(--green)">—</div></div></div>
-    <div class="stat-box"><div class="stat-icon">⚠️</div><div><div class="stat-label">Low Stock</div>   <div class="stat-value" id="st-warn" style="color:var(--orange)">—</div></div></div>
-    <div class="stat-box"><div class="stat-icon">🚨</div><div><div class="stat-label">Out of Stock</div><div class="stat-value" id="st-out"  style="color:var(--red)">—</div></div></div>
-  </div>
-  <div class="section-hdr">
-    <h2 class="section-title">Current Stock Levels — Guntupalli</h2>
-    <button class="btn-secondary btn-sm" onclick="loadOverview()">↻ Refresh</button>
-  </div>
-  <div class="table-scroll">
-  <table class="inv-table">
-    <thead>
-      <tr><th>Item</th><th>Category</th><th>Current Qty</th><th>Unit</th><th>Reorder Level</th><th>Status</th></tr>
-    </thead>
-    <tbody id="overview-body">
-      <tr><td colspan="6" class="empty-state">Loading…</td></tr>
-    </tbody>
-  </table>
-  </div>
+<div class="stats">
+  <div class="stat-box"><div class="stat-icon">📋</div><div><div class="stat-label">Orders</div><div class="stat-value" id="s-total">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">💰</div><div><div class="stat-label">Total Revenue</div><div class="stat-value" id="s-rev">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">📲</div><div><div class="stat-label">UPI Revenue</div><div class="stat-value upi" id="s-upi">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">💵</div><div><div class="stat-label">Cash Revenue</div><div class="stat-value cash" id="s-cash">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">🖨️</div><div><div class="stat-label">Printer 1 (Full)</div><div class="stat-value" id="s-p1">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">☕</div><div><div class="stat-label">Printer 2 (Bev)</div><div class="stat-value" id="s-p2">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">🍛</div><div><div class="stat-label">Printer 3 (Food)</div><div class="stat-value" id="s-p3">—</div></div></div>
 </div>
 
-<!-- ══ PANEL: STOCK ENTRY ══ -->
-<div class="panel" id="panel-stock-entry">
-  <div class="section-hdr">
-    <div>
-      <h2 class="section-title">Today's Stock Entry — Guntupalli</h2>
-      <span class="date-label" id="today-date-label">📅 —</span>
-    </div>
-    <button class="btn-primary" onclick="submitStockEntry()">💾 Save All Quantities</button>
-  </div>
-  <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.5rem">
-    Kitchen staff: Enter the opening quantities for each item for today. These will be saved as the starting stock for today's service.
-  </p>
-  <div class="stock-entry-grid" id="stock-entry-grid">
-    <div class="empty-state">Loading items…</div>
-  </div>
+<div class="legend">
+  <div class="legend-item"><div class="leg-bar" style="background:var(--p1)"></div> Printer 1 only</div>
+  <div class="legend-item"><div class="leg-bar" style="background:var(--p2)"></div> Printer 1 + 2 (beverages)</div>
+  <div class="legend-item"><div class="leg-bar" style="background:var(--p3)"></div> Printer 1 + 3 (food)</div>
+  <div class="legend-item"><div class="leg-bar" style="background:#7B1FA2"></div> All 3 printers</div>
 </div>
 
-<!-- ══ PANEL: MANAGE ITEMS ══ -->
-<div class="panel" id="panel-manage-items">
-  <div class="form-card" id="add-item-form">
-    <h3 id="add-form-title">➕ Add New Kitchen Item</h3>
-    <input type="hidden" id="edit-item-id">
-    <div class="form-grid">
-      <div class="form-field"><label>Item Name</label><input type="text" id="f-name" placeholder="e.g. Milk"></div>
-      <div class="form-field">
-        <label>Category</label>
-        <select id="f-category">
-          <option value="Dairy & Ice Cream">Dairy &amp; Ice Cream</option>
-          <option value="Dry Goods & Pantry">Dry Goods &amp; Pantry</option>
-          <option value="Fresh Produce">Fresh Produce</option>
-          <option value="Sauces, Syrups & Spices">Sauces, Syrups &amp; Spices</option>
-          <option value="Meat & Protein">Meat &amp; Protein</option>
-          <option value="Beverages & Mixers">Beverages &amp; Mixers</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <div class="form-field"><label>Unit (kg / L / pcs…)</label><input type="text" id="f-unit" placeholder="kg"></div>
-      <div class="form-field"><label>Initial Quantity</label><input type="number" id="f-qty" placeholder="0" min="0" step="0.1"></div>
-      <div class="form-field"><label>Reorder Level</label><input type="number" id="f-reorder" placeholder="5" min="0" step="0.1"></div>
-    </div>
-    <div class="form-actions">
-      <button class="btn-primary"   onclick="saveItem()">Save Item</button>
-      <button class="btn-secondary" onclick="resetAddForm()">Cancel</button>
-    </div>
-  </div>
-  <div class="section-hdr"><h2 class="section-title">All Items — Guntupalli</h2></div>
-  <div class="table-scroll">
-  <table class="inv-table">
-    <thead>
-      <tr><th>Item</th><th>Category</th><th>Unit</th><th>Current Qty</th><th>Reorder Level</th><th>Actions</th></tr>
-    </thead>
-    <tbody id="manage-items-body">
-      <tr><td colspan="6" class="empty-state">Loading…</td></tr>
-    </tbody>
-  </table>
-  </div>
-</div>
+<div class="orders" id="orders"></div>
 
-<!-- ══ PANEL: RECIPES ══ -->
-<div class="panel" id="panel-recipes">
-
-  <!-- Top bar -->
-  <div class="section-hdr" style="margin-bottom:1.5rem">
-    <div>
-      <h2 class="section-title">🍳 Recipes — Ingredient Mapping</h2>
-      <p style="font-size:0.82rem;color:var(--muted);margin-top:0.3rem">
-        Define which ingredients each menu item uses. Stock auto-deducts when an order is placed.
-      </p>
-    </div>
-    <button class="btn-secondary btn-sm" onclick="loadRecipes()">↻ Refresh</button>
-  </div>
-
-  <!-- Search / filter row -->
-  <div style="display:flex;gap:0.8rem;margin-bottom:1.5rem;flex-wrap:wrap">
-    <input id="recipe-search" type="text" placeholder="Search menu item…"
-      style="flex:1;min-width:180px;padding:0.6rem 0.9rem;border:1px solid rgba(123,79,46,0.2);font-family:'Jost',sans-serif;font-size:0.88rem;outline:none;"
-      oninput="filterRecipes()">
-    <select id="recipe-section-filter"
-      style="padding:0.6rem 0.9rem;border:1px solid rgba(123,79,46,0.2);font-family:'Jost',sans-serif;font-size:0.85rem;background:white;outline:none;"
-      onchange="filterRecipes()">
-      <option value="">All Sections</option>
-    </select>
-    <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.82rem;color:var(--muted);cursor:pointer">
-      <input type="checkbox" id="recipe-unmapped-only" onchange="filterRecipes()">
-      Unmapped only
-    </label>
-  </div>
-
-  <!-- Recipe cards grid -->
-  <div id="recipes-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem">
-    <div class="empty-state">Loading…</div>
-  </div>
-
-  <!-- ── ADD INGREDIENT MODAL ── -->
-  <div id="recipe-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:4000;align-items:center;justify-content:center">
-    <div style="background:#fff;width:min(480px,95vw);padding:2rem;position:relative">
-      <h3 style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--espresso);margin-bottom:1.2rem">
-        ➕ Add Ingredient to <em id="modal-item-name" style="color:var(--caramel)"></em>
-      </h3>
-      <input type="hidden" id="modal-menu-item-id">
-
-      <div style="margin-bottom:1rem">
-        <label style="font-size:0.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.4rem">Search Ingredient</label>
-        <input id="modal-ing-search" type="text" placeholder="Type to filter ingredients…"
-          style="width:100%;padding:0.7rem;border:1px solid rgba(123,79,46,0.2);font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;"
-          oninput="filterModalIngredients()">
-        <select id="modal-ing-select" size="6"
-          style="width:100%;margin-top:0.4rem;border:1px solid rgba(123,79,46,0.2);font-family:'Jost',sans-serif;font-size:0.85rem;padding:0.3rem;">
-        </select>
-      </div>
-
-      <div style="margin-bottom:1.2rem">
-        <label style="font-size:0.68rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:0.4rem">
-          Qty Per Serving <span id="modal-unit-hint" style="color:var(--caramel)"></span>
-        </label>
-        <input id="modal-qty" type="number" min="0.01" step="0.01" placeholder="e.g. 200"
-          style="width:100%;padding:0.7rem;border:1px solid rgba(123,79,46,0.2);font-family:'Jost',sans-serif;font-size:0.9rem;outline:none;">
-      </div>
-
-      <div style="display:flex;gap:0.8rem">
-        <button class="btn-primary" onclick="saveRecipeIngredient()" style="flex:1">Save</button>
-        <button class="btn-secondary" onclick="closeRecipeModal()" style="flex:1">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ══ PANEL: IMPORT EXCEL ══ -->
-<div class="panel" id="panel-import-excel">
-  <div class="form-card">
-    <h3>📥 Import Inventory from Excel</h3>
-    <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.2rem">
-      Upload an <strong>.xlsx</strong> file. Required column: <code>name</code>.
-      Optional columns: <code>unit</code>, <code>currentQty</code>, <code>reorderLevel</code>, <code>category</code>.
-    </p>
-    <div class="form-actions" style="flex-direction:column;align-items:flex-start;gap:1rem">
-      <div class="form-field">
-        <label>Choose Excel file (.xlsx)</label>
-        <input type="file" id="excel-file-input" accept=".xlsx,.xls"
-          style="padding:0.5rem;border:1px solid rgba(123,79,46,0.2);background:var(--foam);font-family:Jost,sans-serif;font-size:0.88rem;cursor:pointer;">
-      </div>
-      <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-size:0.85rem;color:var(--text)">
-        <input type="checkbox" id="excel-clear-first" style="width:15px;height:15px;">
-        <span><strong>Clear existing inventory first</strong> <span style="color:var(--red)">(deletes all current items & recipe links for this branch before importing)</span></span>
-      </label>
-      <button class="btn-primary" onclick="previewExcel()">👁 Preview Rows</button>
-    </div>
-  </div>
-
-  <!-- Preview table -->
-  <div id="excel-preview-wrap" style="display:none">
-    <div class="section-hdr">
-      <h2 class="section-title">Preview — <span id="excel-row-count">0</span> rows</h2>
-      <button class="btn-primary" onclick="importExcel()">💾 Import to DB</button>
-    </div>
-    <p style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem">
-      Review the data below before importing. Items already in the DB will be updated; new ones will be added.
-    </p>
-    <div class="table-scroll">
-    <table class="inv-table">
-      <thead>
-        <tr><th>#</th><th>Name</th><th>Unit</th><th>Current Qty</th><th>Reorder Level</th><th>Category</th></tr>
-      </thead>
-      <tbody id="excel-preview-body"></tbody>
-    </table>
-    </div>
-  </div>
-
-  <!-- Import result -->
-  <div id="excel-result" style="display:none;margin-top:1.5rem" class="form-card">
-    <h3>✅ Import Complete</h3>
-    <p id="excel-result-text" style="font-size:0.9rem;margin-top:0.5rem"></p>
-    <div class="form-actions" style="margin-top:1rem">
-      <button class="btn-secondary" onclick="resetExcel()">Import Another File</button>
-      <button class="btn-primary" onclick="switchTab('overview', document.querySelector('.tab-btn'))">View Overview</button>
-    </div>
-  </div>
-
-  <!-- Download sample template -->
-  <div style="margin-top:2rem">
-    <button class="btn-secondary btn-sm" onclick="downloadTemplate()">⬇ Download Sample Template</button>
-    <span style="font-size:0.72rem;color:var(--muted);margin-left:0.8rem">Use this template for correct column names</span>
-  </div>
-</div>
-
-<!-- ══ PANEL: LOGS ══ -->
-<div class="panel" id="panel-logs">
-  <div class="section-hdr">
-    <h2 class="section-title">Activity Log — Guntupalli</h2>
-    <div style="display:flex;gap:0.5rem;align-items:center">
-      <input type="date" id="log-date-filter"
-        style="padding:0.4rem 0.8rem;border:1px solid rgba(123,79,46,0.2);font-family:Jost,sans-serif;font-size:0.82rem;outline:none;"
-        onchange="loadLogs()">
-      <button class="btn-secondary btn-sm" onclick="document.getElementById('log-date-filter').value='';loadLogs()">Clear</button>
-    </div>
-  </div>
-  <div class="table-scroll">
-  <table class="inv-table">
-    <thead>
-      <tr><th>Time</th><th>Item</th><th>Type</th><th>Change</th><th>New Qty</th><th>Note</th></tr>
-    </thead>
-    <tbody id="logs-body">
-      <tr><td colspan="6" class="empty-state">Loading…</td></tr>
-    </tbody>
-  </table>
-  </div>
-</div>
-
-<div id="toast">✓ Done</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-// ╔══════════════════════════════════════════════════════╗
-// ║  BRANCH KEY — THE ONLY LINE TO CHANGE per branch    ║
-// ║  Guntupalli → 'guntupalli'                          ║
-// ║  Ongole     → 'ongole'                              ║
-// ║  Kodaikanal → 'kodaikanal'                          ║
-// ╚══════════════════════════════════════════════════════╝
-const BRANCH = 'guntupalli';
+const BRANCH       = 'guntupalli';
+const BRANCH_LABEL = 'Guntupalli';
 
-// ═══════════════════════════════════════════════
-//  LOGOUT
-// ═══════════════════════════════════════════════
 function logout() {
   sessionStorage.clear();
   localStorage.removeItem('mach_token');
   window.location.href = 'home.html';
 }
 
-// ═══════════════════════════════════════════════
-//  AUTH GUARD
-//  Allows: kitchen (matching branch), manager, owner
-// ═══════════════════════════════════════════════
-(function () {
-  const role = sessionStorage.getItem('mach_role');
-  const loc  = sessionStorage.getItem('mach_location');
+// ── Auth guard ──
+(function() {
+  const role   = sessionStorage.getItem('mach_role');
+  const access = JSON.parse(sessionStorage.getItem('mach_access') || '[]');
+  const page   = (location.pathname.split('/').pop() || 'index.html').split('?')[0];
 
   if (!role) { window.location.href = 'index.html'; return; }
-
+  if (role !== 'owner' && role !== 'manager' && !access.includes(page)) {
+    window.location.href = 'index.html'; return;
+  }
   if (role === 'owner') {
     const token = localStorage.getItem('mach_token');
     if (!token) { window.location.href = 'index.html'; return; }
   }
-
-  // Kitchen staff: must match this branch
-  if (role === 'kitchen' && loc !== BRANCH) {
-    window.location.href = 'index.html';
-    return;
-  }
-
   document.getElementById('auth-gate').style.display = 'none';
   init();
 })();
 
-// ═══════════════════════════════════════════════
-//  TABS
-// ═══════════════════════════════════════════════
-function switchTab(name, el) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  el.classList.add('active');
-  if (name === 'overview')      loadOverview();
-  if (name === 'stock-entry')   loadStockEntry();
-  if (name === 'manage-items')  loadManageItems();
-  if (name === 'logs')          loadLogs();
-  if (name === 'recipes')       loadRecipes();
-  // import-excel panel is self-contained, no load call needed
-}
+let mode = 'today', selDate = todayStr();
 
-// ═══════════════════════════════════════════════
-//  TOAST
-// ═══════════════════════════════════════════════
-function showToast(msg, type = 'success') {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'show ' + type;
-  setTimeout(() => t.className = '', 3000);
-}
+function todayStr() { return new Date().toISOString().slice(0, 10); }
+function subtractDays(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
 
-// ═══════════════════════════════════════════════
-//  API HELPER — always scoped to BRANCH
-// ═══════════════════════════════════════════════
-async function api(url, method = 'GET', body = null) {
-  const token = localStorage.getItem('mach_token') || '';
-  const sep   = url.includes('?') ? '&' : '?';
-  const opts  = {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token && { 'Authorization': 'Bearer ' + token })
-    }
-  };
-  if (body) opts.body = JSON.stringify(body);
-  // Always pass ?location=BRANCH so the server filters correctly
-  const res = await fetch(url + sep + 'location=' + BRANCH, opts);
-  return res.json();
-}
-
-// ═══════════════════════════════════════════════
-//  OVERVIEW
-// ═══════════════════════════════════════════════
-async function loadOverview() {
-  const data = await api('/api/inventory');
-  if (!data.success) return;
-  const items = data.items;
-  let ok = 0, warn = 0, out = 0;
-  items.forEach(i => {
-    if (i.currentQty <= 0)                    out++;
-    else if (i.currentQty <= i.reorderLevel)  warn++;
-    else                                       ok++;
-  });
-  document.getElementById('st-total').textContent = items.length;
-  document.getElementById('st-ok').textContent    = ok;
-  document.getElementById('st-warn').textContent  = warn;
-  document.getElementById('st-out').textContent   = out;
-  document.getElementById('last-updated').textContent =
-    'Updated ' + new Date().toLocaleTimeString('en-IN');
-
-  const tbody = document.getElementById('overview-body');
-  if (!items.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No items yet. Add items in the Manage Items tab.</td></tr>';
-    return;
-  }
-  tbody.innerHTML = items.map(i => {
-    const pct       = i.reorderLevel > 0
-      ? Math.min(100, Math.round((i.currentQty / (i.reorderLevel * 3)) * 100))
-      : (i.currentQty > 0 ? 100 : 0);
-    const fillClass = i.currentQty <= 0            ? 'fill-low'
-                    : i.currentQty <= i.reorderLevel ? 'fill-warn' : 'fill-ok';
-    const [lvlText, lvlCls] =
-      i.currentQty <= 0            ? ['Out of Stock', 'level-out']
-    : i.currentQty <= i.reorderLevel ? ['Low Stock',   'level-warn']
-    :                                  ['OK',           'level-ok'];
-    return `<tr>
-      <td><strong>${i.name}</strong></td>
-      <td style="color:var(--muted)">${i.category || '—'}</td>
-      <td>
-        <div class="qty-bar-wrap">
-          <strong>${i.currentQty}</strong>
-          <div class="qty-bar"><div class="qty-bar-fill ${fillClass}" style="width:${pct}%"></div></div>
-        </div>
-      </td>
-      <td>${i.unit}</td>
-      <td>${i.reorderLevel}</td>
-      <td><span class="badge-level ${lvlCls}">${lvlText}</span></td>
-    </tr>`;
-  }).join('');
-}
-
-// ═══════════════════════════════════════════════
-//  STOCK ENTRY
-// ═══════════════════════════════════════════════
-async function loadStockEntry() {
-  document.getElementById('today-date-label').textContent =
-    '📅 ' + new Date().toLocaleDateString('en-IN', {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    });
-  const data = await api('/api/inventory');
-  if (!data.success) return;
-  const items = data.items;
-  const grid  = document.getElementById('stock-entry-grid');
-  if (!items.length) {
-    grid.innerHTML = '<div class="empty-state">No items. Add items in the Manage Items tab first.</div>';
-    return;
-  }
-  grid.innerHTML = items.map(i => `
-    <div class="stock-item-card" data-id="${i.id}">
-      <div class="item-name-label">${i.name}</div>
-      <div class="item-meta">${i.category || '—'} · Unit: ${i.unit}</div>
-      <div class="stock-qty-row">
-        <button class="qty-stepper" onclick="stepQty(${i.id}, -1)">−</button>
-        <input type="number" class="stock-qty-input" id="sq-${i.id}"
-               value="${i.currentQty}" min="0" step="0.1">
-        <button class="qty-stepper" onclick="stepQty(${i.id}, 1)">+</button>
-      </div>
-      <div class="current-qty-label">Current in DB: <strong>${i.currentQty} ${i.unit}</strong></div>
-    </div>
-  `).join('');
-}
-
-function stepQty(id, delta) {
-  const input = document.getElementById('sq-' + id);
-  input.value = Math.max(0, (parseFloat(input.value) || 0) + delta);
-}
-
-async function submitStockEntry() {
-  const cards   = document.querySelectorAll('.stock-item-card');
-  const entries = [];
-  cards.forEach(card => {
-    entries.push({
-      id:  parseInt(card.dataset.id),
-      qty: parseFloat(document.getElementById('sq-' + card.dataset.id).value) || 0
-    });
-  });
-  const data = await api('/api/inventory/stock-entry', 'POST', { entries, location: BRANCH });
-  if (data.success) {
-    showToast('✓ Stock levels saved!', 'success');
-    loadOverview();
-  } else {
-    showToast('Error: ' + (data.error || 'Failed'), 'error');
-  }
-}
-
-// ═══════════════════════════════════════════════
-//  MANAGE ITEMS
-// ═══════════════════════════════════════════════
-async function loadManageItems() {
-  const data  = await api('/api/inventory');
-  if (!data.success) return;
-  const tbody = document.getElementById('manage-items-body');
-  if (!data.items.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No items yet. Add one above.</td></tr>';
-    return;
-  }
-  tbody.innerHTML = data.items.map(i => `
-    <tr>
-      <td><strong>${i.name}</strong></td>
-      <td>${i.category || '—'}</td>
-      <td>${i.unit}</td>
-      <td>${i.currentQty}</td>
-      <td>${i.reorderLevel}</td>
-      <td style="display:flex;gap:0.4rem">
-        <button class="btn-primary btn-sm"
-          onclick="editItem(${i.id},'${escJs(i.name)}','${escJs(i.category||'')}','${escJs(i.unit)}',${i.currentQty},${i.reorderLevel})">
-          Edit
-        </button>
-        <button class="btn-danger btn-sm" onclick="deleteItem(${i.id},'${escJs(i.name)}')">Delete</button>
-      </td>
-    </tr>
-  `).join('');
-}
-
-function escJs(s) { return (s || '').replace(/'/g, "\'"); }
-
-function editItem(id, name, cat, unit, qty, reorder) {
-  document.getElementById('edit-item-id').value         = id;
-  document.getElementById('f-name').value               = name;
-  document.getElementById('f-category').value           = cat;
-  document.getElementById('f-unit').value               = unit;
-  document.getElementById('f-qty').value                = qty;
-  document.getElementById('f-reorder').value            = reorder;
-  document.getElementById('add-form-title').textContent = '✏️ Edit Item — ' + name;
-  document.getElementById('add-item-form').scrollIntoView({ behavior: 'smooth' });
-}
-
-function resetAddForm() {
-  document.getElementById('edit-item-id').value         = '';
-  document.getElementById('f-name').value               = '';
-  document.getElementById('f-unit').value               = '';
-  document.getElementById('f-qty').value                = '';
-  document.getElementById('f-reorder').value            = '';
-  document.getElementById('f-category').value           = 'Other';
-  document.getElementById('add-form-title').textContent = '➕ Add New Kitchen Item';
-}
-
-async function saveItem() {
-  const id      = document.getElementById('edit-item-id').value;
-  const name    = document.getElementById('f-name').value.trim();
-  const cat     = document.getElementById('f-category').value;
-  const unit    = document.getElementById('f-unit').value.trim();
-  const qty     = parseFloat(document.getElementById('f-qty').value) || 0;
-  const reorder = parseFloat(document.getElementById('f-reorder').value) || 0;
-  if (!name || !unit) { showToast('Name and unit are required', 'error'); return; }
-
-  const payload = { name, category: cat, unit, currentQty: qty, reorderLevel: reorder, location: BRANCH };
-  const data    = id
-    ? await api('/api/inventory/' + id, 'PUT',  payload)
-    : await api('/api/inventory',       'POST', payload);
-
-  if (data.success) {
-    showToast(id ? '✓ Item updated' : '✓ Item added', 'success');
-    resetAddForm();
-    loadManageItems();
-    loadOverview();
-  } else {
-    showToast('Error: ' + (data.error || 'Failed'), 'error');
-  }
-}
-
-async function deleteItem(id, name) {
-  if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
-  const data = await api('/api/inventory/' + id, 'DELETE');
-  if (data.success) {
-    showToast('✓ Item deleted', 'success');
-    loadManageItems();
-    loadOverview();
-  } else {
-    showToast('Error: ' + data.error, 'error');
-  }
-}
-
-// ═══════════════════════════════════════════════
-//  LOGS
-// ═══════════════════════════════════════════════
-async function loadLogs() {
-  const df   = document.getElementById('log-date-filter')?.value;
-  const url  = '/api/inventory/logs' + (df ? '?date=' + df : '');
-  const data = await api(url);
-  if (!data.success) return;
-  const tbody = document.getElementById('logs-body');
-  if (!data.logs.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No activity found.</td></tr>';
-    return;
-  }
-  tbody.innerHTML = data.logs.map(l => {
-    const cls  = l.logType === 'restock'          ? 'log-restock'
-               : (l.logType === 'deduct' || l.logType === 'order_deduction') ? 'log-deduct'  : 'log-manual';
-    const sign = l.delta > 0 ? '+' : '';
-    return `<tr>
-      <td style="white-space:nowrap;color:var(--muted);font-size:0.78rem">
-        ${new Date(l.createdAt).toLocaleString('en-IN', { dateStyle:'medium', timeStyle:'short' })}
-      </td>
-      <td><strong>${l.itemName}</strong></td>
-      <td><span class="log-chip ${cls}">${l.logType}</span></td>
-      <td style="font-weight:600;color:${l.delta >= 0 ? 'var(--green)' : 'var(--red)'}">${sign}${l.delta}</td>
-      <td>${l.newQty}</td>
-      <td style="color:var(--muted);font-size:0.78rem">${l.note || '—'}</td>
-    </tr>`;
-  }).join('');
-}
-
-// ═══════════════════════════════════════════════
-//  EXCEL IMPORT
-// ═══════════════════════════════════════════════
-let _excelRows = [];
-
-function _normaliseRows(rawRows) {
-  // Maps both "Ingredient Name" style headers (from our Excel) and plain "name" style
-  return rawRows
-    .map(r => ({
-      name:         (r['Ingredient Name'] || r.name         || r.Name         || '').toString().trim(),
-      unit:         (r['Unit']            || r.unit         || r.Unit         || 'units').toString().trim(),
-      currentQty:   parseFloat(r['Current Qty']   ?? r.currentQty ?? r.qty ?? r.Qty ?? r.CurrentQty ?? 0) || 0,
-      reorderLevel: parseFloat(r['Reorder Level'] ?? r.reorderLevel ?? r.reorder ?? r.ReorderLevel ?? 0) || 0,
-      category:     (r['Category'] || r.category || r.Category || '').toString().trim(),
-    }))
-    // Skip category header rows (no name, or name is an emoji header like "🥖 SANDWICH INGREDIENTS")
-    .filter(r => r.name && !/^[^\w]/.test(r.name));
-}
-
-function previewExcel() {
-  const fileInput = document.getElementById('excel-file-input');
-  if (!fileInput.files.length) { showToast('Please select an Excel file first', 'error'); return; }
-  const file = fileInput.files[0];
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const wb = XLSX.read(e.target.result, { type: 'array' });
-
-      // Prefer "Stock Inventory" sheet; fall back to first sheet
-      const sheetName = wb.SheetNames.includes('Stock Inventory')
-        ? 'Stock Inventory'
-        : wb.SheetNames[0];
-      const ws = wb.Sheets[sheetName];
-
-      // Our Excel has rows 1–2 as title/subtitle and row 3 as real headers → range:2 (0-indexed)
-      // But we also support plain files where row 1 is already the header → try range:2 first,
-      // check if we got meaningful data, else fall back to range:0
-      let rawRows = XLSX.utils.sheet_to_json(ws, { defval: '', range: 2 });
-      let rows    = _normaliseRows(rawRows);
-
-      if (!rows.length) {
-        // Fallback: plain file with headers on row 1
-        rawRows = XLSX.utils.sheet_to_json(ws, { defval: '' });
-        rows    = _normaliseRows(rawRows);
-      }
-
-      if (!rows.length) { showToast('No data rows found in file', 'error'); return; }
-
-      _excelRows = rows;   // already normalised
-      document.getElementById('excel-row-count').textContent = rows.length;
-      document.getElementById('excel-preview-body').innerHTML = rows.map((r, i) => `
-        <tr>
-          <td style="color:var(--muted)">${i + 1}</td>
-          <td><strong>${r.name || '—'}</strong></td>
-          <td>${r.unit}</td>
-          <td>${r.currentQty}</td>
-          <td>${r.reorderLevel}</td>
-          <td style="color:var(--muted)">${r.category || '—'}</td>
-        </tr>
-      `).join('');
-      document.getElementById('excel-preview-wrap').style.display = 'block';
-      document.getElementById('excel-result').style.display = 'none';
-    } catch(err) {
-      showToast('Could not read file: ' + err.message, 'error');
-    }
-  };
-  reader.readAsArrayBuffer(file);
-}
-
-async function importExcel() {
-  if (!_excelRows.length) { showToast('No rows to import', 'error'); return; }
-  const clearFirst = document.getElementById('excel-clear-first')?.checked || false;
-  if (clearFirst && !confirm('This will DELETE all existing inventory items and recipe links for this branch, then reload from your Excel. Continue?')) return;
-  showToast('Importing…');
-  // _excelRows are already normalised by _normaliseRows() during preview
-  const token = localStorage.getItem('mach_token') || '';
-  const res = await fetch('/api/inventory/import', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token && { 'Authorization': 'Bearer ' + token })
-    },
-    body: JSON.stringify({ rows: _excelRows, location: BRANCH, clearFirst })
-  });
-  const data = await res.json();
-  if (data.success) {
-    document.getElementById('excel-preview-wrap').style.display = 'none';
-    document.getElementById('excel-result').style.display = 'block';
-    document.getElementById('excel-result-text').innerHTML =
-      `<strong>${data.inserted}</strong> items added &nbsp;·&nbsp; <strong>${data.updated}</strong> items updated` +
-      (data.errors.length ? `<br><span style="color:var(--red)">Skipped rows: ${data.errors.join('; ')}</span>` : '');
-    showToast('✓ Import complete!', 'success');
-    loadOverview();
-  } else {
-    showToast('Import failed: ' + (data.error || 'Unknown error'), 'error');
-  }
-}
-
-function resetExcel() {
-  _excelRows = [];
-  document.getElementById('excel-file-input').value = '';
-  document.getElementById('excel-preview-wrap').style.display = 'none';
-  document.getElementById('excel-result').style.display = 'none';
-}
-
-function downloadTemplate() {
-  const ws = XLSX.utils.aoa_to_sheet([
-    ['name', 'unit', 'currentQty', 'reorderLevel', 'category'],
-    ['Milk', 'ml', 5000, 500, 'Dairy'],
-    ['Espresso Beans', 'shots', 200, 50, 'Beverages'],
-    ['Sugar', 'kg', 10, 2, 'Other'],
-  ]);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Inventory');
-  XLSX.writeFile(wb, 'inventory-template.xlsx');
-}
-
-
-// ═══════════════════════════════════════════════
-//  RECIPES
-// ═══════════════════════════════════════════════
-let _allRecipes    = [];   // full list from API
-let _allIngredients = [];  // for modal dropdown
-
-async function loadRecipes() {
-  const grid = document.getElementById('recipes-grid');
-  grid.innerHTML = '<div class="empty-state">Loading…</div>';
-
-  const [recipeData, invData] = await Promise.all([
-    api('/api/recipes'),
-    api('/api/inventory' + (BRANCH ? '?location=' + BRANCH : '')),
-  ]);
-  if (!recipeData.success) { grid.innerHTML = '<div class="empty-state">Failed to load recipes.</div>'; return; }
-
-  _allRecipes     = recipeData.recipes || [];
-  _allIngredients = (invData.items || []).sort((a, b) => a.name.localeCompare(b.name));
-
-  // Populate section filter
-  const sectionSel = document.getElementById('recipe-section-filter');
-  const sections   = [...new Set(_allRecipes.map(r => r.section).filter(Boolean))].sort();
-  sectionSel.innerHTML = '<option value="">All Sections</option>' +
-    sections.map(s => `<option value="${s}">${s}</option>`).join('');
-
-  renderRecipeCards(_allRecipes);
-}
-
-function filterRecipes() {
-  const q        = (document.getElementById('recipe-search')?.value || '').toLowerCase();
-  const section  = document.getElementById('recipe-section-filter')?.value || '';
-  const unmapped = document.getElementById('recipe-unmapped-only')?.checked;
-
-  const filtered = _allRecipes.filter(r => {
-    if (q && !r.name.toLowerCase().includes(q)) return false;
-    if (section && r.section !== section) return false;
-    if (unmapped && r.ingredients.length > 0) return false;
-    return true;
-  });
-  renderRecipeCards(filtered);
-}
-
-function renderRecipeCards(recipes) {
-  const grid = document.getElementById('recipes-grid');
-  if (!recipes.length) {
-    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">No menu items found.</div>';
-    return;
-  }
-  grid.innerHTML = recipes.map(item => {
-    const ingRows = item.ingredients.length
-      ? item.ingredients.map(i => `
-          <tr>
-            <td style="padding:0.45rem 0.5rem">${i.ingredientName}</td>
-            <td style="padding:0.45rem 0.5rem;text-align:center;color:var(--caramel);font-weight:600">${i.qtyPerServing}</td>
-            <td style="padding:0.45rem 0.5rem;color:var(--muted)">${i.unit}</td>
-            <td style="padding:0.45rem 0.5rem">
-              <div style="display:flex;gap:0.3rem">
-                <button onclick="editRecipeLink(${i.linkId}, ${i.qtyPerServing})"
-                  style="background:var(--espresso);color:#fff;border:none;padding:0.2rem 0.5rem;font-size:0.68rem;cursor:pointer;font-family:Jost,sans-serif">
-                  Edit
-                </button>
-                <button onclick="deleteRecipeLink(${i.linkId}, ${item.id})"
-                  style="background:var(--red);color:#fff;border:none;padding:0.2rem 0.5rem;font-size:0.68rem;cursor:pointer;font-family:Jost,sans-serif">
-                  ✕
-                </button>
-              </div>
-            </td>
-          </tr>
-        `).join('')
-      : `<tr><td colspan="4" style="padding:0.6rem 0.5rem;color:var(--muted);font-style:italic;font-size:0.8rem">No ingredients mapped yet</td></tr>`;
-
-    const badgeColor = item.ingredients.length ? 'var(--green)' : 'var(--orange)';
-    const badgeText  = item.ingredients.length ? `${item.ingredients.length} ingredient${item.ingredients.length > 1 ? 's' : ''}` : 'Unmapped';
-
-    return `
-      <div style="background:#fff;border-left:4px solid ${badgeColor};padding:1.2rem">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.8rem">
-          <div>
-            <div style="font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--espresso)">${item.name}</div>
-            <div style="font-size:0.7rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase">${item.section || ''}</div>
-          </div>
-          <span style="font-size:0.65rem;letter-spacing:1px;text-transform:uppercase;padding:0.2rem 0.6rem;background:${item.ingredients.length ? 'rgba(46,125,50,0.1)' : 'rgba(230,81,0,0.1)'};color:${badgeColor}">
-            ${badgeText}
-          </span>
-        </div>
-        <table style="width:100%;border-collapse:collapse;font-size:0.82rem;margin-bottom:0.7rem">
-          <thead>
-            <tr style="background:rgba(123,79,46,0.06)">
-              <th style="padding:0.35rem 0.5rem;text-align:left;font-size:0.62rem;letter-spacing:1.5px;color:var(--muted);font-weight:500">INGREDIENT</th>
-              <th style="padding:0.35rem 0.5rem;text-align:center;font-size:0.62rem;letter-spacing:1.5px;color:var(--muted);font-weight:500">QTY</th>
-              <th style="padding:0.35rem 0.5rem;font-size:0.62rem;letter-spacing:1.5px;color:var(--muted);font-weight:500">UNIT</th>
-              <th style="padding:0.35rem 0.5rem;font-size:0.62rem;letter-spacing:1.5px;color:var(--muted);font-weight:500"></th>
-            </tr>
-          </thead>
-          <tbody>${ingRows}</tbody>
-        </table>
-        <button onclick="openRecipeModal(${item.id}, '${item.name.replace(/'/g, "\\'")}')"
-          style="width:100%;background:none;border:1px dashed rgba(123,79,46,0.3);color:var(--caramel);padding:0.45rem;font-family:Jost,sans-serif;font-size:0.78rem;letter-spacing:1px;cursor:pointer;transition:all 0.2s"
-          onmouseover="this.style.background='rgba(123,79,46,0.05)'" onmouseout="this.style.background='none'">
-          + Add Ingredient
-        </button>
-      </div>
-    `;
-  }).join('');
-}
-
-function openRecipeModal(menuItemId, menuItemName) {
-  document.getElementById('modal-menu-item-id').value  = menuItemId;
-  document.getElementById('modal-item-name').textContent = menuItemName;
-  document.getElementById('modal-ing-search').value    = '';
-  document.getElementById('modal-qty').value           = '';
-  document.getElementById('modal-unit-hint').textContent = '';
-  renderModalIngredients(_allIngredients);
-  document.getElementById('recipe-modal-overlay').style.display = 'flex';
-}
-
-function closeRecipeModal() {
-  document.getElementById('recipe-modal-overlay').style.display = 'none';
-}
-
-function renderModalIngredients(list) {
-  const sel = document.getElementById('modal-ing-select');
-  sel.innerHTML = list.map(i =>
-    `<option value="${i.id}" data-unit="${i.unit}">${i.name} (${i.unit}) — stock: ${i.currentQty}</option>`
-  ).join('');
-}
-
-function filterModalIngredients() {
-  const q = document.getElementById('modal-ing-search').value.toLowerCase();
-  renderModalIngredients(_allIngredients.filter(i => i.name.toLowerCase().includes(q)));
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Show unit hint when ingredient selected in modal
-  const sel = document.getElementById('modal-ing-select');
-  if (sel) sel.addEventListener('change', () => {
-    const opt = sel.options[sel.selectedIndex];
-    document.getElementById('modal-unit-hint').textContent = opt ? '(' + opt.dataset.unit + ')' : '';
-  });
-  // Close modal on overlay click
-  document.getElementById('recipe-modal-overlay')?.addEventListener('click', function(e) {
-    if (e.target === this) closeRecipeModal();
-  });
+document.getElementById('date-picker').value = todayStr();
+document.getElementById('date-picker').addEventListener('change', function() {
+  selDate = this.value; mode = 'custom';
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  fetchOrders();
 });
 
-async function saveRecipeIngredient() {
-  const menuItemId = document.getElementById('modal-menu-item-id').value;
-  const sel        = document.getElementById('modal-ing-select');
-  const ingredientId = sel.value;
-  const qty        = parseFloat(document.getElementById('modal-qty').value);
+function selectChip(el, days) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  if (days === -1) { mode = 'all'; selDate = null; document.getElementById('date-picker').value = ''; }
+  else if (days === 7) { mode = 'week'; selDate = null; document.getElementById('date-picker').value = ''; }
+  else { mode = days === 0 ? 'today' : 'yesterday'; selDate = subtractDays(days); document.getElementById('date-picker').value = selDate; }
+  fetchOrders();
+}
 
-  if (!ingredientId) { showToast('Select an ingredient', 'error'); return; }
-  if (!qty || qty <= 0) { showToast('Enter a valid quantity', 'error'); return; }
+function jumpDate(d) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  selDate = d; mode = 'custom'; document.getElementById('date-picker').value = d; fetchOrders();
+}
 
-  const token = localStorage.getItem('mach_token') || '';
-  const res = await fetch(`/api/recipes/${menuItemId}/ingredients`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...(token && { Authorization: 'Bearer ' + token }) },
-    body: JSON.stringify({ ingredientId: parseInt(ingredientId), qtyPerServing: qty }),
-  });
-  const data = await res.json();
-  if (data.success) {
-    showToast('✓ Ingredient added!', 'success');
-    closeRecipeModal();
-    loadRecipes();
-  } else {
-    showToast('Error: ' + (data.error || 'Failed'), 'error');
+function cardClass(p) {
+  const has2 = p.includes(2), has3 = p.includes(3);
+  if (has2 && has3) return 'p123';
+  if (has2) return 'p12';
+  if (has3) return 'p13';
+  return 'p1only';
+}
+
+async function fetchOrders() {
+  try {
+    let url = `/api/orders/routing?location=${BRANCH}`;
+    if (mode === 'today' || mode === 'yesterday' || mode === 'custom') url += `&date=${selDate}`;
+
+    const token = localStorage.getItem('mach_token') || '';
+    const res   = await fetch(url, { headers: token ? { Authorization: 'Bearer ' + token } : {} });
+    const data  = await res.json();
+    if (!data.success) throw new Error('API error');
+
+    let orders = data.orders || [];
+    if (mode === 'week') { const cut = subtractDays(6); orders = orders.filter(o => o.timestamp.slice(0,10) >= cut); }
+
+    // ── Available date chips ──
+    const avail = document.getElementById('avail-dates');
+    avail.innerHTML = (data.availableDates || []).slice(0, 10)
+      .map(d => `<div class="chip" style="font-size:0.6rem;padding:0.2rem 0.5rem" onclick="jumpDate('${d}')">${d}</div>`)
+      .join('') || '<span style="color:rgba(255,255,255,0.25);font-size:0.7rem">None yet</span>';
+
+    document.getElementById('last-upd').textContent = new Date().toLocaleTimeString('en-IN');
+    document.getElementById('s-total').textContent  = orders.length;
+    document.getElementById('s-rev').textContent    = '₹' + orders.reduce((s,o)=>s+o.grand,0).toLocaleString('en-IN');
+
+    const upiRev  = orders.filter(o => (o.paymentMode||'').toUpperCase() === 'UPI').reduce((s,o)=>s+o.grand,0);
+    const cashRev = orders.filter(o => (o.paymentMode||'').toUpperCase() === 'CASH').reduce((s,o)=>s+o.grand,0);
+    document.getElementById('s-upi').textContent    = '₹' + upiRev.toLocaleString('en-IN');
+    document.getElementById('s-cash').textContent   = '₹' + cashRev.toLocaleString('en-IN');
+
+    document.getElementById('s-p1').textContent     = orders.filter(o=>o.printers.includes(1)).length;
+    document.getElementById('s-p2').textContent     = orders.filter(o=>o.printers.includes(2)).length;
+    document.getElementById('s-p3').textContent     = orders.filter(o=>o.printers.includes(3)).length;
+
+    const container = document.getElementById('orders');
+    if (!orders.length) {
+      const msg = mode === 'all' ? 'No orders yet.' : mode === 'week' ? 'No orders in the last 7 days.' : `No orders on ${selDate}.`;
+      container.innerHTML = `<div class="empty">📭 ${msg}</div>`; return;
+    }
+
+    container.innerHTML = orders.map(o => {
+      const pm = (o.paymentMode || 'Cash').toUpperCase();
+      const pmClass = pm === 'UPI' ? 'pm-upi' : pm === 'CASH' ? 'pm-cash' : 'pm-other';
+      const pmIcon  = pm === 'UPI' ? '📲' : pm === 'CASH' ? '💵' : '💳';
+      return `
+      <div class="order-card ${cardClass(o.printers)}">
+        <div class="card-main">
+          <div class="order-top">
+            <span class="inv-no">${o.invoiceNo}</span>
+            <span class="table-tag">${o.tableNo}</span>
+            <span class="status-tag status-${o.status}">${o.status}</span>
+            <span class="pm-badge ${pmClass}">${pmIcon} ${pm}</span>
+            <span class="time-tag">${new Date(o.timestamp).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})}</span>
+          </div>
+          <div class="printer-badges">
+            ${o.printers.map(p=>`<span class="p-badge p${p}">🖨 P${p} — ${p===1?'Full Invoice':p===2?'Beverages':'Food'}</span>`).join('')}
+          </div>
+          <div class="items-cols">
+            ${o.breakdown.beverages.length ? `<div class="items-col"><h4>☕ Beverages → P2</h4>${o.breakdown.beverages.map(i=>`<div class="item-row"><span>${i.name}</span><span class="item-meta">×${i.qty} · ₹${i.amount}</span></div>`).join('')}</div>` : ''}
+            ${o.breakdown.food.length ? `<div class="items-col"><h4>🍛 Food → P3</h4>${o.breakdown.food.map(i=>`<div class="item-row"><span>${i.name}</span><span class="item-meta">×${i.qty} · ₹${i.amount}</span></div>`).join('')}</div>` : ''}
+            ${!o.breakdown.beverages.length && !o.breakdown.food.length ? `<div class="items-col"><h4>📄 All Items → P1</h4>${o.breakdown.all.map(i=>`<div class="item-row"><span>${i.name}</span><span class="item-meta">×${i.qty} · ₹${i.amount}</span></div>`).join('')}</div>` : ''}
+          </div>
+        </div>
+        <div class="card-right">
+          <div>
+            <div class="grand-label">Grand Total</div>
+            <div class="grand-amount">₹${o.grand.toLocaleString('en-IN')}</div>
+            <div class="pm-total ${pmClass}">${pmIcon} ${pm}</div>
+          </div>
+          <div>
+            <div class="customer-name">👤 ${o.customer}</div>
+            <div class="customer-phone">📞 ${o.phone}</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+  } catch(e) {
+    document.getElementById('orders').innerHTML =
+      `<div class="error">⚠️ Could not connect to server.<br>
+       <small style="font-size:0.8rem;margin-top:0.4rem;display:block;color:#8A6B55">
+         Make sure <strong>node server.js</strong> is running at <strong>http://localhost:3000</strong>
+       </small></div>`;
   }
 }
 
-async function editRecipeLink(linkId, currentQty) {
-  const newQty = parseFloat(prompt('New quantity per serving:', currentQty));
-  if (!newQty || newQty <= 0) return;
-  const token = localStorage.getItem('mach_token') || '';
-  const res = await fetch(`/api/recipes/links/${linkId}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...(token && { Authorization: 'Bearer ' + token }) },
-    body: JSON.stringify({ qtyPerServing: newQty }),
-  });
-  const data = await res.json();
-  if (data.success) { showToast('✓ Updated!', 'success'); loadRecipes(); }
-  else showToast('Error: ' + data.error, 'error');
-}
-
-async function deleteRecipeLink(linkId, menuItemId) {
-  if (!confirm('Remove this ingredient from the recipe?')) return;
-  const token = localStorage.getItem('mach_token') || '';
-  const res = await fetch(`/api/recipes/links/${linkId}`, {
-    method: 'DELETE',
-    headers: { ...(token && { Authorization: 'Bearer ' + token }) },
-  });
-  const data = await res.json();
-  if (data.success) { showToast('✓ Removed', 'success'); loadRecipes(); }
-  else showToast('Error: ' + data.error, 'error');
-}
-
-// ═══════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════
-function init() {
-  loadOverview();
-  setInterval(loadOverview, 15000);
-}
+function init() { fetchOrders(); setInterval(fetchOrders, 5000); }
 </script>
 </body>
 </html>
