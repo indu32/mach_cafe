@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MACH Cafe — Printer Routing Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #f5f0eb; color: #2A1408; }
+
+
+#auth-gate { position:fixed; inset:0; background:#3B1F0C; display:flex; align-items:center; justify-content:center; z-index:9999; flex-direction:column; gap:1rem; }
+#auth-gate p { color:rgba(255,255,255,0.5); font-size:0.85rem; letter-spacing:2px; text-transform:uppercase; }
+#auth-gate a { color:#C8956C; text-decoration:none; font-size:0.85rem; border-bottom:1px solid #C8956C; padding-bottom:2px; }
+.btn-logout { background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.7); padding:0.4rem 1rem; font-size:0.72rem; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; }
+.btn-logout:hover { background:rgba(255,255,255,0.2); }
+
+
+.logout-btn {
+  background: none;
+  border: 1px solid rgba(212,169,106,0.3);
+  color: var(--latte);
+  font-family: 'Jost', sans-serif;
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 0.5rem 1.4rem;
+  cursor: pointer; transition: all 0.3s;
+}
+.logout-btn:hover { color: var(--caramel); border-color: var(--caramel); }
+
+  header {
+    background: #3B1F0C; color: #fff;
+    padding: 1.2rem 2rem;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  }
+  header h1 { font-size: 1.3rem; letter-spacing: 1px; }
+  .live-dot {
+    display: inline-block; width: 10px; height: 10px;
+    background: #4caf50; border-radius: 50%;
+    margin-right: 0.5rem; animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .last-updated { font-size: 0.75rem; opacity: 0.5; }
+
+  /* ── DATE BAR ── */
+  .date-bar {
+    background: #5A3520; padding: 0.9rem 2rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .date-bar label { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+  .date-bar input[type="date"] {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: #fff; padding: 0.4rem 0.8rem; font-size: 0.85rem; outline: none;
+    cursor: pointer;
+  }
+  .date-bar input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+  .date-btn {
+    padding: 0.4rem 1rem; background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2); color: #fff;
+    font-size: 0.75rem; letter-spacing: 1px; cursor: pointer; transition: background 0.2s;
+  }
+  .date-btn:hover, .date-btn.active { background: #7B4F2E; border-color: #7B4F2E; }
+  .date-divider { color: rgba(255,255,255,0.2); }
+
+  /* quick-date chips */
+  .date-chips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .chip {
+    font-size: 0.7rem; padding: 0.3rem 0.7rem; cursor: pointer;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.6); letter-spacing: 1px; transition: all 0.2s;
+  }
+  .chip:hover { background: rgba(255,255,255,0.18); color: #fff; }
+  .chip.active { background: #C8956C; border-color: #C8956C; color: #fff; }
+
+  /* ── STATS ── */
+  .stats {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 1px; background: #d4c4b4; margin-bottom: 1px;
+  }
+  .stat-box {
+    background: #fff; padding: 1.2rem 1.5rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .stat-icon { font-size: 1.8rem; }
+  .stat-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #8A6B55; }
+  .stat-value { font-size: 1.6rem; font-weight: 700; color: #3B1F0C; }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex; gap: 1.5rem; flex-wrap: wrap;
+    padding: 0.7rem 2rem; background: #2a1408;
+    font-size: 0.7rem; color: rgba(255,255,255,0.45);
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; }
+  .legend-dot { width: 12px; height: 4px; border-radius: 2px; }
+
+  /* ── ORDERS ── */
+  .orders { padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 1rem; }
+
+  .order-card {
+    background: #fff; border-left: 5px solid #ccc;
+    padding: 1.2rem 1.5rem;
+    display: grid; grid-template-columns: 1fr auto;
+    gap: 1rem; align-items: start;
+  }
+  .order-card.p1only { border-left-color: #9e9e9e; }
+  .order-card.p12    { border-left-color: #2196F3; }
+  .order-card.p13    { border-left-color: #FF9800; }
+  .order-card.p123   { border-left-color: #9C27B0; }
+
+  .order-top { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+  .inv-no { font-weight: 700; font-size: 0.92rem; color: #3B1F0C; }
+  .table-tag { font-size: 0.7rem; background: #f0e8e0; padding: 0.2rem 0.6rem; color: #7B4F2E; }
+  .status-tag {
+    font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0.2rem 0.6rem; border-radius: 2px;
+  }
+  .status-PENDING   { background: #fff3e0; color: #e65100; }
+  .status-PAID      { background: #e8f5e9; color: #2e7d32; }
+  .status-CANCELLED { background: #ffebee; color: #c62828; }
+  .time-tag { font-size: 0.72rem; color: #8A6B55; margin-left: auto; }
+
+  .printer-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+  .p-badge {
+    font-size: 0.68rem; letter-spacing: 1px; padding: 0.25rem 0.7rem;
+    font-weight: 600; border-radius: 2px;
+  }
+  .p-badge.p1 { background: #eeeeee; color: #424242; }
+  .p-badge.p2 { background: #e3f2fd; color: #1565C0; }
+  .p-badge.p3 { background: #fff3e0; color: #BF360C; }
+
+  .items-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  .items-col h4 {
+    font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase;
+    color: #8A6B55; margin-bottom: 0.4rem; padding-bottom: 0.3rem;
+    border-bottom: 1px solid #e8ddd5;
+  }
+  .item-row { font-size: 0.78rem; color: #5A3520; padding: 0.15rem 0; display: flex; justify-content: space-between; }
+  .item-row span { color: #8A6B55; font-size: 0.7rem; }
+
+  .order-right { text-align: right; min-width: 120px; }
+  .grand-amount { font-size: 1.3rem; font-weight: 700; color: #7B4F2E; }
+  .grand-label { font-size: 0.65rem; color: #8A6B55; letter-spacing: 1px; text-transform: uppercase; }
+  .customer-name { font-size: 0.78rem; color: #5A3520; margin-top: 0.5rem; }
+  .customer-phone { font-size: 0.72rem; color: #8A6B55; }
+
+  .empty { text-align: center; padding: 4rem; color: #8A6B55; font-size: 1rem; }
+  .error { text-align: center; padding: 4rem; color: #c62828; font-size: 1rem; }
+
+  /* ── HISTORY SIDEBAR dates ── */
+  .available-dates {
+    display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;
+  }
+  .avail-label { font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 1px; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div id="auth-gate">
+  <p>🔐 Verifying access...</p>
+  <a href="/owner-login.html" id="login-link" style="display:none">← Go to Login</a>
+</div>
+
+<header>
+  <h1>☕ MACH Cafe — <span style="color:#C8956C">Printer Routing</span></h1>
+  <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+    <span class="last-updated" id="last-updated">Fetching…</span>
+    <span><span class="live-dot"></span>Live</span>
+  </div>
+
+  <button class="btn-logout" onclick="logout()">Logout</button>
+</header>
+
+<!-- DATE FILTER BAR -->
+<div class="date-bar">
+  <label>Filter by Date</label>
+  <input type="date" id="date-picker" />
+
+  <div class="date-chips">
+    <div class="chip active" data-days="0" onclick="selectChip(this, 0)">Today</div>
+    <div class="chip" data-days="1" onclick="selectChip(this, 1)">Yesterday</div>
+    <div class="chip" data-days="7" onclick="selectChip(this, 7)">Last 7 Days</div>
+    <div class="chip" data-days="-1" onclick="selectChip(this, -1)">All Time</div>
+  </div>
+
+  <span class="date-divider">|</span>
+  <label class="avail-label">Days with orders:</label>
+  <div class="available-dates" id="available-dates">—</div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-box">
+    <div class="stat-icon">📋</div>
+    <div>
+      <div class="stat-label">Orders</div>
+      <div class="stat-value" id="stat-total">—</div>
+    </div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-icon">💰</div>
+    <div>
+      <div class="stat-label">Revenue</div>
+      <div class="stat-value" id="stat-revenue">—</div>
+    </div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-icon">🖨️</div>
+    <div>
+      <div class="stat-label">Printer 1 (Full)</div>
+      <div class="stat-value" id="stat-p1">—</div>
+    </div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-icon">☕</div>
+    <div>
+      <div class="stat-label">Printer 2 (Bev)</div>
+      <div class="stat-value" id="stat-p2">—</div>
+    </div>
+  </div>
+  <div class="stat-box">
+    <div class="stat-icon">🍛</div>
+    <div>
+      <div class="stat-label">Printer 3 (Food)</div>
+      <div class="stat-value" id="stat-p3">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#9e9e9e"></div> Printer 1 only</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#2196F3"></div> Printer 1 + 2 (beverages)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#FF9800"></div> Printer 1 + 3 (food)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#9C27B0"></div> All 3 printers (mixed)</div>
+</div>
+
+<!-- ORDERS LIST -->
+<div class="orders" id="orders-container">
+  <div class="empty">Loading…</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  LOGOUT
+// ═══════════════════════════════════════════════
+function logout() {
+  sessionStorage.clear();
+  localStorage.removeItem('mach_token');
+  window.location.href = 'index.html';
+}
+
+// ═══════════════════════════════════════════════
+//  AUTH GUARD
+// ═══════════════════════════════════════════════
+(function() {
+  const role = sessionStorage.getItem('mach_role');
+  if (!role) { window.location.href = 'index.html'; return; }
+
+  if (role === 'owner') {
+    const token = localStorage.getItem('mach_token');
+    if (!token) { window.location.href = 'index.html'; return; }
+  }
+
+  // Passed — hide auth gate and boot
+  document.getElementById('auth-gate').style.display = 'none';
+  init();
+})();
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let currentMode = 'today';
+let currentDate = todayStr();
+
+function todayStr() { return new Date().toISOString().slice(0, 10); }
+function subtractDays(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
+
+// ═══════════════════════════════════════════════
+//  DATE PICKER
+// ═══════════════════════════════════════════════
+document.getElementById('date-picker').addEventListener('change', function() {
+  currentDate = this.value;
+  currentMode = 'custom';
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  fetchOrders();
+});
+document.getElementById('date-picker').value = todayStr();
+
+// ═══════════════════════════════════════════════
+//  CHIP SELECTION
+// ═══════════════════════════════════════════════
+function selectChip(el, days) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+
+  if (days === -1) {
+    currentMode = 'all';
+    currentDate = null;
+    document.getElementById('date-picker').value = '';
+  } else if (days === 7) {
+    currentMode = 'week';
+    currentDate = null;
+    document.getElementById('date-picker').value = '';
+  } else {
+    currentMode = days === 0 ? 'today' : 'yesterday';
+    currentDate = subtractDays(days);
+    document.getElementById('date-picker').value = currentDate;
+  }
+  fetchOrders();
+}
+
+// ═══════════════════════════════════════════════
+//  AVAILABLE DATE CHIPS
+// ═══════════════════════════════════════════════
+function renderAvailableDates(dates) {
+  const container = document.getElementById('available-dates');
+  if (!dates.length) { container.innerHTML = '<span style="color:rgba(255,255,255,0.3);font-size:0.7rem">None yet</span>'; return; }
+  container.innerHTML = dates.slice(0, 10).map(d =>
+    `<div class="chip" style="font-size:0.65rem;padding:0.2rem 0.5rem" onclick="jumpToDate('${d}')">${d}</div>`
+  ).join('');
+}
+
+function jumpToDate(dateStr) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  currentDate = dateStr;
+  currentMode = 'custom';
+  document.getElementById('date-picker').value = dateStr;
+  fetchOrders();
+}
+
+// ═══════════════════════════════════════════════
+//  CARD CLASS
+// ═══════════════════════════════════════════════
+function cardClass(printers) {
+  const has2 = printers.includes(2), has3 = printers.includes(3);
+  if (has2 && has3) return 'p123';
+  if (has2)         return 'p12';
+  if (has3)         return 'p13';
+  return 'p1only';
+}
+
+// ═══════════════════════════════════════════════
+//  FETCH ORDERS
+// ═══════════════════════════════════════════════
+async function fetchOrders() {
+  try {
+    let url = '/api/orders/routing';
+    if (currentMode === 'today' || currentMode === 'yesterday' || currentMode === 'custom') {
+      url += `?date=${currentDate}`;
+    }
+
+    const token = localStorage.getItem('mach_token') || '';
+    const res   = await fetch(url, {
+      headers: { ...(token && { 'Authorization': 'Bearer ' + token }) }
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error('API error');
+
+    let orders = data.orders;
+
+    if (currentMode === 'week') {
+      const cutoff = subtractDays(6);
+      orders = orders.filter(o => o.timestamp.slice(0, 10) >= cutoff);
+    }
+
+    renderAvailableDates(data.availableDates || []);
+    document.getElementById('last-updated').textContent = 'Updated: ' + new Date().toLocaleTimeString('en-IN');
+
+    document.getElementById('stat-total').textContent   = orders.length;
+    document.getElementById('stat-revenue').textContent = '₹' + orders.reduce((s, o) => s + o.grand, 0).toLocaleString('en-IN');
+    document.getElementById('stat-p1').textContent      = orders.filter(o => o.printers.includes(1)).length;
+    document.getElementById('stat-p2').textContent      = orders.filter(o => o.printers.includes(2)).length;
+    document.getElementById('stat-p3').textContent      = orders.filter(o => o.printers.includes(3)).length;
+
+    const container = document.getElementById('orders-container');
+    if (!orders.length) {
+      const label = currentMode === 'all'  ? 'No orders found.' :
+                    currentMode === 'week' ? 'No orders in the last 7 days.' :
+                    `No orders on ${currentDate}.`;
+      container.innerHTML = `<div class="empty">📭 ${label}</div>`;
+      return;
+    }
+
+    container.innerHTML = orders.map(o => `
+      <div class="order-card ${cardClass(o.printers)}">
+        <div>
+          <div class="order-top">
+            <span class="inv-no">${o.invoiceNo}</span>
+            <span class="table-tag">${o.tableNo}</span>
+            <span class="status-tag status-${o.status}">${o.status}</span>
+            <span class="time-tag">${new Date(o.timestamp).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</span>
+          </div>
+          <div class="printer-badges">
+            ${o.printers.map(p => `
+              <span class="p-badge p${p}">🖨 Printer ${p} — ${p === 1 ? 'Full Invoice' : p === 2 ? 'Beverages' : 'Food Items'}</span>
+            `).join('')}
+          </div>
+          <div class="items-grid">
+            ${o.breakdown.beverages.length ? `
+              <div class="items-col">
+                <h4>☕ Beverages → Printer 2</h4>
+                ${o.breakdown.beverages.map(i => `<div class="item-row"><span>${i.name}</span><span>x${i.qty} · ₹${i.amount}</span></div>`).join('')}
+              </div>` : ''}
+            ${o.breakdown.food.length ? `
+              <div class="items-col">
+                <h4>🍛 Food → Printer 3</h4>
+                ${o.breakdown.food.map(i => `<div class="item-row"><span>${i.name}</span><span>x${i.qty} · ₹${i.amount}</span></div>`).join('')}
+              </div>` : ''}
+            ${!o.breakdown.beverages.length && !o.breakdown.food.length ? `
+              <div class="items-col">
+                <h4>📄 All Items → Printer 1 Only</h4>
+                ${o.breakdown.all.map(i => `<div class="item-row"><span>${i.name}</span><span>x${i.qty} · ₹${i.amount}</span></div>`).join('')}
+              </div>` : ''}
+          </div>
+        </div>
+        <div class="order-right">
+          <div class="grand-label">Grand Total</div>
+          <div class="grand-amount">₹${o.grand.toLocaleString('en-IN')}</div>
+          <div class="customer-name">👤 ${o.customer}</div>
+          <div class="customer-phone">📞 ${o.phone}</div>
+        </div>
+      </div>
+    `).join('');
+
+  } catch (e) {
+    document.getElementById('orders-container').innerHTML =
+      `<div class="error">⚠️ Could not connect to server.<br>
+        <small style="color:#8A6B55;font-size:0.8rem;margin-top:0.5rem;display:block">
+          Make sure <strong>node server.js</strong> is running and you opened this via
+          <strong>http://localhost:3000/printer-dashboard.html</strong>
+        </small>
+      </div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+function init() {
+  fetchOrders();
+  setInterval(fetchOrders, 5000);
+}
+</script>
+</body>
+</html>

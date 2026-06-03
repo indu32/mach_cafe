@@ -1,0 +1,7972 @@
+{
+  "customers": [
+    {
+      "id": 1,
+      "name": "yamunu",
+      "phone": "3826425134",
+      "email": null,
+      "address": null,
+      "created_at": "2026-05-25 12:02:10"
+    },
+    {
+      "id": 2,
+      "name": "nandhuuu",
+      "phone": "9867452136",
+      "email": null,
+      "address": null,
+      "created_at": "2026-05-25 12:51:09"
+    },
+    {
+      "id": 3,
+      "name": "navya",
+      "phone": "4524210256",
+      "email": null,
+      "address": null,
+      "created_at": "2026-05-25 14:25:08"
+    },
+    {
+      "id": 4,
+      "name": "navya",
+      "phone": "8342348327",
+      "email": null,
+      "address": null,
+      "created_at": "2026-05-25 14:34:23"
+    },
+    {
+      "id": 5,
+      "name": "yamuu",
+      "phone": "9765453456",
+      "email": null,
+      "address": null,
+      "created_at": "2026-05-27 11:58:48"
+    }
+  ],
+  "invoices": [
+    {
+      "id": 1,
+      "invoiceNo": "MACH-KOD-1779690730416",
+      "customerId": 1,
+      "tableNo": "Counter",
+      "paymentMode": "Card",
+      "status": "PENDING",
+      "subtotal": 140,
+      "cgst": 4,
+      "sgst": 4,
+      "grand": 148,
+      "timestamp": "2026-05-25 12:02:10",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 2,
+      "invoiceNo": "MACH-KOD-1779693669097",
+      "customerId": 2,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 320,
+      "cgst": 8,
+      "sgst": 8,
+      "grand": 336,
+      "timestamp": "2026-05-25 12:51:09",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 3,
+      "invoiceNo": "MACH-GUN-1779699189182",
+      "customerId": 2,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 780,
+      "cgst": 20,
+      "sgst": 20,
+      "grand": 820,
+      "timestamp": "2026-05-25 14:23:09",
+      "location": "guntupalli"
+    },
+    {
+      "id": 4,
+      "invoiceNo": "MACH-GUN-1779699227232",
+      "customerId": 2,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 930,
+      "cgst": 23,
+      "sgst": 23,
+      "grand": 976,
+      "timestamp": "2026-05-25 14:23:47",
+      "location": "guntupalli"
+    },
+    {
+      "id": 5,
+      "invoiceNo": "MACH-GUN-1779699308952",
+      "customerId": 3,
+      "tableNo": "Counter",
+      "paymentMode": "UPI",
+      "status": "PENDING",
+      "subtotal": 190,
+      "cgst": 5,
+      "sgst": 5,
+      "grand": 200,
+      "timestamp": "2026-05-25 14:25:08",
+      "location": "guntupalli"
+    },
+    {
+      "id": 6,
+      "invoiceNo": "MACH-GUN-1779699863316",
+      "customerId": 4,
+      "tableNo": "Counter",
+      "paymentMode": "UPI",
+      "status": "PENDING",
+      "subtotal": 4530,
+      "cgst": 113,
+      "sgst": 113,
+      "grand": 4756,
+      "timestamp": "2026-05-25 14:34:23",
+      "location": "guntupalli"
+    },
+    {
+      "id": 7,
+      "invoiceNo": "MACH-1779707117138",
+      "customerId": 2,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 700,
+      "cgst": 18,
+      "sgst": 18,
+      "grand": 736,
+      "timestamp": "2026-05-25 16:35:17",
+      "location": "guntupalli"
+    },
+    {
+      "id": 8,
+      "invoiceNo": "MACH-1779708008183",
+      "customerId": 4,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 390,
+      "cgst": 10,
+      "sgst": 10,
+      "grand": 410,
+      "timestamp": "2026-05-25 16:50:08",
+      "location": "guntupalli"
+    },
+    {
+      "id": 9,
+      "invoiceNo": "MACH-1779708050079",
+      "customerId": 2,
+      "tableNo": "Counter",
+      "paymentMode": "UPI",
+      "status": "PENDING",
+      "subtotal": 720,
+      "cgst": 18,
+      "sgst": 18,
+      "grand": 756,
+      "timestamp": "2026-05-25 16:50:50",
+      "location": "guntupalli"
+    },
+    {
+      "id": 10,
+      "invoiceNo": "MACH-1779783797710",
+      "customerId": 4,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 490,
+      "cgst": 12,
+      "sgst": 12,
+      "grand": 514,
+      "timestamp": "2026-05-26 13:53:17",
+      "location": "guntupalli"
+    },
+    {
+      "id": 11,
+      "invoiceNo": "MACH-1779783905802",
+      "customerId": 4,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 480,
+      "cgst": 12,
+      "sgst": 12,
+      "grand": 504,
+      "timestamp": "2026-05-26 13:55:05",
+      "location": "guntupalli"
+    },
+    {
+      "id": 12,
+      "invoiceNo": "MACH-ONG-1779786132461",
+      "customerId": 4,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 290,
+      "cgst": 7,
+      "sgst": 7,
+      "grand": 304,
+      "timestamp": "2026-05-26 14:32:12",
+      "location": "ongole"
+    },
+    {
+      "id": 13,
+      "invoiceNo": "MACH-KOD-1779786228119",
+      "customerId": 2,
+      "tableNo": "Counter",
+      "paymentMode": "UPI",
+      "status": "PENDING",
+      "subtotal": 370,
+      "cgst": 9,
+      "sgst": 9,
+      "grand": 388,
+      "timestamp": "2026-05-26 14:33:48",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 14,
+      "invoiceNo": "MACH-GUN-1779863328655",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 1560,
+      "cgst": 39,
+      "sgst": 39,
+      "grand": 1638,
+      "timestamp": "2026-05-27 11:58:48",
+      "location": "guntupalli"
+    },
+    {
+      "id": 15,
+      "invoiceNo": "MACH-GUN-1779863769513",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 520,
+      "cgst": 13,
+      "sgst": 13,
+      "grand": 546,
+      "timestamp": "2026-05-27 12:06:09",
+      "location": "guntupalli"
+    },
+    {
+      "id": 16,
+      "invoiceNo": "MACH-GUN-1779868093190",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 240,
+      "cgst": 6,
+      "sgst": 6,
+      "grand": 252,
+      "timestamp": "2026-05-27 13:18:13",
+      "location": "guntupalli"
+    },
+    {
+      "id": 17,
+      "invoiceNo": "MACH-GUN-1779868276753",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 300,
+      "cgst": 8,
+      "sgst": 8,
+      "grand": 316,
+      "timestamp": "2026-05-27 13:21:16",
+      "location": "guntupalli"
+    },
+    {
+      "id": 18,
+      "invoiceNo": "MACH-GUN-1779868413883",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 240,
+      "cgst": 6,
+      "sgst": 6,
+      "grand": 252,
+      "timestamp": "2026-05-27 13:23:33",
+      "location": "guntupalli"
+    },
+    {
+      "id": 19,
+      "invoiceNo": "MACH-ONG-1779871318338",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 250,
+      "cgst": 6,
+      "sgst": 6,
+      "grand": 262,
+      "timestamp": "2026-05-27 14:11:58",
+      "location": "ongole"
+    },
+    {
+      "id": 20,
+      "invoiceNo": "MACH-GUN-1779943127989",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 120,
+      "cgst": 3,
+      "sgst": 3,
+      "grand": 126,
+      "timestamp": "2026-05-28 10:08:48",
+      "location": "guntupalli"
+    },
+    {
+      "id": 21,
+      "invoiceNo": "MACH-GUN-1779943212156",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 90,
+      "cgst": 2,
+      "sgst": 2,
+      "grand": 94,
+      "timestamp": "2026-05-28 10:10:12",
+      "location": "guntupalli"
+    },
+    {
+      "id": 22,
+      "invoiceNo": "MACH-GUN-1779944061223",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 120,
+      "cgst": 3,
+      "sgst": 3,
+      "grand": 126,
+      "timestamp": "2026-05-28 10:24:21",
+      "location": "guntupalli"
+    },
+    {
+      "id": 23,
+      "invoiceNo": "MACH-ONG-1779944204772",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 170,
+      "cgst": 4,
+      "sgst": 4,
+      "grand": 178,
+      "timestamp": "2026-05-28 10:26:44",
+      "location": "ongole"
+    },
+    {
+      "id": 24,
+      "invoiceNo": "MACH-GUN-1779944544825",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 180,
+      "cgst": 5,
+      "sgst": 5,
+      "grand": 190,
+      "timestamp": "2026-05-28 10:32:24",
+      "location": "guntupalli"
+    },
+    {
+      "id": 25,
+      "invoiceNo": "MACH-GUN-1779944958086",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 110,
+      "cgst": 3,
+      "sgst": 3,
+      "grand": 116,
+      "timestamp": "2026-05-28 10:39:18",
+      "location": "guntupalli"
+    },
+    {
+      "id": 26,
+      "invoiceNo": "MACH-GUN-1779945310436",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 60,
+      "cgst": 2,
+      "sgst": 2,
+      "grand": 64,
+      "timestamp": "2026-05-28 10:45:10",
+      "location": "guntupalli"
+    },
+    {
+      "id": 27,
+      "invoiceNo": "MACH-GUN-1779947467299",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 330,
+      "cgst": 8,
+      "sgst": 8,
+      "grand": 346,
+      "timestamp": "2026-05-28 11:21:07",
+      "location": "guntupalli"
+    },
+    {
+      "id": 28,
+      "invoiceNo": "MACH-GUN-1779960628921",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "UPI",
+      "status": "PENDING",
+      "subtotal": 140,
+      "cgst": 4,
+      "sgst": 4,
+      "grand": 148,
+      "timestamp": "2026-05-28 15:00:28",
+      "location": "guntupalli"
+    },
+    {
+      "id": 29,
+      "invoiceNo": "MACH-GUN-1779961444904",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 160,
+      "cgst": 4,
+      "sgst": 4,
+      "grand": 168,
+      "timestamp": "2026-05-28 15:14:04",
+      "location": "guntupalli"
+    },
+    {
+      "id": 30,
+      "invoiceNo": "MACH-ONG-1779961566843",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 80,
+      "cgst": 2,
+      "sgst": 2,
+      "grand": 84,
+      "timestamp": "2026-05-28 15:16:06",
+      "location": "ongole"
+    },
+    {
+      "id": 31,
+      "invoiceNo": "MACH-GUN-1780048922666",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 240,
+      "cgst": 6,
+      "sgst": 6,
+      "grand": 252,
+      "timestamp": "2026-05-29 15:32:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 32,
+      "invoiceNo": "MACH-GUN-1780051430940",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 45,
+      "cgst": 1,
+      "sgst": 1,
+      "grand": 47,
+      "timestamp": "2026-05-29 16:13:50",
+      "location": "guntupalli"
+    },
+    {
+      "id": 33,
+      "invoiceNo": "MACH-GUN-1780052450785",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 70,
+      "cgst": 2,
+      "sgst": 2,
+      "grand": 74,
+      "timestamp": "2026-05-29 16:30:50",
+      "location": "guntupalli"
+    },
+    {
+      "id": 34,
+      "invoiceNo": "MACH-GUN-1780052533899",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 100,
+      "cgst": 3,
+      "sgst": 3,
+      "grand": 106,
+      "timestamp": "2026-05-29 16:32:13",
+      "location": "guntupalli"
+    },
+    {
+      "id": 35,
+      "invoiceNo": "MACH-GUN-1780115574001",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "UPI",
+      "status": "PENDING",
+      "subtotal": 20,
+      "cgst": 1,
+      "sgst": 1,
+      "grand": 22,
+      "timestamp": "2026-05-30 10:02:54",
+      "location": "guntupalli"
+    },
+    {
+      "id": 36,
+      "invoiceNo": "MACH-GUN-1780116775054",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 25,
+      "cgst": 1,
+      "sgst": 1,
+      "grand": 27,
+      "timestamp": "2026-05-30 10:22:55",
+      "location": "guntupalli"
+    },
+    {
+      "id": 37,
+      "invoiceNo": "MACH-GUN-1780116988310",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 25,
+      "cgst": 1,
+      "sgst": 1,
+      "grand": 27,
+      "timestamp": "2026-05-30 10:26:28",
+      "location": "guntupalli"
+    },
+    {
+      "id": 38,
+      "invoiceNo": "MACH-GUN-1780117415268",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 25,
+      "cgst": 1,
+      "sgst": 1,
+      "grand": 27,
+      "timestamp": "2026-05-30 10:33:35",
+      "location": "guntupalli"
+    },
+    {
+      "id": 39,
+      "invoiceNo": "MACH-GUN-1780117527339",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 45,
+      "cgst": 1,
+      "sgst": 1,
+      "grand": 47,
+      "timestamp": "2026-05-30 10:35:27",
+      "location": "guntupalli"
+    },
+    {
+      "id": 40,
+      "invoiceNo": "MACH-GUN-1780118411111",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 25,
+      "cgst": 1,
+      "sgst": 1,
+      "grand": 27,
+      "timestamp": "2026-05-30 10:50:11",
+      "location": "guntupalli"
+    },
+    {
+      "id": 41,
+      "invoiceNo": "MACH-GUN-1780118543769",
+      "customerId": 5,
+      "tableNo": "Counter",
+      "paymentMode": "Cash",
+      "status": "PENDING",
+      "subtotal": 25,
+      "cgst": 1,
+      "sgst": 1,
+      "grand": 27,
+      "timestamp": "2026-05-30 10:52:23",
+      "location": "guntupalli"
+    }
+  ],
+  "order_items": [
+    {
+      "id": 1,
+      "invoiceId": 1,
+      "name": "Butter Croissant",
+      "qty": 1,
+      "rate": 140,
+      "amount": 140
+    },
+    {
+      "id": 2,
+      "invoiceId": 2,
+      "name": "Hibiscus Cooler",
+      "qty": 1,
+      "rate": 160,
+      "amount": 160
+    },
+    {
+      "id": 3,
+      "invoiceId": 2,
+      "name": "Mango Lassi",
+      "qty": 1,
+      "rate": 160,
+      "amount": 160
+    },
+    {
+      "id": 4,
+      "invoiceId": 3,
+      "name": "Latte",
+      "qty": 1,
+      "rate": 170,
+      "amount": 170
+    },
+    {
+      "id": 5,
+      "invoiceId": 3,
+      "name": "Caramel Cold Brew",
+      "qty": 1,
+      "rate": 210,
+      "amount": 210
+    },
+    {
+      "id": 6,
+      "invoiceId": 3,
+      "name": "Veg Hakka Noodles",
+      "qty": 1,
+      "rate": 240,
+      "amount": 240
+    },
+    {
+      "id": 7,
+      "invoiceId": 3,
+      "name": "Chocolate Croissant",
+      "qty": 1,
+      "rate": 160,
+      "amount": 160
+    },
+    {
+      "id": 8,
+      "invoiceId": 4,
+      "name": "Chocolate Croissant",
+      "qty": 1,
+      "rate": 160,
+      "amount": 160
+    },
+    {
+      "id": 9,
+      "invoiceId": 4,
+      "name": "Veg Hakka Noodles",
+      "qty": 1,
+      "rate": 240,
+      "amount": 240
+    },
+    {
+      "id": 10,
+      "invoiceId": 4,
+      "name": "Mango Lassi",
+      "qty": 1,
+      "rate": 160,
+      "amount": 160
+    },
+    {
+      "id": 11,
+      "invoiceId": 4,
+      "name": "Cheese Toast",
+      "qty": 1,
+      "rate": 180,
+      "amount": 180
+    },
+    {
+      "id": 12,
+      "invoiceId": 4,
+      "name": "Mocha",
+      "qty": 1,
+      "rate": 190,
+      "amount": 190
+    },
+    {
+      "id": 13,
+      "invoiceId": 5,
+      "name": "Mocha",
+      "qty": 1,
+      "rate": 190,
+      "amount": 190
+    },
+    {
+      "id": 14,
+      "invoiceId": 6,
+      "name": "Paneer Fried Rice",
+      "qty": 8,
+      "rate": 260,
+      "amount": 2080
+    },
+    {
+      "id": 15,
+      "invoiceId": 6,
+      "name": "Paneer Wrap",
+      "qty": 1,
+      "rate": 210,
+      "amount": 210
+    },
+    {
+      "id": 16,
+      "invoiceId": 6,
+      "name": "Vanilla Scoop",
+      "qty": 2,
+      "rate": 100,
+      "amount": 200
+    },
+    {
+      "id": 17,
+      "invoiceId": 6,
+      "name": "Blueberry Muffin",
+      "qty": 1,
+      "rate": 150,
+      "amount": 150
+    },
+    {
+      "id": 18,
+      "invoiceId": 6,
+      "name": "Caramel Cold Brew",
+      "qty": 9,
+      "rate": 210,
+      "amount": 1890
+    },
+    {
+      "id": 19,
+      "invoiceId": 7,
+      "name": "Hazelnut Latte",
+      "qty": 1,
+      "rate": 200,
+      "amount": 200
+    },
+    {
+      "id": 20,
+      "invoiceId": 7,
+      "name": "Caramel Latte",
+      "qty": 1,
+      "rate": 200,
+      "amount": 200
+    },
+    {
+      "id": 21,
+      "invoiceId": 7,
+      "name": "Mint Sparkling Water",
+      "qty": 1,
+      "rate": 120,
+      "amount": 120
+    },
+    {
+      "id": 22,
+      "invoiceId": 7,
+      "name": "Cheese Toast",
+      "qty": 1,
+      "rate": 180,
+      "amount": 180
+    },
+    {
+      "id": 23,
+      "invoiceId": 8,
+      "name": "Caramel Latte",
+      "qty": 1,
+      "rate": 200,
+      "amount": 200
+    },
+    {
+      "id": 24,
+      "invoiceId": 8,
+      "name": "Mocha",
+      "qty": 1,
+      "rate": 190,
+      "amount": 190
+    },
+    {
+      "id": 25,
+      "invoiceId": 9,
+      "name": "Blueberry Lemonade",
+      "qty": 1,
+      "rate": 170,
+      "amount": 170
+    },
+    {
+      "id": 26,
+      "invoiceId": 9,
+      "name": "Hibiscus Cooler",
+      "qty": 1,
+      "rate": 160,
+      "amount": 160
+    },
+    {
+      "id": 27,
+      "invoiceId": 9,
+      "name": "Caramel Cold Brew",
+      "qty": 1,
+      "rate": 210,
+      "amount": 210
+    },
+    {
+      "id": 28,
+      "invoiceId": 9,
+      "name": "Cold Brew",
+      "qty": 1,
+      "rate": 180,
+      "amount": 180
+    },
+    {
+      "id": 29,
+      "invoiceId": 10,
+      "name": "Espresso",
+      "qty": 1,
+      "rate": 120,
+      "amount": 120
+    },
+    {
+      "id": 30,
+      "invoiceId": 10,
+      "name": "Latte",
+      "qty": 1,
+      "rate": 170,
+      "amount": 170
+    },
+    {
+      "id": 31,
+      "invoiceId": 10,
+      "name": "Hazelnut Latte",
+      "qty": 1,
+      "rate": 200,
+      "amount": 200
+    },
+    {
+      "id": 32,
+      "invoiceId": 11,
+      "name": "Caramel Latte",
+      "qty": 1,
+      "rate": 200,
+      "amount": 200
+    },
+    {
+      "id": 33,
+      "invoiceId": 11,
+      "name": "Hot Chocolate",
+      "qty": 1,
+      "rate": 160,
+      "amount": 160
+    },
+    {
+      "id": 34,
+      "invoiceId": 11,
+      "name": "Espresso",
+      "qty": 1,
+      "rate": 120,
+      "amount": 120
+    },
+    {
+      "id": 35,
+      "invoiceId": 12,
+      "name": "Espresso",
+      "qty": 1,
+      "rate": 120,
+      "amount": 120
+    },
+    {
+      "id": 36,
+      "invoiceId": 12,
+      "name": "Latte",
+      "qty": 1,
+      "rate": 170,
+      "amount": 170
+    },
+    {
+      "id": 37,
+      "invoiceId": 13,
+      "name": "Caramel Latte",
+      "qty": 1,
+      "rate": 200,
+      "amount": 200
+    },
+    {
+      "id": 38,
+      "invoiceId": 13,
+      "name": "Latte",
+      "qty": 1,
+      "rate": 170,
+      "amount": 170
+    },
+    {
+      "id": 39,
+      "invoiceId": 14,
+      "name": "Paneer Fried Rice",
+      "qty": 6,
+      "rate": 260,
+      "amount": 1560
+    },
+    {
+      "id": 40,
+      "invoiceId": 15,
+      "name": "Paneer Fried Rice",
+      "qty": 2,
+      "rate": 260,
+      "amount": 520
+    },
+    {
+      "id": 41,
+      "invoiceId": 16,
+      "name": "Choco Berry with Vanilla",
+      "qty": 1,
+      "rate": 120,
+      "amount": 120
+    },
+    {
+      "id": 42,
+      "invoiceId": 16,
+      "name": "Black & White",
+      "qty": 1,
+      "rate": 120,
+      "amount": 120
+    },
+    {
+      "id": 43,
+      "invoiceId": 17,
+      "name": "Butterscotch Strawberry",
+      "qty": 3,
+      "rate": 100,
+      "amount": 300
+    },
+    {
+      "id": 44,
+      "invoiceId": 18,
+      "name": "Choco Berry with Vanilla",
+      "qty": 2,
+      "rate": 120,
+      "amount": 240
+    },
+    {
+      "id": 45,
+      "invoiceId": 19,
+      "name": "Butterscotch Strawberry",
+      "qty": 2,
+      "rate": 100,
+      "amount": 200
+    },
+    {
+      "id": 46,
+      "invoiceId": 19,
+      "name": "Chocolate",
+      "qty": 1,
+      "rate": 50,
+      "amount": 50
+    },
+    {
+      "id": 47,
+      "invoiceId": 20,
+      "name": "Apple",
+      "qty": 2,
+      "rate": 60,
+      "amount": 120
+    },
+    {
+      "id": 48,
+      "invoiceId": 21,
+      "name": "Badam Milk",
+      "qty": 1,
+      "rate": 30,
+      "amount": 30
+    },
+    {
+      "id": 49,
+      "invoiceId": 21,
+      "name": "Apple",
+      "qty": 1,
+      "rate": 60,
+      "amount": 60
+    },
+    {
+      "id": 50,
+      "invoiceId": 22,
+      "name": "Apple",
+      "qty": 2,
+      "rate": 60,
+      "amount": 120
+    },
+    {
+      "id": 51,
+      "invoiceId": 23,
+      "name": "ABC",
+      "qty": 1,
+      "rate": 50,
+      "amount": 50
+    },
+    {
+      "id": 52,
+      "invoiceId": 23,
+      "name": "Apple",
+      "qty": 1,
+      "rate": 60,
+      "amount": 60
+    },
+    {
+      "id": 53,
+      "invoiceId": 23,
+      "name": "Beetroot",
+      "qty": 1,
+      "rate": 60,
+      "amount": 60
+    },
+    {
+      "id": 54,
+      "invoiceId": 24,
+      "name": "Apple",
+      "qty": 3,
+      "rate": 60,
+      "amount": 180
+    },
+    {
+      "id": 55,
+      "invoiceId": 25,
+      "name": "Apple",
+      "qty": 1,
+      "rate": 60,
+      "amount": 60
+    },
+    {
+      "id": 56,
+      "invoiceId": 25,
+      "name": "ABC",
+      "qty": 1,
+      "rate": 50,
+      "amount": 50
+    },
+    {
+      "id": 57,
+      "invoiceId": 26,
+      "name": "Apple",
+      "qty": 1,
+      "rate": 60,
+      "amount": 60
+    },
+    {
+      "id": 58,
+      "invoiceId": 27,
+      "name": "Badam Milk",
+      "qty": 3,
+      "rate": 30,
+      "amount": 90
+    },
+    {
+      "id": 59,
+      "invoiceId": 27,
+      "name": "CAP",
+      "qty": 1,
+      "rate": 80,
+      "amount": 80
+    },
+    {
+      "id": 60,
+      "invoiceId": 27,
+      "name": "Apple",
+      "qty": 1,
+      "rate": 60,
+      "amount": 60
+    },
+    {
+      "id": 61,
+      "invoiceId": 27,
+      "name": "Almond",
+      "qty": 2,
+      "rate": 50,
+      "amount": 100
+    },
+    {
+      "id": 62,
+      "invoiceId": 28,
+      "name": "Badam Milk",
+      "qty": 1,
+      "rate": 30,
+      "amount": 30
+    },
+    {
+      "id": 63,
+      "invoiceId": 28,
+      "name": "Apple",
+      "qty": 1,
+      "rate": 60,
+      "amount": 60
+    },
+    {
+      "id": 64,
+      "invoiceId": 28,
+      "name": "ABC",
+      "qty": 1,
+      "rate": 50,
+      "amount": 50
+    },
+    {
+      "id": 65,
+      "invoiceId": 29,
+      "name": "Dragon",
+      "qty": 2,
+      "rate": 80,
+      "amount": 160
+    },
+    {
+      "id": 66,
+      "invoiceId": 30,
+      "name": "Tea",
+      "qty": 1,
+      "rate": 20,
+      "amount": 20
+    },
+    {
+      "id": 67,
+      "invoiceId": 30,
+      "name": "Apple",
+      "qty": 1,
+      "rate": 60,
+      "amount": 60
+    },
+    {
+      "id": 68,
+      "invoiceId": 31,
+      "name": "Apple",
+      "qty": 1,
+      "rate": 60,
+      "amount": 60
+    },
+    {
+      "id": 69,
+      "invoiceId": 31,
+      "name": "Bombay Sandwich",
+      "qty": 2,
+      "rate": 90,
+      "amount": 180
+    },
+    {
+      "id": 70,
+      "invoiceId": 32,
+      "name": "Karupatti Coffee (Thati Bellam)",
+      "qty": 1,
+      "rate": 25,
+      "amount": 25
+    },
+    {
+      "id": 71,
+      "invoiceId": 32,
+      "name": "Tea",
+      "qty": 1,
+      "rate": 20,
+      "amount": 20
+    },
+    {
+      "id": 72,
+      "invoiceId": 33,
+      "name": "Filter Coffee",
+      "qty": 1,
+      "rate": 20,
+      "amount": 20
+    },
+    {
+      "id": 73,
+      "invoiceId": 33,
+      "name": "Coffee",
+      "qty": 1,
+      "rate": 20,
+      "amount": 20
+    },
+    {
+      "id": 74,
+      "invoiceId": 33,
+      "name": "Horlicks",
+      "qty": 1,
+      "rate": 30,
+      "amount": 30
+    },
+    {
+      "id": 75,
+      "invoiceId": 34,
+      "name": "Almond",
+      "qty": 1,
+      "rate": 50,
+      "amount": 50
+    },
+    {
+      "id": 76,
+      "invoiceId": 34,
+      "name": "Black Currant",
+      "qty": 1,
+      "rate": 50,
+      "amount": 50
+    },
+    {
+      "id": 77,
+      "invoiceId": 35,
+      "name": "Filter Coffee",
+      "qty": 1,
+      "rate": 20,
+      "amount": 20
+    },
+    {
+      "id": 78,
+      "invoiceId": 36,
+      "name": "Bellam Tea",
+      "qty": 1,
+      "rate": 25,
+      "amount": 25
+    },
+    {
+      "id": 79,
+      "invoiceId": 37,
+      "name": "Bellam Tea",
+      "qty": 1,
+      "rate": 25,
+      "amount": 25
+    },
+    {
+      "id": 80,
+      "invoiceId": 38,
+      "name": "Bellam Tea",
+      "qty": 1,
+      "rate": 25,
+      "amount": 25
+    },
+    {
+      "id": 81,
+      "invoiceId": 39,
+      "name": "Filter Coffee",
+      "qty": 1,
+      "rate": 20,
+      "amount": 20
+    },
+    {
+      "id": 82,
+      "invoiceId": 39,
+      "name": "Karupatti Coffee (Thati Bellam)",
+      "qty": 1,
+      "rate": 25,
+      "amount": 25
+    },
+    {
+      "id": 83,
+      "invoiceId": 40,
+      "name": "Karupatti Coffee (Thati Bellam)",
+      "qty": 1,
+      "rate": 25,
+      "amount": 25
+    },
+    {
+      "id": 84,
+      "invoiceId": 41,
+      "name": "Bellam Tea",
+      "qty": 1,
+      "rate": 25,
+      "amount": 25
+    }
+  ],
+  "menu_items": [
+    {
+      "id": 317,
+      "name": "Fried Momo",
+      "price": 100,
+      "emoji": "🍟",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Fried Snacks",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 318,
+      "name": "Veg Roll",
+      "price": 65,
+      "emoji": "🍟",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Fried Snacks",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 319,
+      "name": "Paneer Roll",
+      "price": 80,
+      "emoji": "🍟",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Fried Snacks",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 320,
+      "name": "Veg Nuggets",
+      "price": 100,
+      "emoji": "🍟",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Fried Snacks",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 321,
+      "name": "Veg Fingers",
+      "price": 100,
+      "emoji": "🍟",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Fried Snacks",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 322,
+      "name": "Chicken Roll",
+      "price": 100,
+      "emoji": "🍟",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Fried Snacks",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 323,
+      "name": "Chicken Fries",
+      "price": 140,
+      "emoji": "🍟",
+      "section": "snacks",
+      "category": "food",
+      "badge": "premium",
+      "description": "Fried Snacks",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 328,
+      "name": "Classic Sandwich",
+      "price": 70,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 329,
+      "name": "Bombay Sandwich",
+      "price": 90,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 330,
+      "name": "Chutney Sandwich",
+      "price": 90,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 331,
+      "name": "Cucumber Sandwich",
+      "price": 90,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 332,
+      "name": "Hot n Spicy Sandwich",
+      "price": 90,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 333,
+      "name": "Chilli Sandwich",
+      "price": 100,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 334,
+      "name": "Club Sandwich",
+      "price": 100,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 335,
+      "name": "Peri Peri Sandwich",
+      "price": 110,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 336,
+      "name": "Veg Mayo Sandwich",
+      "price": 110,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 337,
+      "name": "Peanut Butter Sandwich",
+      "price": 120,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 338,
+      "name": "Tandoori Sandwich",
+      "price": 120,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 339,
+      "name": "Mushroom Sandwich",
+      "price": 130,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 340,
+      "name": "Paneer Sandwich",
+      "price": 130,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 341,
+      "name": "Barbeque Sandwich",
+      "price": 140,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 342,
+      "name": "Manchurian Sandwich",
+      "price": 140,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 343,
+      "name": "Nutella Sandwich",
+      "price": 140,
+      "emoji": "🥪",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Grilled Sandwich",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 344,
+      "name": "Salted",
+      "price": 60,
+      "emoji": "😊",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Smiles",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 345,
+      "name": "Peri Peri",
+      "price": 80,
+      "emoji": "😊",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Smiles",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 346,
+      "name": "Madras Masala",
+      "price": 100,
+      "emoji": "😊",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Smiles",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 347,
+      "name": "Cheesy Chilli",
+      "price": 120,
+      "emoji": "😊",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Smiles",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 348,
+      "name": "Apple",
+      "price": 60,
+      "emoji": "🥛",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "With Milk",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 349,
+      "name": "Avocado",
+      "price": 80,
+      "emoji": "🥛",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "With Milk",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 353,
+      "name": "Dragon",
+      "price": 80,
+      "emoji": "🥛",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "With Milk",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 355,
+      "name": "Pomegranate",
+      "price": 80,
+      "emoji": "🥛",
+      "section": "cold",
+      "category": "beverage",
+      "badge": "premium",
+      "description": "With Milk",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 357,
+      "name": "Grapes",
+      "price": 50,
+      "emoji": "🧃",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Without Milk",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 359,
+      "name": "Pineapple",
+      "price": 50,
+      "emoji": "🧃",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Without Milk",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 361,
+      "name": "ABC",
+      "price": 50,
+      "emoji": "🥤",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Detox",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 362,
+      "name": "CAP",
+      "price": 80,
+      "emoji": "🥤",
+      "section": "cold",
+      "category": "beverage",
+      "badge": "premium",
+      "description": "Detox",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 363,
+      "name": "CAG",
+      "price": 50,
+      "emoji": "🥤",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Detox",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 364,
+      "name": "BCCT",
+      "price": 40,
+      "emoji": "🥤",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Detox",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 365,
+      "name": "Beetroot",
+      "price": 60,
+      "emoji": "🥤",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Detox",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 366,
+      "name": "Carrot",
+      "price": 60,
+      "emoji": "🥤",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Detox",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 367,
+      "name": "Bitter Gourd",
+      "price": 120,
+      "emoji": "🥕",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Vegetable Juices",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 368,
+      "name": "Bottle Gourd",
+      "price": 120,
+      "emoji": "🥕",
+      "section": "cold",
+      "category": "beverage",
+      "badge": "premiujm",
+      "description": "Vegetable Juices",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 369,
+      "name": "Curry Leaves",
+      "price": 120,
+      "emoji": "🥕",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Vegetable Juices",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 372,
+      "name": "Kiwi",
+      "price": 80,
+      "emoji": "🥤",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 375,
+      "name": "Rose Milk",
+      "price": 90,
+      "emoji": "🥤",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 377,
+      "name": "Vanilla",
+      "price": 80,
+      "emoji": "🥤",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 378,
+      "name": "Butterscotch Strawberry",
+      "price": 100,
+      "emoji": "🥤",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 379,
+      "name": "Mango Strawberry",
+      "price": 100,
+      "emoji": "🥤",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 381,
+      "name": "Kitkat",
+      "price": 100,
+      "emoji": "🥤",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 382,
+      "name": "Apple Dates",
+      "price": 100,
+      "emoji": "🥤",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 384,
+      "name": "Peanut Butter",
+      "price": 80,
+      "emoji": "🥤",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 385,
+      "name": "Seedless Dates",
+      "price": 80,
+      "emoji": "🥤",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 387,
+      "name": "Nutella / Hazelnut",
+      "price": 100,
+      "emoji": "🥤",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 389,
+      "name": "Dry Fruit",
+      "price": 120,
+      "emoji": "🥤",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 390,
+      "name": "Oreo",
+      "price": 90,
+      "emoji": "🍪",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Oreo Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 391,
+      "name": "Butterscotch Oreo",
+      "price": 100,
+      "emoji": "🍪",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Oreo Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 392,
+      "name": "Chocolate Oreo",
+      "price": 100,
+      "emoji": "🍪",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Oreo Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 393,
+      "name": "Mango Oreo",
+      "price": 100,
+      "emoji": "🍪",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Oreo Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 394,
+      "name": "Strawberry Oreo",
+      "price": 100,
+      "emoji": "🍪",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": "premium",
+      "description": "Oreo Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 395,
+      "name": "Cold Coffee",
+      "price": 80,
+      "emoji": "☕",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Coffee Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 396,
+      "name": "Chocolate Cold Coffee",
+      "price": 100,
+      "emoji": "☕",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Coffee Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 397,
+      "name": "Strawberry Cold Coffee",
+      "price": 90,
+      "emoji": "☕",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Coffee Shakes",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 398,
+      "name": "Fruits & Nuts Loaded",
+      "price": 150,
+      "emoji": "🍨",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": "premium",
+      "description": "Falooda",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 399,
+      "name": "Kesar Pista",
+      "price": 150,
+      "emoji": "🍨",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Falooda",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 401,
+      "name": "Blackcurrant",
+      "price": 120,
+      "emoji": "🍨",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Falooda",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 406,
+      "name": "Sweet",
+      "price": 40,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 407,
+      "name": "Banana",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 408,
+      "name": "Litchi",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 409,
+      "name": "Mango",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 410,
+      "name": "Muskmelon",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 411,
+      "name": "Watermelon",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 412,
+      "name": "Almond",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 413,
+      "name": "Black Currant",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": "premium",
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 414,
+      "name": "Butterscotch",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 415,
+      "name": "Chocolate",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 417,
+      "name": "Rooh Afza",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 418,
+      "name": "Strawberry",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 419,
+      "name": "Mango Banana",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 420,
+      "name": "Pista",
+      "price": 50,
+      "emoji": "🥛",
+      "section": "shakes",
+      "category": "beverage",
+      "badge": null,
+      "description": "Lassi",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 421,
+      "name": "Blushing Bride (Strawberry)",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 422,
+      "name": "Energetic Blueberry",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 423,
+      "name": "Fruit Punch",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 424,
+      "name": "Chinese Gooseberry (Kiwi)",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 425,
+      "name": "Litchi Lemonade",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 426,
+      "name": "Mango Mint Lemonade",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 427,
+      "name": "Red Devil",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 428,
+      "name": "Rose Lemonade",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 429,
+      "name": "Sparkling Blackcurrant",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 430,
+      "name": "Virgin Mojito",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 431,
+      "name": "Blue Lagoon",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 432,
+      "name": "Pineapple Breeze",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 433,
+      "name": "Wonderful Watermelon",
+      "price": 70,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 434,
+      "name": "Midnight Beauty",
+      "price": 80,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": "premium",
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 435,
+      "name": "Sea Blossoms",
+      "price": 80,
+      "emoji": "🍹",
+      "section": "cold",
+      "category": "beverage",
+      "badge": null,
+      "description": "Mojitos",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 436,
+      "name": "Awesome Sundae",
+      "price": 120,
+      "emoji": "🍨",
+      "section": "desserts",
+      "category": "food",
+      "badge": null,
+      "description": "Sundaes (Triples)",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 437,
+      "name": "Black & White",
+      "price": 120,
+      "emoji": "🍨",
+      "section": "desserts",
+      "category": "food",
+      "badge": null,
+      "description": "Sundaes (Triples)",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 438,
+      "name": "King of Fruit with Nuts & Berry",
+      "price": 120,
+      "emoji": "🍨",
+      "section": "desserts",
+      "category": "food",
+      "badge": null,
+      "description": "Sundaes (Triples)",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 439,
+      "name": "Heaven of Ice Cream",
+      "price": 120,
+      "emoji": "🍨",
+      "section": "desserts",
+      "category": "food",
+      "badge": null,
+      "description": "Sundaes (Triples)",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 440,
+      "name": "Choco Berry with Vanilla",
+      "price": 120,
+      "emoji": "🍨",
+      "section": "desserts",
+      "category": "food",
+      "badge": null,
+      "description": "Sundaes (Triples)",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 441,
+      "name": "Nuts with Scotch",
+      "price": 120,
+      "emoji": "🍨",
+      "section": "desserts",
+      "category": "food",
+      "badge": null,
+      "description": "Sundaes (Triples)",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 442,
+      "name": "Choco King",
+      "price": 140,
+      "emoji": "🍨",
+      "section": "desserts",
+      "category": "food",
+      "badge": "premium",
+      "description": "Sundaes (Triples)",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 443,
+      "name": "Hot Brownie Fudge",
+      "price": 130,
+      "emoji": "🍫",
+      "section": "desserts",
+      "category": "food",
+      "badge": null,
+      "description": "Brownies",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 444,
+      "name": "Dry Fruit Brownie Fudge",
+      "price": 150,
+      "emoji": "🍫",
+      "section": "desserts",
+      "category": "food",
+      "badge": null,
+      "description": "Brownies",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 445,
+      "name": "Hot Vanilla Brownie Fudge",
+      "price": 160,
+      "emoji": "🍫",
+      "section": "desserts",
+      "category": "food",
+      "badge": null,
+      "description": "Brownies",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 446,
+      "name": "Hot Choco Brownie Fudge",
+      "price": 180,
+      "emoji": "🍫",
+      "section": "desserts",
+      "category": "food",
+      "badge": null,
+      "description": "Brownies",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 447,
+      "name": "Coffee",
+      "price": 20,
+      "emoji": "☕",
+      "section": "coffees",
+      "category": "beverage",
+      "badge": null,
+      "description": "Beverages",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 448,
+      "name": "Filter Coffee",
+      "price": 20,
+      "emoji": "☕",
+      "section": "coffees",
+      "category": "beverage",
+      "badge": null,
+      "description": "Beverages",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 449,
+      "name": "Karupatti Coffee (Thati Bellam)",
+      "price": 25,
+      "emoji": "☕",
+      "section": "coffees",
+      "category": "beverage",
+      "badge": "premium",
+      "description": "Beverages",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 450,
+      "name": "Badam Milk",
+      "price": 30,
+      "emoji": "☕",
+      "section": "coffees",
+      "category": "beverage",
+      "badge": null,
+      "description": "Beverages",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 451,
+      "name": "Boost",
+      "price": 30,
+      "emoji": "☕",
+      "section": "coffees",
+      "category": "beverage",
+      "badge": null,
+      "description": "Beverages",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 452,
+      "name": "Horlicks",
+      "price": 30,
+      "emoji": "☕",
+      "section": "coffees",
+      "category": "beverage",
+      "badge": null,
+      "description": "Beverages",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 453,
+      "name": "Tea",
+      "price": 20,
+      "emoji": "☕",
+      "section": "coffees",
+      "category": "beverage",
+      "badge": null,
+      "description": "Beverages",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 454,
+      "name": "Bellam Tea",
+      "price": 25,
+      "emoji": "☕",
+      "section": "coffees",
+      "category": "beverage",
+      "badge": null,
+      "description": "Beverages",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 455,
+      "name": "Green Tea",
+      "price": 30,
+      "emoji": "☕",
+      "section": "coffees",
+      "category": "beverage",
+      "badge": null,
+      "description": "Beverages",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 456,
+      "name": "Lemon Tea",
+      "price": 30,
+      "emoji": "☕",
+      "section": "coffees",
+      "category": "beverage",
+      "badge": null,
+      "description": "Beverages",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 457,
+      "name": "Veg Burger",
+      "price": 100,
+      "emoji": "🍔",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Burgers",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 458,
+      "name": "Chicken Burger",
+      "price": 120,
+      "emoji": "🍔",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Burgers",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 459,
+      "name": "Veg Manchurian",
+      "price": 120,
+      "emoji": "🥢",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Manchurian",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 460,
+      "name": "Paneer Manchurian",
+      "price": 160,
+      "emoji": "🥢",
+      "section": "snacks",
+      "category": "food",
+      "badge": "premium",
+      "description": "Manchurian",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 461,
+      "name": "Mushroom Manchurian",
+      "price": 150,
+      "emoji": "🥢",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Manchurian",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 462,
+      "name": "Chicken Manchurian",
+      "price": 180,
+      "emoji": "🥢",
+      "section": "snacks",
+      "category": "food",
+      "badge": "premium",
+      "description": "Manchurian",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 463,
+      "name": "Chicken 65",
+      "price": 160,
+      "emoji": "🍗",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Starters",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 464,
+      "name": "Mushroom 65",
+      "price": 140,
+      "emoji": "🍄",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Starters",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 465,
+      "name": "Paneer 65",
+      "price": 140,
+      "emoji": "🧀",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Starters",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 466,
+      "name": "Chilli Chicken",
+      "price": 160,
+      "emoji": "🌶️",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Starters",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 467,
+      "name": "Pepper Chicken",
+      "price": 160,
+      "emoji": "🌶️",
+      "section": "snacks",
+      "category": "food",
+      "badge": "premium",
+      "description": "Starters",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 468,
+      "name": "Chicken Lollipop",
+      "price": 180,
+      "emoji": "🍗",
+      "section": "snacks",
+      "category": "food",
+      "badge": "premium",
+      "description": "Starters",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 469,
+      "name": "Dragon Chicken",
+      "price": 160,
+      "emoji": "🍗",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Starters",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 470,
+      "name": "Pasta",
+      "price": 120,
+      "emoji": "🍝",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Pasta & Rice",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 471,
+      "name": "Veg Fried Rice",
+      "price": 120,
+      "emoji": "🍚",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Fried Rice",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 472,
+      "name": "Mushroom Fried Rice",
+      "price": 140,
+      "emoji": "🍚",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Fried Rice",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 473,
+      "name": "Egg Fried Rice",
+      "price": 140,
+      "emoji": "🍚",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Fried Rice",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 474,
+      "name": "Paneer Fried Rice",
+      "price": 150,
+      "emoji": "🍚",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Fried Rice",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 475,
+      "name": "Chicken Fried Rice",
+      "price": 160,
+      "emoji": "🍚",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Fried Rice",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 476,
+      "name": "Veg Noodles",
+      "price": 120,
+      "emoji": "🍜",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Noodles",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 477,
+      "name": "Paneer Noodles",
+      "price": 140,
+      "emoji": "🍜",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Noodles",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 478,
+      "name": "Egg Noodles",
+      "price": 140,
+      "emoji": "🍜",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Noodles",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 479,
+      "name": "Mushroom Noodles",
+      "price": 150,
+      "emoji": "🍜",
+      "section": "snacks",
+      "category": "food",
+      "badge": null,
+      "description": "Noodles",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 480,
+      "name": "Chicken Noodles",
+      "price": 160,
+      "emoji": "🍜",
+      "section": "snacks",
+      "category": "food",
+      "badge": "premium",
+      "description": "Noodles",
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 481,
+      "name": "veg burger",
+      "price": 100,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 482,
+      "name": "chicken burger",
+      "price": 120,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 483,
+      "name": "veg manchurian",
+      "price": 120,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 484,
+      "name": "paneer manchurian",
+      "price": 160,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 485,
+      "name": "mushroom manchu",
+      "price": 150,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 486,
+      "name": "chicken manchu",
+      "price": 180,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 487,
+      "name": "chicken 65",
+      "price": 180,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 488,
+      "name": "mushroom 65",
+      "price": 150,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 489,
+      "name": "paneer 65",
+      "price": 160,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 490,
+      "name": "chilli chicken",
+      "price": 200,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 491,
+      "name": "pepper chicken",
+      "price": 200,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 492,
+      "name": "chicken lolipop",
+      "price": 200,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 493,
+      "name": "dragon chicken",
+      "price": 210,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 494,
+      "name": "kalayika special chicken",
+      "price": 230,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 495,
+      "name": "pasta",
+      "price": 100,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 496,
+      "name": "veg fired rice",
+      "price": 120,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 497,
+      "name": "egg firred rice",
+      "price": 140,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 498,
+      "name": "mushroom fr",
+      "price": 150,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 499,
+      "name": "paneer fr",
+      "price": 160,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 500,
+      "name": "Chicken Fr",
+      "price": 180,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 501,
+      "name": "veg noodles",
+      "price": 120,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 502,
+      "name": "egg noodles",
+      "price": 140,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 503,
+      "name": "mushroom noodles",
+      "price": 150,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 504,
+      "name": "paneer noodles",
+      "price": 160,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    },
+    {
+      "id": 505,
+      "name": "chicken noodles",
+      "price": 180,
+      "emoji": "🍽️",
+      "section": "snacks",
+      "category": "beverage",
+      "badge": null,
+      "description": null,
+      "isFeatured": 0,
+      "isAvailable": 1
+    }
+  ],
+  "ingredients": [
+    {
+      "id": 1,
+      "name": "Espresso Beans",
+      "unit": "shots",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 2,
+      "name": "Whole Milk",
+      "unit": "ml",
+      "currentQty": 10000,
+      "reorderLevel": 1000,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 3,
+      "name": "Oat Milk",
+      "unit": "ml",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 4,
+      "name": "Dark Chocolate Sauce",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 5,
+      "name": "Caramel Syrup",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 6,
+      "name": "Hazelnut Syrup",
+      "unit": "ml",
+      "currentQty": 1500,
+      "reorderLevel": 150,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 7,
+      "name": "Matcha Powder",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 8,
+      "name": "Masala Chai Mix",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 9,
+      "name": "Cocoa Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 10,
+      "name": "Whipped Cream",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 11,
+      "name": "Cold Brew Concentrate",
+      "unit": "ml",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 12,
+      "name": "Lemon Juice",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 13,
+      "name": "Hibiscus Tea",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 14,
+      "name": "Blueberry Reduction",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 15,
+      "name": "Fresh Mint",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 16,
+      "name": "Sparkling Water",
+      "unit": "ml",
+      "currentQty": 10000,
+      "reorderLevel": 1000,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 17,
+      "name": "Vanilla Ice Cream",
+      "unit": "scoops",
+      "currentQty": 200,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 18,
+      "name": "Strawberry Ice Cream",
+      "unit": "scoops",
+      "currentQty": 150,
+      "reorderLevel": 15,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 19,
+      "name": "Coconut Ice Cream",
+      "unit": "scoops",
+      "currentQty": 100,
+      "reorderLevel": 10,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 20,
+      "name": "Mango Pulp",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 21,
+      "name": "Yoghurt",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 22,
+      "name": "Sourdough Bread",
+      "unit": "slices",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 23,
+      "name": "Cheese Blend",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 24,
+      "name": "Eggs",
+      "unit": "units",
+      "currentQty": 200,
+      "reorderLevel": 30,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 25,
+      "name": "Multigrain Bread",
+      "unit": "slices",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 26,
+      "name": "Paneer",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 27,
+      "name": "Wheat Tortilla",
+      "unit": "units",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 28,
+      "name": "Hakka Noodles",
+      "unit": "g",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 29,
+      "name": "Basmati Rice",
+      "unit": "g",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 30,
+      "name": "Croissant Dough",
+      "unit": "units",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 31,
+      "name": "Chocolate Chips",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 32,
+      "name": "Blueberries",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 33,
+      "name": "White Bread",
+      "unit": "slices",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 34,
+      "name": "Potatoes",
+      "unit": "g",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 35,
+      "name": "Peanut Butter",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 36,
+      "name": "Cream Cheese",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 37,
+      "name": "Mascarpone",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 38,
+      "name": "Savoiardi",
+      "unit": "units",
+      "currentQty": 200,
+      "reorderLevel": 30,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 39,
+      "name": "Coconut Milk",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 40,
+      "name": "Agar Agar",
+      "unit": "g",
+      "currentQty": 200,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "guntupalli"
+    },
+    {
+      "id": 41,
+      "name": "Espresso Beans",
+      "unit": "shots",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 42,
+      "name": "Whole Milk",
+      "unit": "ml",
+      "currentQty": 10000,
+      "reorderLevel": 1000,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 43,
+      "name": "Oat Milk",
+      "unit": "ml",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 44,
+      "name": "Dark Chocolate Sauce",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 45,
+      "name": "Caramel Syrup",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 46,
+      "name": "Hazelnut Syrup",
+      "unit": "ml",
+      "currentQty": 1500,
+      "reorderLevel": 150,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 47,
+      "name": "Matcha Powder",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 48,
+      "name": "Masala Chai Mix",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 49,
+      "name": "Cocoa Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 50,
+      "name": "Whipped Cream",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 51,
+      "name": "Cold Brew Concentrate",
+      "unit": "ml",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 52,
+      "name": "Lemon Juice",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 53,
+      "name": "Hibiscus Tea",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 54,
+      "name": "Blueberry Reduction",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 55,
+      "name": "Fresh Mint",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 56,
+      "name": "Sparkling Water",
+      "unit": "ml",
+      "currentQty": 10000,
+      "reorderLevel": 1000,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 57,
+      "name": "Vanilla Ice Cream",
+      "unit": "scoops",
+      "currentQty": 200,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 58,
+      "name": "Strawberry Ice Cream",
+      "unit": "scoops",
+      "currentQty": 150,
+      "reorderLevel": 15,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 59,
+      "name": "Coconut Ice Cream",
+      "unit": "scoops",
+      "currentQty": 100,
+      "reorderLevel": 10,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 60,
+      "name": "Mango Pulp",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 61,
+      "name": "Yoghurt",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 62,
+      "name": "Sourdough Bread",
+      "unit": "slices",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 63,
+      "name": "Cheese Blend",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 64,
+      "name": "Eggs",
+      "unit": "units",
+      "currentQty": 200,
+      "reorderLevel": 30,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 65,
+      "name": "Multigrain Bread",
+      "unit": "slices",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 66,
+      "name": "Paneer",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 67,
+      "name": "Wheat Tortilla",
+      "unit": "units",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 68,
+      "name": "Hakka Noodles",
+      "unit": "g",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 69,
+      "name": "Basmati Rice",
+      "unit": "g",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 70,
+      "name": "Croissant Dough",
+      "unit": "units",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 71,
+      "name": "Chocolate Chips",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 72,
+      "name": "Blueberries",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 73,
+      "name": "White Bread",
+      "unit": "slices",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 74,
+      "name": "Potatoes",
+      "unit": "g",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 75,
+      "name": "Peanut Butter",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 76,
+      "name": "Cream Cheese",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 77,
+      "name": "Mascarpone",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 78,
+      "name": "Savoiardi",
+      "unit": "units",
+      "currentQty": 200,
+      "reorderLevel": 30,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 79,
+      "name": "Coconut Milk",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 80,
+      "name": "Agar Agar",
+      "unit": "g",
+      "currentQty": 200,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "ongole"
+    },
+    {
+      "id": 81,
+      "name": "Espresso Beans",
+      "unit": "shots",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 82,
+      "name": "Whole Milk",
+      "unit": "ml",
+      "currentQty": 10000,
+      "reorderLevel": 1000,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 83,
+      "name": "Oat Milk",
+      "unit": "ml",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 84,
+      "name": "Dark Chocolate Sauce",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 85,
+      "name": "Caramel Syrup",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 86,
+      "name": "Hazelnut Syrup",
+      "unit": "ml",
+      "currentQty": 1500,
+      "reorderLevel": 150,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 87,
+      "name": "Matcha Powder",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 88,
+      "name": "Masala Chai Mix",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 89,
+      "name": "Cocoa Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 90,
+      "name": "Whipped Cream",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 91,
+      "name": "Cold Brew Concentrate",
+      "unit": "ml",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 92,
+      "name": "Lemon Juice",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 93,
+      "name": "Hibiscus Tea",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 94,
+      "name": "Blueberry Reduction",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 95,
+      "name": "Fresh Mint",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 96,
+      "name": "Sparkling Water",
+      "unit": "ml",
+      "currentQty": 10000,
+      "reorderLevel": 1000,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 97,
+      "name": "Vanilla Ice Cream",
+      "unit": "scoops",
+      "currentQty": 200,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 98,
+      "name": "Strawberry Ice Cream",
+      "unit": "scoops",
+      "currentQty": 150,
+      "reorderLevel": 15,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 99,
+      "name": "Coconut Ice Cream",
+      "unit": "scoops",
+      "currentQty": 100,
+      "reorderLevel": 10,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 100,
+      "name": "Mango Pulp",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 101,
+      "name": "Yoghurt",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 102,
+      "name": "Sourdough Bread",
+      "unit": "slices",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 103,
+      "name": "Cheese Blend",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 104,
+      "name": "Eggs",
+      "unit": "units",
+      "currentQty": 200,
+      "reorderLevel": 30,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 105,
+      "name": "Multigrain Bread",
+      "unit": "slices",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 106,
+      "name": "Paneer",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 107,
+      "name": "Wheat Tortilla",
+      "unit": "units",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 108,
+      "name": "Hakka Noodles",
+      "unit": "g",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 109,
+      "name": "Basmati Rice",
+      "unit": "g",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 110,
+      "name": "Croissant Dough",
+      "unit": "units",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 111,
+      "name": "Chocolate Chips",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 112,
+      "name": "Blueberries",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 113,
+      "name": "White Bread",
+      "unit": "slices",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 114,
+      "name": "Potatoes",
+      "unit": "g",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 115,
+      "name": "Peanut Butter",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 116,
+      "name": "Cream Cheese",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 117,
+      "name": "Mascarpone",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 118,
+      "name": "Savoiardi",
+      "unit": "units",
+      "currentQty": 200,
+      "reorderLevel": 30,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 119,
+      "name": "Coconut Milk",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 120,
+      "name": "Agar Agar",
+      "unit": "g",
+      "currentQty": 200,
+      "reorderLevel": 20,
+      "created_at": "2026-05-25 11:37:34",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 121,
+      "name": "Bread Slices",
+      "unit": "slices",
+      "currentQty": 200,
+      "reorderLevel": 40,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 122,
+      "name": "Carrot (shredded)",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 123,
+      "name": "Beetroot (shredded)",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 124,
+      "name": "Capsicum (sliced)",
+      "unit": "g",
+      "currentQty": 1500,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 125,
+      "name": "Cucumber (sliced)",
+      "unit": "g",
+      "currentQty": 1500,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 126,
+      "name": "Mayonnaise",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 127,
+      "name": "Chaat Masala",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 128,
+      "name": "Butter",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 150,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 129,
+      "name": "Peri Peri Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 130,
+      "name": "Hot & Spicy Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 131,
+      "name": "Tandoori Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 132,
+      "name": "Tomato Sauce",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 133,
+      "name": "Chilli Sauce",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 134,
+      "name": "Green Chilli Sauce",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 135,
+      "name": "Mushrooms",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 150,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 136,
+      "name": "Onion (chopped)",
+      "unit": "g",
+      "currentQty": 1500,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 137,
+      "name": "Nutella",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 150,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 138,
+      "name": "Apple",
+      "unit": "units",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 139,
+      "name": "Avocado",
+      "unit": "units",
+      "currentQty": 20,
+      "reorderLevel": 5,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 140,
+      "name": "Banana",
+      "unit": "units",
+      "currentQty": 40,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 141,
+      "name": "Beetroot (whole)",
+      "unit": "units",
+      "currentQty": 40,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 142,
+      "name": "Carrot (whole)",
+      "unit": "units",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 143,
+      "name": "Dragon Fruit",
+      "unit": "units",
+      "currentQty": 15,
+      "reorderLevel": 5,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 144,
+      "name": "Muskmelon",
+      "unit": "g",
+      "currentQty": 3000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 145,
+      "name": "Pomegranate",
+      "unit": "g",
+      "currentQty": 3000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 146,
+      "name": "Grapes",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 147,
+      "name": "Pineapple",
+      "unit": "units",
+      "currentQty": 10,
+      "reorderLevel": 3,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 148,
+      "name": "Watermelon",
+      "unit": "g",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 149,
+      "name": "Ginger",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 150,
+      "name": "Lemon",
+      "unit": "units",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 151,
+      "name": "Pudina (Mint Leaves)",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 152,
+      "name": "Tomato",
+      "unit": "units",
+      "currentQty": 30,
+      "reorderLevel": 8,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 153,
+      "name": "Sugar Syrup",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 154,
+      "name": "Rose Syrup",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 155,
+      "name": "Chocolate Syrup",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 156,
+      "name": "Mango Crush",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 157,
+      "name": "Strawberry Crush",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 158,
+      "name": "Butterscotch Crush",
+      "unit": "ml",
+      "currentQty": 1500,
+      "reorderLevel": 150,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 159,
+      "name": "Kiwi Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 160,
+      "name": "Litchi Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 161,
+      "name": "Black Currant Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 162,
+      "name": "Pista Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 163,
+      "name": "Blueberry Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 164,
+      "name": "Watermelon Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 165,
+      "name": "Blue Lagoon Syrup",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 166,
+      "name": "Lime & Mint Syrup",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 167,
+      "name": "Mango Ice Cream",
+      "unit": "scoops",
+      "currentQty": 120,
+      "reorderLevel": 15,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 168,
+      "name": "Pista Ice Cream",
+      "unit": "scoops",
+      "currentQty": 100,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 169,
+      "name": "Butterscotch Ice Cream",
+      "unit": "scoops",
+      "currentQty": 100,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 170,
+      "name": "Chocolate Ice Cream",
+      "unit": "scoops",
+      "currentQty": 120,
+      "reorderLevel": 15,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 171,
+      "name": "Black Currant Ice Cream",
+      "unit": "scoops",
+      "currentQty": 80,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 172,
+      "name": "Kesar Pista Ice Cream",
+      "unit": "scoops",
+      "currentQty": 80,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 173,
+      "name": "Oreo & Cream Ice Cream",
+      "unit": "scoops",
+      "currentQty": 80,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 174,
+      "name": "Almond Ice Cream",
+      "unit": "scoops",
+      "currentQty": 60,
+      "reorderLevel": 8,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 175,
+      "name": "Milk",
+      "unit": "ml",
+      "currentQty": 10000,
+      "reorderLevel": 1000,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 176,
+      "name": "Curd / Yoghurt",
+      "unit": "ml",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 177,
+      "name": "Sugar",
+      "unit": "g",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 178,
+      "name": "Coffee Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 179,
+      "name": "Vanilla Essence",
+      "unit": "ml",
+      "currentQty": 200,
+      "reorderLevel": 20,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 180,
+      "name": "Oreo Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 181,
+      "name": "Choco Chips",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 182,
+      "name": "Baby Cashews",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 183,
+      "name": "Almonds (Badam)",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 184,
+      "name": "Almond Powder",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 185,
+      "name": "Cashews",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 186,
+      "name": "Dry Grapes",
+      "unit": "g",
+      "currentQty": 200,
+      "reorderLevel": 30,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 187,
+      "name": "Dates",
+      "unit": "units",
+      "currentQty": 60,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 188,
+      "name": "Cherry (Cocktail)",
+      "unit": "units",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 189,
+      "name": "Elaichi (Cardamom)",
+      "unit": "g",
+      "currentQty": 100,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 190,
+      "name": "Colour Jelly",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 191,
+      "name": "Sabja Seeds (Basil)",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 30,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 192,
+      "name": "Hazelnut Powder/Crush",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 30,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 193,
+      "name": "Kitkat Bar",
+      "unit": "units",
+      "currentQty": 30,
+      "reorderLevel": 5,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 194,
+      "name": "Brownie Cake",
+      "unit": "units",
+      "currentQty": 30,
+      "reorderLevel": 5,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 195,
+      "name": "Sprite / 7Up Bottle (200ml)",
+      "unit": "bottles",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 196,
+      "name": "Soda Bottle (200ml)",
+      "unit": "bottles",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 197,
+      "name": "Ice Cubes",
+      "unit": "g",
+      "currentQty": 10000,
+      "reorderLevel": 1000,
+      "created_at": "2026-05-28 10:07:02",
+      "location": "guntupalli"
+    },
+    {
+      "id": 198,
+      "name": "Bread Slices",
+      "unit": "slices",
+      "currentQty": 200,
+      "reorderLevel": 40,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 199,
+      "name": "Carrot (shredded)",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 200,
+      "name": "Beetroot (shredded)",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 201,
+      "name": "Capsicum (sliced)",
+      "unit": "g",
+      "currentQty": 1500,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 202,
+      "name": "Cucumber (sliced)",
+      "unit": "g",
+      "currentQty": 1500,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 203,
+      "name": "Mayonnaise",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 204,
+      "name": "Chaat Masala",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 205,
+      "name": "Butter",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 150,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 206,
+      "name": "Peri Peri Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 207,
+      "name": "Hot & Spicy Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 208,
+      "name": "Tandoori Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 209,
+      "name": "Tomato Sauce",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 210,
+      "name": "Chilli Sauce",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 211,
+      "name": "Green Chilli Sauce",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 212,
+      "name": "Mushrooms",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 150,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 213,
+      "name": "Onion (chopped)",
+      "unit": "g",
+      "currentQty": 1500,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 214,
+      "name": "Nutella",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 150,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 215,
+      "name": "Apple",
+      "unit": "units",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 216,
+      "name": "Avocado",
+      "unit": "units",
+      "currentQty": 20,
+      "reorderLevel": 5,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 217,
+      "name": "Banana",
+      "unit": "units",
+      "currentQty": 40,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 218,
+      "name": "Beetroot (whole)",
+      "unit": "units",
+      "currentQty": 40,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 219,
+      "name": "Carrot (whole)",
+      "unit": "units",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 220,
+      "name": "Dragon Fruit",
+      "unit": "units",
+      "currentQty": 15,
+      "reorderLevel": 5,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 221,
+      "name": "Muskmelon",
+      "unit": "g",
+      "currentQty": 3000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 222,
+      "name": "Pomegranate",
+      "unit": "g",
+      "currentQty": 3000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 223,
+      "name": "Grapes",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 224,
+      "name": "Pineapple",
+      "unit": "units",
+      "currentQty": 10,
+      "reorderLevel": 3,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 225,
+      "name": "Watermelon",
+      "unit": "g",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 226,
+      "name": "Ginger",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 227,
+      "name": "Lemon",
+      "unit": "units",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 228,
+      "name": "Pudina (Mint Leaves)",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 229,
+      "name": "Tomato",
+      "unit": "units",
+      "currentQty": 30,
+      "reorderLevel": 8,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 230,
+      "name": "Sugar Syrup",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 231,
+      "name": "Rose Syrup",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 232,
+      "name": "Chocolate Syrup",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 233,
+      "name": "Mango Crush",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 234,
+      "name": "Strawberry Crush",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 235,
+      "name": "Butterscotch Crush",
+      "unit": "ml",
+      "currentQty": 1500,
+      "reorderLevel": 150,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 236,
+      "name": "Kiwi Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 237,
+      "name": "Litchi Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 238,
+      "name": "Black Currant Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 239,
+      "name": "Pista Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 240,
+      "name": "Blueberry Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 241,
+      "name": "Watermelon Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 242,
+      "name": "Blue Lagoon Syrup",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 243,
+      "name": "Lime & Mint Syrup",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 244,
+      "name": "Mango Ice Cream",
+      "unit": "scoops",
+      "currentQty": 120,
+      "reorderLevel": 15,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 245,
+      "name": "Pista Ice Cream",
+      "unit": "scoops",
+      "currentQty": 100,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 246,
+      "name": "Butterscotch Ice Cream",
+      "unit": "scoops",
+      "currentQty": 100,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 247,
+      "name": "Chocolate Ice Cream",
+      "unit": "scoops",
+      "currentQty": 120,
+      "reorderLevel": 15,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 248,
+      "name": "Black Currant Ice Cream",
+      "unit": "scoops",
+      "currentQty": 80,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 249,
+      "name": "Kesar Pista Ice Cream",
+      "unit": "scoops",
+      "currentQty": 80,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 250,
+      "name": "Oreo & Cream Ice Cream",
+      "unit": "scoops",
+      "currentQty": 80,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 251,
+      "name": "Almond Ice Cream",
+      "unit": "scoops",
+      "currentQty": 60,
+      "reorderLevel": 8,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 252,
+      "name": "Milk",
+      "unit": "ml",
+      "currentQty": 10000,
+      "reorderLevel": 1000,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 253,
+      "name": "Curd / Yoghurt",
+      "unit": "ml",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 254,
+      "name": "Sugar",
+      "unit": "g",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 255,
+      "name": "Coffee Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 256,
+      "name": "Vanilla Essence",
+      "unit": "ml",
+      "currentQty": 200,
+      "reorderLevel": 20,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 257,
+      "name": "Oreo Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 258,
+      "name": "Choco Chips",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 259,
+      "name": "Baby Cashews",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 260,
+      "name": "Almonds (Badam)",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 261,
+      "name": "Almond Powder",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 262,
+      "name": "Cashews",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 263,
+      "name": "Dry Grapes",
+      "unit": "g",
+      "currentQty": 200,
+      "reorderLevel": 30,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 264,
+      "name": "Dates",
+      "unit": "units",
+      "currentQty": 60,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 265,
+      "name": "Cherry (Cocktail)",
+      "unit": "units",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 266,
+      "name": "Elaichi (Cardamom)",
+      "unit": "g",
+      "currentQty": 100,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 267,
+      "name": "Colour Jelly",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 268,
+      "name": "Sabja Seeds (Basil)",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 30,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 269,
+      "name": "Hazelnut Powder/Crush",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 30,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 270,
+      "name": "Kitkat Bar",
+      "unit": "units",
+      "currentQty": 30,
+      "reorderLevel": 5,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 271,
+      "name": "Brownie Cake",
+      "unit": "units",
+      "currentQty": 30,
+      "reorderLevel": 5,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 272,
+      "name": "Sprite / 7Up Bottle (200ml)",
+      "unit": "bottles",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 273,
+      "name": "Soda Bottle (200ml)",
+      "unit": "bottles",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 274,
+      "name": "Ice Cubes",
+      "unit": "g",
+      "currentQty": 10000,
+      "reorderLevel": 1000,
+      "created_at": "2026-05-28 10:22:33",
+      "location": "ongole"
+    },
+    {
+      "id": 275,
+      "name": "Bread Slices",
+      "unit": "slices",
+      "currentQty": 200,
+      "reorderLevel": 40,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 276,
+      "name": "Carrot (shredded)",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 277,
+      "name": "Beetroot (shredded)",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 278,
+      "name": "Capsicum (sliced)",
+      "unit": "g",
+      "currentQty": 1500,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 279,
+      "name": "Cucumber (sliced)",
+      "unit": "g",
+      "currentQty": 1500,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 280,
+      "name": "Mayonnaise",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 281,
+      "name": "Chaat Masala",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 282,
+      "name": "Butter",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 150,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 283,
+      "name": "Peri Peri Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 284,
+      "name": "Hot & Spicy Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 285,
+      "name": "Tandoori Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 286,
+      "name": "Tomato Sauce",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 287,
+      "name": "Chilli Sauce",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 288,
+      "name": "Green Chilli Sauce",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 289,
+      "name": "Mushrooms",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 150,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 290,
+      "name": "Onion (chopped)",
+      "unit": "g",
+      "currentQty": 1500,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 291,
+      "name": "Nutella",
+      "unit": "g",
+      "currentQty": 1000,
+      "reorderLevel": 150,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 292,
+      "name": "Apple",
+      "unit": "units",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 293,
+      "name": "Avocado",
+      "unit": "units",
+      "currentQty": 20,
+      "reorderLevel": 5,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 294,
+      "name": "Banana",
+      "unit": "units",
+      "currentQty": 40,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 295,
+      "name": "Beetroot (whole)",
+      "unit": "units",
+      "currentQty": 40,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 296,
+      "name": "Carrot (whole)",
+      "unit": "units",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 297,
+      "name": "Dragon Fruit",
+      "unit": "units",
+      "currentQty": 15,
+      "reorderLevel": 5,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 298,
+      "name": "Muskmelon",
+      "unit": "g",
+      "currentQty": 3000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 299,
+      "name": "Pomegranate",
+      "unit": "g",
+      "currentQty": 3000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 300,
+      "name": "Grapes",
+      "unit": "g",
+      "currentQty": 2000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 301,
+      "name": "Pineapple",
+      "unit": "units",
+      "currentQty": 10,
+      "reorderLevel": 3,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 302,
+      "name": "Watermelon",
+      "unit": "g",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 303,
+      "name": "Ginger",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 304,
+      "name": "Lemon",
+      "unit": "units",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 305,
+      "name": "Pudina (Mint Leaves)",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 306,
+      "name": "Tomato",
+      "unit": "units",
+      "currentQty": 30,
+      "reorderLevel": 8,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 307,
+      "name": "Sugar Syrup",
+      "unit": "ml",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 308,
+      "name": "Rose Syrup",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 309,
+      "name": "Chocolate Syrup",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 310,
+      "name": "Mango Crush",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 311,
+      "name": "Strawberry Crush",
+      "unit": "ml",
+      "currentQty": 2000,
+      "reorderLevel": 200,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 312,
+      "name": "Butterscotch Crush",
+      "unit": "ml",
+      "currentQty": 1500,
+      "reorderLevel": 150,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 313,
+      "name": "Kiwi Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 314,
+      "name": "Litchi Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 315,
+      "name": "Black Currant Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 316,
+      "name": "Pista Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 317,
+      "name": "Blueberry Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 318,
+      "name": "Watermelon Crush",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 319,
+      "name": "Blue Lagoon Syrup",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 320,
+      "name": "Lime & Mint Syrup",
+      "unit": "ml",
+      "currentQty": 1000,
+      "reorderLevel": 100,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 321,
+      "name": "Mango Ice Cream",
+      "unit": "scoops",
+      "currentQty": 120,
+      "reorderLevel": 15,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 322,
+      "name": "Pista Ice Cream",
+      "unit": "scoops",
+      "currentQty": 100,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 323,
+      "name": "Butterscotch Ice Cream",
+      "unit": "scoops",
+      "currentQty": 100,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 324,
+      "name": "Chocolate Ice Cream",
+      "unit": "scoops",
+      "currentQty": 120,
+      "reorderLevel": 15,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 325,
+      "name": "Black Currant Ice Cream",
+      "unit": "scoops",
+      "currentQty": 80,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 326,
+      "name": "Kesar Pista Ice Cream",
+      "unit": "scoops",
+      "currentQty": 80,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 327,
+      "name": "Oreo & Cream Ice Cream",
+      "unit": "scoops",
+      "currentQty": 80,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 328,
+      "name": "Almond Ice Cream",
+      "unit": "scoops",
+      "currentQty": 60,
+      "reorderLevel": 8,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 329,
+      "name": "Milk",
+      "unit": "ml",
+      "currentQty": 10000,
+      "reorderLevel": 1000,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 330,
+      "name": "Curd / Yoghurt",
+      "unit": "ml",
+      "currentQty": 5000,
+      "reorderLevel": 500,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 331,
+      "name": "Sugar",
+      "unit": "g",
+      "currentQty": 3000,
+      "reorderLevel": 300,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 332,
+      "name": "Coffee Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 333,
+      "name": "Vanilla Essence",
+      "unit": "ml",
+      "currentQty": 200,
+      "reorderLevel": 20,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 334,
+      "name": "Oreo Powder",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 335,
+      "name": "Choco Chips",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 336,
+      "name": "Baby Cashews",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 337,
+      "name": "Almonds (Badam)",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 338,
+      "name": "Almond Powder",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 339,
+      "name": "Cashews",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 340,
+      "name": "Dry Grapes",
+      "unit": "g",
+      "currentQty": 200,
+      "reorderLevel": 30,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 341,
+      "name": "Dates",
+      "unit": "units",
+      "currentQty": 60,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 342,
+      "name": "Cherry (Cocktail)",
+      "unit": "units",
+      "currentQty": 100,
+      "reorderLevel": 20,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 343,
+      "name": "Elaichi (Cardamom)",
+      "unit": "g",
+      "currentQty": 100,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 344,
+      "name": "Colour Jelly",
+      "unit": "g",
+      "currentQty": 500,
+      "reorderLevel": 50,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 345,
+      "name": "Sabja Seeds (Basil)",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 30,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 346,
+      "name": "Hazelnut Powder/Crush",
+      "unit": "g",
+      "currentQty": 300,
+      "reorderLevel": 30,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 347,
+      "name": "Kitkat Bar",
+      "unit": "units",
+      "currentQty": 30,
+      "reorderLevel": 5,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 348,
+      "name": "Brownie Cake",
+      "unit": "units",
+      "currentQty": 30,
+      "reorderLevel": 5,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 349,
+      "name": "Sprite / 7Up Bottle (200ml)",
+      "unit": "bottles",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 350,
+      "name": "Soda Bottle (200ml)",
+      "unit": "bottles",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 351,
+      "name": "Ice Cubes",
+      "unit": "g",
+      "currentQty": 10000,
+      "reorderLevel": 1000,
+      "created_at": "2026-05-28 10:23:27",
+      "location": "kodaikanal"
+    },
+    {
+      "id": 352,
+      "name": "breads",
+      "unit": "unit",
+      "currentQty": 91,
+      "reorderLevel": 20,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 353,
+      "name": "carrot",
+      "unit": "g",
+      "currentQty": 1618,
+      "reorderLevel": 390,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 354,
+      "name": "beetroot",
+      "unit": "g",
+      "currentQty": 557,
+      "reorderLevel": 120,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 355,
+      "name": "capsicum",
+      "unit": "g",
+      "currentQty": 309,
+      "reorderLevel": 90,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 356,
+      "name": "cucumber",
+      "unit": "g",
+      "currentQty": 1927,
+      "reorderLevel": 540,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 357,
+      "name": "mayonise",
+      "unit": "unit",
+      "currentQty": 20,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 358,
+      "name": "chatmasala",
+      "unit": "g",
+      "currentQty": 65,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 359,
+      "name": "cheese",
+      "unit": "g",
+      "currentQty": 2405,
+      "reorderLevel": 660,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 360,
+      "name": "butter",
+      "unit": "g",
+      "currentQty": 717,
+      "reorderLevel": 200,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 361,
+      "name": "2 breads",
+      "unit": "unit",
+      "currentQty": 93,
+      "reorderLevel": 30,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 362,
+      "name": "periperipow",
+      "unit": "g",
+      "currentQty": 264,
+      "reorderLevel": 60,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 363,
+      "name": "tomato sause",
+      "unit": "unit",
+      "currentQty": 42,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 364,
+      "name": "chilli sause",
+      "unit": "unit",
+      "currentQty": 2,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 365,
+      "name": "greenchillisause",
+      "unit": "unit",
+      "currentQty": 7,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 366,
+      "name": "hot&spicy pow",
+      "unit": "g",
+      "currentQty": 224,
+      "reorderLevel": 50,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 367,
+      "name": "tandooripow",
+      "unit": "g",
+      "currentQty": 160,
+      "reorderLevel": 50,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 368,
+      "name": "onion",
+      "unit": "g",
+      "currentQty": 789,
+      "reorderLevel": 170,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 369,
+      "name": "mayo",
+      "unit": "g",
+      "currentQty": 244,
+      "reorderLevel": 50,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 370,
+      "name": "mushrooms",
+      "unit": "unit",
+      "currentQty": 27,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 371,
+      "name": "nutella",
+      "unit": "unit",
+      "currentQty": 15,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 372,
+      "name": "milk",
+      "unit": "ml",
+      "currentQty": 4892,
+      "reorderLevel": 1070,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 373,
+      "name": "sugar",
+      "unit": "g",
+      "currentQty": 3600,
+      "reorderLevel": 760,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 374,
+      "name": "avacado(half)",
+      "unit": "unit",
+      "currentQty": 23,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 375,
+      "name": "banana",
+      "unit": "unit",
+      "currentQty": 44,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 376,
+      "name": "beetroots",
+      "unit": "unit",
+      "currentQty": 28,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 377,
+      "name": "dragon fruit",
+      "unit": "unit",
+      "currentQty": 50,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 378,
+      "name": "icecreamvennela",
+      "unit": "scoops",
+      "currentQty": 49,
+      "reorderLevel": 20,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 379,
+      "name": "sugat",
+      "unit": "g",
+      "currentQty": 90,
+      "reorderLevel": 30,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 380,
+      "name": "FRUIT",
+      "unit": "gms",
+      "currentQty": 937,
+      "reorderLevel": 200,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 381,
+      "name": "suagr",
+      "unit": "unit",
+      "currentQty": 22,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 382,
+      "name": "icecubes",
+      "unit": "unit",
+      "currentQty": 28,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 383,
+      "name": "sugar syrup",
+      "unit": "l",
+      "currentQty": 6320,
+      "reorderLevel": 1460,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 384,
+      "name": "apple",
+      "unit": "unit",
+      "currentQty": 22,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 385,
+      "name": "lemon",
+      "unit": "unit",
+      "currentQty": 48,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 386,
+      "name": "ginger",
+      "unit": "g",
+      "currentQty": 1347,
+      "reorderLevel": 400,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 387,
+      "name": "pudhina",
+      "unit": "unit",
+      "currentQty": 39,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 388,
+      "name": "pine",
+      "unit": "unit",
+      "currentQty": 15,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 389,
+      "name": "tomato",
+      "unit": "unit",
+      "currentQty": 22,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 390,
+      "name": "beetrrots",
+      "unit": "unit",
+      "currentQty": 45,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 391,
+      "name": "carrots",
+      "unit": "unit",
+      "currentQty": 19,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 392,
+      "name": "vene",
+      "unit": "ml",
+      "currentQty": 958,
+      "reorderLevel": 220,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 393,
+      "name": "buttersc",
+      "unit": "ml",
+      "currentQty": 762,
+      "reorderLevel": 240,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 394,
+      "name": "buttrsc crush",
+      "unit": "ml",
+      "currentQty": 1021,
+      "reorderLevel": 250,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 395,
+      "name": "chocolate",
+      "unit": "unit",
+      "currentQty": 8,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 396,
+      "name": "choco syrup",
+      "unit": "unit",
+      "currentQty": 20,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 397,
+      "name": "cocopow",
+      "unit": "unit",
+      "currentQty": 12,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 398,
+      "name": "kiwicrush",
+      "unit": "ml",
+      "currentQty": 611,
+      "reorderLevel": 160,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 399,
+      "name": "litchi",
+      "unit": "ml",
+      "currentQty": 758,
+      "reorderLevel": 200,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 400,
+      "name": "80mange",
+      "unit": "unit",
+      "currentQty": 21,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 401,
+      "name": "mangocrush",
+      "unit": "ml",
+      "currentQty": 862,
+      "reorderLevel": 240,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 402,
+      "name": "rosesyrup",
+      "unit": "ml",
+      "currentQty": 738,
+      "reorderLevel": 230,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 403,
+      "name": "strawberry",
+      "unit": "unit",
+      "currentQty": 32,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 404,
+      "name": "straw crush",
+      "unit": "ml",
+      "currentQty": 1017,
+      "reorderLevel": 260,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 405,
+      "name": "ven esse",
+      "unit": "unit",
+      "currentQty": 13,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 406,
+      "name": "strawcrush",
+      "unit": "ml",
+      "currentQty": 386,
+      "reorderLevel": 120,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 407,
+      "name": "ven",
+      "unit": "ml",
+      "currentQty": 490,
+      "reorderLevel": 110,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 408,
+      "name": "mango",
+      "unit": "unit",
+      "currentQty": 45,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 409,
+      "name": "blackcurrant",
+      "unit": "unit",
+      "currentQty": 15,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 410,
+      "name": "blackcurrent crush",
+      "unit": "ml",
+      "currentQty": 988,
+      "reorderLevel": 250,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 411,
+      "name": "kitkat",
+      "unit": "unit",
+      "currentQty": 69,
+      "reorderLevel": 20,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 412,
+      "name": "dates",
+      "unit": "unit",
+      "currentQty": 80,
+      "reorderLevel": 30,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 413,
+      "name": "ilachi",
+      "unit": "unit",
+      "currentQty": 5,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 414,
+      "name": "badam",
+      "unit": "unit",
+      "currentQty": 24,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 415,
+      "name": "badampow",
+      "unit": "g",
+      "currentQty": 4898,
+      "reorderLevel": 1530,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 416,
+      "name": "hazelnut",
+      "unit": "g",
+      "currentQty": 3286,
+      "reorderLevel": 710,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 417,
+      "name": "pistacrush",
+      "unit": "ml",
+      "currentQty": 1090,
+      "reorderLevel": 240,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 418,
+      "name": "cash",
+      "unit": "unit",
+      "currentQty": 5,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 419,
+      "name": "cherry",
+      "unit": "unit",
+      "currentQty": 43,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 420,
+      "name": "drygrapes",
+      "unit": "unit",
+      "currentQty": 16,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 421,
+      "name": "oreopow",
+      "unit": "g",
+      "currentQty": 1371,
+      "reorderLevel": 450,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 422,
+      "name": "chocosyrup",
+      "unit": "unit",
+      "currentQty": 11,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 423,
+      "name": "buttersc crush",
+      "unit": "ml",
+      "currentQty": 4658,
+      "reorderLevel": 1360,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 424,
+      "name": "coffeepow",
+      "unit": "g",
+      "currentQty": 128,
+      "reorderLevel": 30,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 425,
+      "name": "strawsyrup",
+      "unit": "ml",
+      "currentQty": 530,
+      "reorderLevel": 150,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 426,
+      "name": "pista",
+      "unit": "scoops",
+      "currentQty": 9189,
+      "reorderLevel": 3100,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 427,
+      "name": "poma",
+      "unit": "g",
+      "currentQty": 356,
+      "reorderLevel": 90,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 428,
+      "name": "babycash",
+      "unit": "g",
+      "currentQty": 59,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 429,
+      "name": "drigrape",
+      "unit": "unit",
+      "currentQty": 28,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 430,
+      "name": "crushes",
+      "unit": "unit",
+      "currentQty": 11,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 431,
+      "name": "kesarpista",
+      "unit": "scoops",
+      "currentQty": 4446,
+      "reorderLevel": 1470,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 432,
+      "name": "dragon",
+      "unit": "g",
+      "currentQty": 261,
+      "reorderLevel": 60,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 433,
+      "name": "chocochips",
+      "unit": "g",
+      "currentQty": 298,
+      "reorderLevel": 100,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 434,
+      "name": "curd",
+      "unit": "ml",
+      "currentQty": 4863,
+      "reorderLevel": 1530,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 435,
+      "name": "icecubes(op)",
+      "unit": "unit",
+      "currentQty": 13,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 436,
+      "name": "litchicrush",
+      "unit": "ml",
+      "currentQty": 662,
+      "reorderLevel": 150,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 437,
+      "name": "muskmelonfru",
+      "unit": "gm",
+      "currentQty": 2261,
+      "reorderLevel": 750,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 438,
+      "name": "blackcurrantcrush",
+      "unit": "ml",
+      "currentQty": 1066,
+      "reorderLevel": 370,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 439,
+      "name": "buttersccrush",
+      "unit": "ml",
+      "currentQty": 4917,
+      "reorderLevel": 1540,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 440,
+      "name": "strawberrycrush",
+      "unit": "ml",
+      "currentQty": 806,
+      "reorderLevel": 190,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 441,
+      "name": "sugarsyrup",
+      "unit": "ml",
+      "currentQty": 838,
+      "reorderLevel": 220,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 442,
+      "name": "strawberryscrush",
+      "unit": "ml",
+      "currentQty": 787,
+      "reorderLevel": 230,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 443,
+      "name": "icecube",
+      "unit": "unit",
+      "currentQty": 33,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 444,
+      "name": "sprite",
+      "unit": "ml",
+      "currentQty": 4198,
+      "reorderLevel": 920,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 445,
+      "name": "blueberrycrush",
+      "unit": "ml",
+      "currentQty": 660,
+      "reorderLevel": 140,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 446,
+      "name": "soda",
+      "unit": "ml",
+      "currentQty": 672,
+      "reorderLevel": 190,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 447,
+      "name": "lime&mintsyrup",
+      "unit": "ml",
+      "currentQty": 671,
+      "reorderLevel": 190,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 448,
+      "name": "blue lagoonsyrup",
+      "unit": "ml",
+      "currentQty": 214,
+      "reorderLevel": 50,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 449,
+      "name": "watermeloncrush",
+      "unit": "ml",
+      "currentQty": 746,
+      "reorderLevel": 160,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 450,
+      "name": "bluelogoonsyrup",
+      "unit": "ml",
+      "currentQty": 338,
+      "reorderLevel": 110,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 451,
+      "name": "oreo &cream",
+      "unit": "scoops",
+      "currentQty": 62,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 452,
+      "name": "almond",
+      "unit": "scoops",
+      "currentQty": 4399,
+      "reorderLevel": 1060,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 453,
+      "name": "brownie cake",
+      "unit": "unit",
+      "currentQty": 72,
+      "reorderLevel": 20,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 454,
+      "name": "babysch",
+      "unit": "g",
+      "currentQty": 117,
+      "reorderLevel": 40,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 455,
+      "name": "dryfuit",
+      "unit": "g",
+      "currentQty": 4372,
+      "reorderLevel": 1030,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 456,
+      "name": "burgur bun",
+      "unit": "unit",
+      "currentQty": 70,
+      "reorderLevel": 20,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 457,
+      "name": "veg patte",
+      "unit": "unit",
+      "currentQty": 22,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 458,
+      "name": "periperi sause",
+      "unit": "g",
+      "currentQty": 387,
+      "reorderLevel": 100,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 459,
+      "name": "chipotal mayo",
+      "unit": "g",
+      "currentQty": 266,
+      "reorderLevel": 70,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 460,
+      "name": "chicken patte",
+      "unit": "unit",
+      "currentQty": 13,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 461,
+      "name": "spring onions",
+      "unit": "unit",
+      "currentQty": 46,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 462,
+      "name": "red chiili",
+      "unit": "unit",
+      "currentQty": 30,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 463,
+      "name": "ginger&garlic",
+      "unit": "unit",
+      "currentQty": 11,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 464,
+      "name": "salt",
+      "unit": "unit",
+      "currentQty": 17,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 465,
+      "name": "red chilli pow",
+      "unit": "unit",
+      "currentQty": 13,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 466,
+      "name": "maidha",
+      "unit": "unit",
+      "currentQty": 45,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 467,
+      "name": "green chilli",
+      "unit": "unit",
+      "currentQty": 9,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 468,
+      "name": "corn floor",
+      "unit": "unit",
+      "currentQty": 80,
+      "reorderLevel": 20,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 469,
+      "name": "kitchenking masala",
+      "unit": "unit",
+      "currentQty": 19,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 470,
+      "name": "food color(opt)",
+      "unit": "unit",
+      "currentQty": 10,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 471,
+      "name": "chat masala",
+      "unit": "unit",
+      "currentQty": 9,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 472,
+      "name": "white&black pepper",
+      "unit": "unit",
+      "currentQty": 17,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 473,
+      "name": "soya sause",
+      "unit": "unit",
+      "currentQty": 14,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 474,
+      "name": "red chilli sause",
+      "unit": "unit",
+      "currentQty": 15,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 475,
+      "name": "green chilli sause",
+      "unit": "unit",
+      "currentQty": 29,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 476,
+      "name": "venegar",
+      "unit": "unit",
+      "currentQty": 30,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 477,
+      "name": "paneer",
+      "unit": "unit",
+      "currentQty": 23,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 478,
+      "name": "mushroom",
+      "unit": "unit",
+      "currentQty": 40,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 479,
+      "name": "boneless chicken",
+      "unit": "unit",
+      "currentQty": 41,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 480,
+      "name": "maida",
+      "unit": "unit",
+      "currentQty": 47,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 481,
+      "name": "turmeric",
+      "unit": "unit",
+      "currentQty": 3,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 482,
+      "name": "curryleaves",
+      "unit": "unit",
+      "currentQty": 39,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 483,
+      "name": "garam masala",
+      "unit": "unit",
+      "currentQty": 12,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 484,
+      "name": "red chilli",
+      "unit": "unit",
+      "currentQty": 42,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 485,
+      "name": "redchilli pow",
+      "unit": "unit",
+      "currentQty": 18,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 486,
+      "name": "soyasause",
+      "unit": "unit",
+      "currentQty": 18,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 487,
+      "name": "tomatosause",
+      "unit": "unit",
+      "currentQty": 16,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 488,
+      "name": "red&green chilli sause",
+      "unit": "unit",
+      "currentQty": 9,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 489,
+      "name": "chicken wings",
+      "unit": "unit",
+      "currentQty": 25,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 490,
+      "name": "pasta",
+      "unit": "unit",
+      "currentQty": 82,
+      "reorderLevel": 20,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 491,
+      "name": "garlic",
+      "unit": "unit",
+      "currentQty": 43,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 492,
+      "name": "black pepper",
+      "unit": "unit",
+      "currentQty": 4,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 493,
+      "name": "redchilli flex",
+      "unit": "unit",
+      "currentQty": 20,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 494,
+      "name": "origano",
+      "unit": "unit",
+      "currentQty": 12,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 495,
+      "name": "muchroom(opt)",
+      "unit": "unit",
+      "currentQty": 18,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 496,
+      "name": "paneer(opt",
+      "unit": "unit",
+      "currentQty": 25,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 497,
+      "name": "chicken(opt)",
+      "unit": "unit",
+      "currentQty": 35,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 498,
+      "name": "rice",
+      "unit": "unit",
+      "currentQty": 92,
+      "reorderLevel": 20,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 499,
+      "name": "beens",
+      "unit": "unit",
+      "currentQty": 25,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 500,
+      "name": "cabbage",
+      "unit": "unit",
+      "currentQty": 9,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 501,
+      "name": "azinamoto(opt)",
+      "unit": "unit",
+      "currentQty": 44,
+      "reorderLevel": 20,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 502,
+      "name": "black&white pepper",
+      "unit": "unit",
+      "currentQty": 5,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 503,
+      "name": "mashrooms",
+      "unit": "unit",
+      "currentQty": 18,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 504,
+      "name": "eggs",
+      "unit": "unit",
+      "currentQty": 18,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 505,
+      "name": "noodles",
+      "unit": "unit",
+      "currentQty": 18,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 506,
+      "name": "french fries",
+      "unit": "unit",
+      "currentQty": 57,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 507,
+      "name": "periperi pow",
+      "unit": "g",
+      "currentQty": 274,
+      "reorderLevel": 90,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 508,
+      "name": "frech fires",
+      "unit": "gms",
+      "currentQty": 5456,
+      "reorderLevel": 1590,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 509,
+      "name": "madras masala pow",
+      "unit": "g",
+      "currentQty": 463,
+      "reorderLevel": 140,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 510,
+      "name": "french fires",
+      "unit": "gms",
+      "currentQty": 628,
+      "reorderLevel": 190,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 511,
+      "name": "red chilli flex",
+      "unit": "unit",
+      "currentQty": 40,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 512,
+      "name": "coffee",
+      "unit": "g",
+      "currentQty": 389,
+      "reorderLevel": 80,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 513,
+      "name": "filter",
+      "unit": "ml",
+      "currentQty": 1998,
+      "reorderLevel": 440,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 514,
+      "name": "brownsugar",
+      "unit": "g",
+      "currentQty": 1445,
+      "reorderLevel": 480,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 515,
+      "name": "boost",
+      "unit": "g",
+      "currentQty": 1773,
+      "reorderLevel": 430,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 516,
+      "name": "horlicks",
+      "unit": "g",
+      "currentQty": 2225,
+      "reorderLevel": 680,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 517,
+      "name": "teapow",
+      "unit": "g",
+      "currentQty": 2167,
+      "reorderLevel": 660,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 518,
+      "name": "masala",
+      "unit": "g",
+      "currentQty": 486,
+      "reorderLevel": 120,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 519,
+      "name": "greentea",
+      "unit": "unit",
+      "currentQty": 72,
+      "reorderLevel": 20,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 520,
+      "name": "honey",
+      "unit": "g",
+      "currentQty": 916,
+      "reorderLevel": 200,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 521,
+      "name": "tea pow",
+      "unit": "g",
+      "currentQty": 266,
+      "reorderLevel": 90,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    },
+    {
+      "id": 522,
+      "name": "subseeds",
+      "unit": "g",
+      "currentQty": 72,
+      "reorderLevel": 10,
+      "created_at": "2026-05-29 15:30:30",
+      "location": "guntupalli"
+    }
+  ],
+  "menu_item_ingredients": [
+    {
+      "id": 223,
+      "menuItemId": 474,
+      "ingredientId": 29,
+      "qtyPerServing": 150
+    },
+    {
+      "id": 224,
+      "menuItemId": 474,
+      "ingredientId": 26,
+      "qtyPerServing": 60
+    },
+    {
+      "id": 225,
+      "menuItemId": 474,
+      "ingredientId": 24,
+      "qtyPerServing": 1
+    }
+  ]
+}
