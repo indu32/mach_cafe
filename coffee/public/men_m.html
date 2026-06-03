@@ -710,6 +710,22 @@ footer{
   .owner-bar-btn { font-size: 0.65rem; padding: 0.6rem 0.9rem; }
 }
 
+/* ── Thermal paper-size selector ── */
+.thermal-size-bar {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.8rem 2.5rem; background: rgba(123,79,46,0.06);
+  border-bottom: 1px solid rgba(123,79,46,0.1);
+  font-size: 0.75rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted);
+}
+.thermal-size-btn {
+  padding: 0.35rem 0.9rem; border: 1px solid rgba(123,79,46,0.3);
+  background: none; font-family: 'Jost', sans-serif; font-size: 0.72rem;
+  letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer;
+  color: var(--espresso); transition: all 0.2s;
+}
+.thermal-size-btn.active { background: var(--espresso); color: #fff; border-color: var(--espresso); }
+.thermal-size-btn:hover:not(.active) { border-color: var(--caramel); color: var(--caramel); }
+
 </style>
 <script src="/xlsx.full.min.js"></script>
 </head>
@@ -926,9 +942,16 @@ footer{
   <div class="invoice-modal">
     <div class="inv-header">
       <div class="inv-logo">Mach Cafe</div>
-  
       <div class="inv-status">✓ Order Confirmed &amp; Saved</div>
     </div>
+
+    <!-- ── Thermal paper-size selector ── -->
+    <div class="thermal-size-bar">
+      <span>🖨 Paper Size:</span>
+      <button class="thermal-size-btn active" id="size-58" onclick="setPaperSize(58)">58 mm</button>
+      <button class="thermal-size-btn"        id="size-80" onclick="setPaperSize(80)">80 mm</button>
+    </div>
+
     <div class="inv-body">
       <div class="inv-row">
         <div class="inv-field"><label>Invoice No.</label><p id="inv-number">—</p></div>
@@ -952,8 +975,8 @@ footer{
       <div class="inv-note" id="inv-note">Thank you for visiting MACH Cafe! ☕<br>For queries: <strong>hello@mach.in</strong></div>
     </div>
     <div class="inv-actions">
-      <button class="inv-btn inv-btn-secondary" onclick="window.print()">🖨 Print Invoice</button>
-      <button class="inv-btn inv-btn-primary" onclick="closeInvoice()">New Order →</button>
+      <button class="inv-btn inv-btn-secondary" onclick="printThermal()">🖨 Print Receipt</button>
+      <button class="inv-btn inv-btn-primary"   onclick="closeInvoice()">New Order →</button>
     </div>
   </div>
 </div>
@@ -1493,6 +1516,15 @@ async function confirmOrder() {
         grand:       data.grand,
       };
       showInvoice(inv);
+      // ── Silently try ESC/POS direct print (server-side) ──
+      // Falls back to browser popup print if server printer is offline.
+      if (data.success && data.invoiceNo) {
+        fetch('/api/print', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ invoiceNo: data.invoiceNo }),
+        }).catch(() => {}); // silent — user can always click "Print Receipt" in the modal
+      }
     } else {
       alert('Order failed: ' + data.error);
     }
@@ -1515,6 +1547,7 @@ async function confirmOrder() {
 }
 
 function showInvoice(inv) {
+  _lastInvoice = inv;   // ← stored for thermal print
   document.getElementById('inv-number').textContent   = inv.invoiceNo;
   document.getElementById('inv-datetime').textContent =
     new Date(inv.timestamp).toLocaleString('en-IN', { dateStyle:'medium', timeStyle:'short' });
@@ -1563,6 +1596,143 @@ function closeInvoice() {
   document.getElementById('invoice-overlay').classList.remove('open');
   document.body.style.overflow = '';
 }
+
+// ══════════════════════════════════════════════════════════
+//  THERMAL RECEIPT PRINTING
+//  Supports 58 mm (50 mm paper) and 80 mm paper widths.
+//  Generates a clean receipt HTML in a new popup window
+//  and triggers window.print() inside it — the browser
+//  sends it to whatever printer is set as default (your
+//  thermal printer).
+//
+//  To set your thermal printer as default:
+//    Windows → Settings → Bluetooth & devices → Printers & scanners
+//             → select your thermal printer → Set as default
+//    macOS   → System Settings → Printers & Scanners
+//             → right-click your thermal printer → Set as default
+//  Then just click "Print Receipt" — it will go straight to
+//  the thermal printer without any dialog if you also set
+//  Chrome/Edge to skip the print dialog:
+//    Chrome → chrome://settings/content/pdfDocuments  (disable)
+//  OR use the server-side ESC/POS route (see server.js /api/print).
+// ══════════════════════════════════════════════════════════
+
+let _thermalPaperMm = 58;   // default: 58 mm (50 mm paper roll)
+
+function setPaperSize(mm) {
+  _thermalPaperMm = mm;
+  document.getElementById('size-58').classList.toggle('active', mm === 58);
+  document.getElementById('size-80').classList.toggle('active', mm === 80);
+}
+
+// Stores last invoice data so printThermal() can access it
+let _lastInvoice = null;
+
+function printThermal() {
+  if (!_lastInvoice) { window.print(); return; }  // fallback
+  const inv  = _lastInvoice;
+  const mm   = _thermalPaperMm;
+  // 58 mm roll → ~160px usable; 80 mm roll → ~226px usable (at 96 dpi)
+  const widthPx = mm === 80 ? 226 : 160;
+
+  const itemRows = (inv.items || []).map(i =>
+    `<tr>
+      <td style="width:55%">${i.emoji||''} ${i.name}</td>
+      <td style="text-align:center;width:15%">${i.qty}</td>
+      <td style="text-align:right;width:30%">&#8377;${(i.amount||0).toLocaleString('en-IN')}</td>
+    </tr>`
+  ).join('');
+
+  const now  = inv.timestamp ? new Date(inv.timestamp) : new Date();
+  const dateStr = now.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+  const timeStr = now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+  const c = inv.customer || {};
+
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Receipt – ${inv.invoiceNo}</title>
+<style>
+  @page {
+    margin: 0;
+    /* Set paper width to match thermal roll */
+    size: ${mm}mm auto;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: ${mm === 80 ? '11px' : '9.5px'};
+    width: ${widthPx}px;
+    color: #000;
+    background: #fff;
+    padding: ${mm === 80 ? '6px 8px' : '4px 5px'};
+  }
+  .center   { text-align: center; }
+  .right    { text-align: right; }
+  .bold     { font-weight: bold; }
+  .lg       { font-size: ${mm === 80 ? '14px' : '11.5px'}; font-weight: bold; }
+  .sm       { font-size: ${mm === 80 ? '9px' : '8px'}; }
+  .divider  { border-top: 1px dashed #000; margin: 4px 0; }
+  .divider2 { border-top: 2px solid #000;  margin: 4px 0; }
+  table     { width: 100%; border-collapse: collapse; }
+  td        { padding: 2px 1px; vertical-align: top; }
+  th        { padding: 2px 1px; font-weight: bold; border-bottom: 1px dashed #000; }
+  .kv       { display: flex; justify-content: space-between; }
+  .kv .v    { font-weight: bold; }
+  .total-row{ display: flex; justify-content: space-between; font-weight: bold;
+              font-size: ${mm === 80 ? '13px' : '10.5px'}; }
+</style>
+</head>
+<body>
+  <!-- HEADER -->
+  <div class="center bold lg">MACH CAFE</div>
+  <div class="center sm">Every cup crafted with care ☕</div>
+  <div class="divider"></div>
+
+  <!-- META -->
+  <div class="kv sm"><span>${inv.invoiceNo}</span><span>${dateStr} ${timeStr}</span></div>
+  <div class="kv sm"><span>Table: ${inv.tableNo || 'Counter'}</span><span>${inv.paymentMode || 'Cash'}</span></div>
+  ${c.name ? `<div class="sm">Customer: ${c.name}${c.phone ? ' · '+c.phone : ''}</div>` : ''}
+  <div class="divider"></div>
+
+  <!-- ITEMS -->
+  <table>
+    <thead>
+      <tr>
+        <th style="text-align:left;width:55%">Item</th>
+        <th style="text-align:center;width:15%">Qty</th>
+        <th style="text-align:right;width:30%">Amt</th>
+      </tr>
+    </thead>
+    <tbody>${itemRows}</tbody>
+  </table>
+  <div class="divider"></div>
+
+  <!-- TOTALS -->
+  <div class="kv sm"><span>Subtotal</span><span>&#8377;${(inv.subtotal||0).toLocaleString('en-IN')}</span></div>
+  <div class="kv sm"><span>CGST (2.5%)</span><span>&#8377;${(inv.cgst||0).toLocaleString('en-IN')}</span></div>
+  <div class="kv sm"><span>SGST (2.5%)</span><span>&#8377;${(inv.sgst||0).toLocaleString('en-IN')}</span></div>
+  <div class="divider2"></div>
+  <div class="total-row"><span>TOTAL</span><span>&#8377;${(inv.grand||0).toLocaleString('en-IN')}</span></div>
+  <div class="divider"></div>
+
+  <!-- FOOTER -->
+  <div class="center sm">Thank you for visiting!</div>
+  <div class="center sm">hello@mach.in</div>
+  <br><br><br>
+</body>
+</html>`;
+
+  const w = window.open('', '_blank', `width=${widthPx + 40},height=600,scrollbars=yes`);
+  if (!w) { alert('Pop-up blocked! Please allow pop-ups for this page and try again.'); return; }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+  // Small delay so fonts load, then auto-print
+  setTimeout(() => { w.focus(); w.print(); }, 400);
+}
+
 
 
 function toggleOwnerBar() {
