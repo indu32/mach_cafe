@@ -1557,7 +1557,7 @@ async function confirmOrder() {
     const cgst = Math.round(subtotal*0.025), sgst = Math.round(subtotal*0.025);
     closeCustomerModal();
     showInvoice({
-      invoiceNo: `VB-OFFLINE-${Math.floor(1000+Math.random()*9000)}`,
+      invoiceNo: (() => { const d=new Date(); const yy=String(d.getFullYear()-2000).padStart(2,'0'); const mm=String(d.getMonth()+1).padStart(2,'0'); const dd=String(d.getDate()).padStart(2,'0'); return `MACH-${yy}${mm}${dd}-${Math.floor(1000+Math.random()*9000)}`; })(),
       timestamp: new Date().toISOString(), tableNo, paymentMode, customer,
       items: cart.map(i => ({ name:i.name, qty:i.qty, rate:i.price, amount:i.price*i.qty, emoji:i.emoji })),
       subtotal, cgst, sgst, grand: subtotal+cgst+sgst,
