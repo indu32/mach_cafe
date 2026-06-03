@@ -79,46 +79,16 @@ db.pragma('foreign_keys = ON');
     db.exec(`CREATE INDEX IF NOT EXISTS idx_ing_loc ON ingredients(location);`);
   }
 
-  if (!hasIngredients) return; // fresh DB — nothing to migrate, seed() will handle it
+  if (!hasIngredients) return; // fresh DB — tables just created, no migration needed
 
-  // ── Replace old fake seed ingredients with the real Excel ones ────────────
-  // Detects by checking for "Espresso Beans" which only exists in the old fake seed.
-  const hasFakeData = db.prepare("SELECT 1 FROM ingredients WHERE name = 'Espresso Beans' LIMIT 1").get();
-  if (hasFakeData) {
-    console.log('🔄  Migration: replacing old fake ingredients with real Excel inventory…');
-    db.transaction(() => {
-      // Clear old fake ingredients and their recipe links / logs
-      const fakeIds = db.prepare("SELECT id FROM ingredients WHERE location = 'guntupalli'").all().map(r => r.id);
-      if (fakeIds.length) {
-        const ph = fakeIds.map(() => '?').join(',');
-        db.prepare(`DELETE FROM menu_item_ingredients WHERE ingredientId IN (${ph})`).run(...fakeIds);
-        db.prepare(`DELETE FROM inventory_logs WHERE itemId IN (${ph})`).run(...fakeIds);
-      }
-      db.prepare("DELETE FROM ingredients WHERE location = 'guntupalli'").run();
+  // ── "Espresso Beans" migration removed ────────────────────────────────────
+  // This one-time migration (which replaced old fake ingredients with hardcoded
+  // "real" Excel data) has been removed. Ingredients are now exclusively managed
+  // via the DB (owner dashboard) and Excel uploads. No hardcoded re-seeding here.
+  // ──────────────────────────────────────────────────────────────────────────
 
-      // Insert the real Excel ingredients
-      const ins = db.prepare(`
-        INSERT OR IGNORE INTO ingredients (location, name, unit, currentQty, reorderLevel, category)
-        VALUES ('guntupalli', ?, ?, ?, ?, ?)
-      `);
-      const realIngs = [
-        ['breads','unit',91,20,'Dry Goods & Pantry'],['carrot','g',1618,390,'Fresh Produce'],['beetroot','g',557,120,'Fresh Produce'],['capsicum','g',309,90,'Fresh Produce'],['cucumber','g',1927,540,'Fresh Produce'],['mayonise','unit',20,10,'Sauces, Syrups & Spices'],['chatmasala','g',65,10,'Sauces, Syrups & Spices'],['cheese','g',2405,660,'Dairy & Ice Cream'],['butter','g',717,200,'Dairy & Ice Cream'],['2 breads','unit',93,30,'Dry Goods & Pantry'],['periperipow','g',264,60,'Sauces, Syrups & Spices'],['tomato sause','unit',42,10,'Fresh Produce'],['chilli sause','unit',2,10,'Sauces, Syrups & Spices'],['greenchillisause','unit',7,10,'Sauces, Syrups & Spices'],['hot&spicy pow','g',224,50,'Sauces, Syrups & Spices'],['tandooripow','g',160,50,'Sauces, Syrups & Spices'],['onion','g',789,170,'Fresh Produce'],['mayo','g',244,50,'Sauces, Syrups & Spices'],['mushrooms','unit',27,10,'Fresh Produce'],['nutella','unit',15,10,'Dry Goods & Pantry'],['milk','ml',4892,1070,'Dairy & Ice Cream'],['sugar','g',3600,760,'Dry Goods & Pantry'],['avacado(half)','unit',23,10,'Fresh Produce'],['banana','unit',44,10,'Fresh Produce'],['beetroots','unit',28,10,'Fresh Produce'],['dragon fruit','unit',50,10,'Fresh Produce'],['icecreamvennela','scoops',49,20,'Dairy & Ice Cream'],['sugat','g',90,30,'Other'],['FRUIT','gms',937,200,'Other'],['suagr','unit',22,10,'Other'],['icecubes','unit',28,10,'Other'],['sugar syrup','l',6320,1460,'Dry Goods & Pantry'],['apple','unit',22,10,'Fresh Produce'],['lemon','unit',48,10,'Fresh Produce'],['ginger','g',1347,400,'Fresh Produce'],['pudhina','unit',39,10,'Fresh Produce'],['pine','unit',15,10,'Fresh Produce'],['tomato','unit',22,10,'Fresh Produce'],['beetrrots','unit',45,10,'Other'],['carrots','unit',19,10,'Fresh Produce'],['vene','ml',958,220,'Dairy & Ice Cream'],['buttersc','ml',762,240,'Dairy & Ice Cream'],['buttrsc crush','ml',1021,250,'Sauces, Syrups & Spices'],['chocolate','unit',8,10,'Sauces, Syrups & Spices'],['choco syrup','unit',20,10,'Sauces, Syrups & Spices'],['cocopow','unit',12,10,'Sauces, Syrups & Spices'],['kiwicrush','ml',611,160,'Fresh Produce'],['litchi','ml',758,200,'Fresh Produce'],['80mange','unit',21,10,'Other'],['mangocrush','ml',862,240,'Fresh Produce'],['rosesyrup','ml',738,230,'Sauces, Syrups & Spices'],['strawberry','unit',32,10,'Fresh Produce'],['straw crush','ml',1017,260,'Sauces, Syrups & Spices'],['ven esse','unit',13,10,'Other'],['strawcrush','ml',386,120,'Sauces, Syrups & Spices'],['ven','ml',490,110,'Other'],['mango','unit',45,10,'Fresh Produce'],['blackcurrant','unit',15,10,'Sauces, Syrups & Spices'],['blackcurrent crush','ml',988,250,'Sauces, Syrups & Spices'],['kitkat','unit',69,20,'Dry Goods & Pantry'],['dates','unit',80,30,'Dry Goods & Pantry'],['ilachi','unit',5,10,'Other'],['badam','unit',24,10,'Dry Goods & Pantry'],['badampow','g',4898,1530,'Dry Goods & Pantry'],['hazelnut','g',3286,710,'Dry Goods & Pantry'],['pistacrush','ml',1090,240,'Dry Goods & Pantry'],['cash','unit',5,10,'Other'],['cherry','unit',43,10,'Dry Goods & Pantry'],['drygrapes','unit',16,10,'Fresh Produce'],['oreopow','g',1371,450,'Dry Goods & Pantry'],['chocosyrup','unit',11,10,'Sauces, Syrups & Spices'],['buttersc crush','ml',4658,1360,'Dairy & Ice Cream'],['coffeepow','g',128,30,'Sauces, Syrups & Spices'],['strawsyrup','ml',530,150,'Sauces, Syrups & Spices'],['pista','scoops',9189,3100,'Dry Goods & Pantry'],['poma','g',356,90,'Other'],['babycash','g',59,10,'Other'],['drigrape','unit',28,10,'Fresh Produce'],['crushes','unit',11,10,'Sauces, Syrups & Spices'],['kesarpista','scoops',4446,1470,'Dry Goods & Pantry'],['dragon','g',261,60,'Fresh Produce'],['chocochips','g',298,100,'Sauces, Syrups & Spices'],['curd','ml',4863,1530,'Dairy & Ice Cream'],['icecubes(op)','unit',13,10,'Other'],['litchicrush','ml',662,150,'Fresh Produce'],['muskmelonfru','gm',2261,750,'Fresh Produce'],['blackcurrantcrush','ml',1066,370,'Sauces, Syrups & Spices'],['buttersccrush','ml',4917,1540,'Dairy & Ice Cream'],['strawberrycrush','ml',806,190,'Fresh Produce'],['sugarsyrup','ml',838,220,'Dry Goods & Pantry'],['strawberryscrush','ml',787,230,'Fresh Produce'],['icecube','unit',33,10,'Other'],['sprite','ml',4198,920,'Beverages & Mixers'],['blueberrycrush','ml',660,140,'Sauces, Syrups & Spices'],['soda','ml',672,190,'Beverages & Mixers'],['lime&mintsyrup','ml',671,190,'Sauces, Syrups & Spices'],['blue lagoonsyrup','ml',214,50,'Sauces, Syrups & Spices'],['watermeloncrush','ml',746,160,'Fresh Produce'],['bluelogoonsyrup','ml',338,110,'Sauces, Syrups & Spices'],['oreo &cream','scoops',62,10,'Dairy & Ice Cream'],['almond','scoops',4399,1060,'Dry Goods & Pantry'],['brownie cake','unit',72,20,'Dry Goods & Pantry'],['babysch','g',117,40,'Other'],['dryfuit','g',4372,1030,'Dry Goods & Pantry'],['burgur bun','unit',70,20,'Dry Goods & Pantry'],['veg patte','unit',22,10,'Meat & Protein'],['periperi sause','g',387,100,'Sauces, Syrups & Spices'],['chipotal mayo','g',266,70,'Sauces, Syrups & Spices'],['chicken patte','unit',13,10,'Meat & Protein'],['spring onions','unit',46,10,'Fresh Produce'],['red chiili','unit',30,10,'Other'],['ginger&garlic','unit',11,10,'Fresh Produce'],['salt','unit',17,10,'Other'],['red chilli pow','unit',13,10,'Fresh Produce'],['maidha','unit',45,10,'Dry Goods & Pantry'],['green chilli','unit',9,10,'Fresh Produce'],['corn floor','unit',80,20,'Dry Goods & Pantry'],['kitchenking masala','unit',19,10,'Sauces, Syrups & Spices'],['food color(opt)','unit',10,10,'Other'],['chat masala','unit',9,10,'Sauces, Syrups & Spices'],['white&black pepper','unit',17,10,'Sauces, Syrups & Spices'],['soya sause','unit',14,10,'Sauces, Syrups & Spices'],['red chilli sause','unit',15,10,'Fresh Produce'],['green chilli sause','unit',29,10,'Fresh Produce'],['venegar','unit',30,10,'Dairy & Ice Cream'],['paneer','unit',23,10,'Fresh Produce'],['mushroom','unit',40,10,'Fresh Produce'],['boneless chicken','unit',41,10,'Meat & Protein'],['maida','unit',47,10,'Dry Goods & Pantry'],['turmeric','unit',3,10,'Sauces, Syrups & Spices'],['curryleaves','unit',39,10,'Fresh Produce'],['garam masala','unit',12,10,'Sauces, Syrups & Spices'],['red chilli','unit',42,10,'Fresh Produce'],['redchilli pow','unit',18,10,'Sauces, Syrups & Spices'],['soyasause','unit',18,10,'Sauces, Syrups & Spices'],['tomatosause','unit',16,10,'Fresh Produce'],['red&green chilli sause','unit',9,10,'Fresh Produce'],['chicken wings','unit',25,10,'Meat & Protein'],['pasta','unit',82,20,'Dry Goods & Pantry'],['garlic','unit',43,10,'Fresh Produce'],['black pepper','unit',4,10,'Sauces, Syrups & Spices'],['redchilli flex','unit',20,10,'Sauces, Syrups & Spices'],['origano','unit',12,10,'Sauces, Syrups & Spices'],['muchroom(opt)','unit',18,10,'Other'],['paneer(opt','unit',25,10,'Fresh Produce'],['chicken(opt)','unit',35,10,'Meat & Protein'],['rice','unit',92,20,'Dry Goods & Pantry'],['beans','unit',25,10,'Fresh Produce'],['cabbage','unit',9,10,'Fresh Produce'],['azinamoto(opt)','unit',44,20,'Other'],['black&white pepper','unit',5,10,'Sauces, Syrups & Spices'],['mashrooms','unit',18,10,'Other'],['eggs','unit',18,10,'Meat & Protein'],['noodles','unit',18,10,'Dry Goods & Pantry'],['french fries','unit',57,10,'Dry Goods & Pantry'],['periperi pow','g',274,90,'Sauces, Syrups & Spices'],['frech fires','gms',5456,1590,'Dry Goods & Pantry'],['madras masala pow','g',463,140,'Sauces, Syrups & Spices'],['french fires','gms',628,190,'Dry Goods & Pantry'],['red chilli flex','unit',40,10,'Fresh Produce'],['coffee','g',389,80,'Sauces, Syrups & Spices'],['filter','ml',1998,440,'Sauces, Syrups & Spices'],['brownsugar','g',1445,480,'Dry Goods & Pantry'],['boost','g',1773,430,'Dry Goods & Pantry'],['horlicks','g',2225,680,'Dry Goods & Pantry'],['teapow','g',2167,660,'Dry Goods & Pantry'],['masala','g',486,120,'Sauces, Syrups & Spices'],['greentea','unit',72,20,'Dry Goods & Pantry'],['honey','g',916,200,'Dry Goods & Pantry'],['tea pow','g',266,90,'Other'],['subseeds','g',72,10,'Sauces, Syrups & Spices'],
-      ];
-      for (const r of realIngs) ins.run(...r);
-      console.log(`✅  Replaced with ${realIngs.length} real ingredients.`);
-    })();
-  }
-
-  // Seed Ongole & Kodaikanal stock from Guntupalli if empty
-  for (const loc of ['ongole', 'kodaikanal']) {
-    const already = db.prepare('SELECT COUNT(*) AS c FROM ingredients WHERE location = ?').get(loc).c;
-    if (already === 0) {
-      console.log(`🌱  Seeding ${loc} ingredients…`);
-      db.prepare(`INSERT OR IGNORE INTO ingredients (location, name, unit, currentQty, reorderLevel, category)
-               SELECT ?, name, unit, currentQty, reorderLevel, category
-               FROM ingredients WHERE location = 'guntupalli'`).run(loc);
-    }
-  }
+  // NOTE: Per-location ingredient cloning (ongole / kodaikanal) has also been
+  // removed. Each location's inventory should be uploaded independently via Excel.
 })();
 
 
@@ -251,336 +221,30 @@ db.exec(`
 
 
 // ═══════════════════════════════════════════════════════
-//  SEED  (only runs once when tables are empty)
+//  SEED  — No hardcoded data. Menu items and ingredients
+//  are managed entirely via the DB (owner dashboard) and
+//  Excel upload. This function is intentionally a no-op.
 // ═══════════════════════════════════════════════════════
 
 function seed() {
-  if (db.prepare('SELECT COUNT(*) AS c FROM menu_items').get().c > 0) return;
-  console.log('🌱  First run — seeding database…');
+  // Data is loaded from the database and Excel uploads — nothing to seed here.
+  // Use the owner dashboard (/api/menu and /api/ingredients) to manage items,
+  // or upload your Excel inventory via the kitchen inventory page.
+  const menuCount = db.prepare('SELECT COUNT(*) AS c FROM menu_items').get().c;
+  const ingCount  = db.prepare('SELECT COUNT(*) AS c FROM ingredients').get().c;
+  console.log(`📋  DB ready — ${menuCount} menu items, ${ingCount} ingredients loaded from database.`);
 
-  // ── Real inventory from Inventory_Template_Stocked.xlsx ──────────────────
-  const addIng = db.prepare(`
-    INSERT OR IGNORE INTO ingredients (location, name, unit, currentQty, reorderLevel, category)
-    VALUES ('guntupalli', ?, ?, ?, ?, ?)
-  `);
+  // ── DEAD CODE REMOVED ──────────────────────────────────────────────────────
+  // Previously this function contained ~150 hardcoded ingredients and ~126
+  // hardcoded menu items (all with price = 0). Those were placeholder/fake data
+  // that conflicted with the real data coming from your DB and Excel uploads.
+  //
+  // DO NOT re-add hardcoded seed data here. All menu and ingredient management
+  // should go through:
+  //   • Owner dashboard API  → POST /api/menu, POST /api/ingredients
+  //   • Excel upload         → POST /api/ingredients/import-excel
+  // ──────────────────────────────────────────────────────────────────────────
 
-  const ings = [
-    // name,                    unit,    currentQty, reorderLevel, category
-    ['breads',                  'unit',  91,   20,  'Dry Goods & Pantry'],
-    ['carrot',                  'g',     1618, 390, 'Fresh Produce'],
-    ['beetroot',                'g',     557,  120, 'Fresh Produce'],
-    ['capsicum',                'g',     309,  90,  'Fresh Produce'],
-    ['cucumber',                'g',     1927, 540, 'Fresh Produce'],
-    ['mayonise',                'unit',  20,   10,  'Sauces, Syrups & Spices'],
-    ['chatmasala',              'g',     65,   10,  'Sauces, Syrups & Spices'],
-    ['cheese',                  'g',     2405, 660, 'Dairy & Ice Cream'],
-    ['butter',                  'g',     717,  200, 'Dairy & Ice Cream'],
-    ['2 breads',                'unit',  93,   30,  'Dry Goods & Pantry'],
-    ['periperipow',             'g',     264,  60,  'Sauces, Syrups & Spices'],
-    ['tomato sause',            'unit',  42,   10,  'Fresh Produce'],
-    ['chilli sause',            'unit',  2,    10,  'Sauces, Syrups & Spices'],
-    ['greenchillisause',        'unit',  7,    10,  'Sauces, Syrups & Spices'],
-    ['hot&spicy pow',           'g',     224,  50,  'Sauces, Syrups & Spices'],
-    ['tandooripow',             'g',     160,  50,  'Sauces, Syrups & Spices'],
-    ['onion',                   'g',     789,  170, 'Fresh Produce'],
-    ['mayo',                    'g',     244,  50,  'Sauces, Syrups & Spices'],
-    ['mushrooms',               'unit',  27,   10,  'Fresh Produce'],
-    ['nutella',                 'unit',  15,   10,  'Dry Goods & Pantry'],
-    ['milk',                    'ml',    4892, 1070,'Dairy & Ice Cream'],
-    ['sugar',                   'g',     3600, 760, 'Dry Goods & Pantry'],
-    ['avacado(half)',           'unit',  23,   10,  'Fresh Produce'],
-    ['banana',                  'unit',  44,   10,  'Fresh Produce'],
-    ['beetroots',               'unit',  28,   10,  'Fresh Produce'],
-    ['dragon fruit',            'unit',  50,   10,  'Fresh Produce'],
-    ['icecreamvennela',         'scoops',49,   20,  'Dairy & Ice Cream'],
-    ['sugat',                   'g',     90,   30,  'Other'],
-    ['FRUIT',                   'gms',   937,  200, 'Other'],
-    ['suagr',                   'unit',  22,   10,  'Other'],
-    ['icecubes',                'unit',  28,   10,  'Other'],
-    ['sugar syrup',             'l',     6320, 1460,'Dry Goods & Pantry'],
-    ['apple',                   'unit',  22,   10,  'Fresh Produce'],
-    ['lemon',                   'unit',  48,   10,  'Fresh Produce'],
-    ['ginger',                  'g',     1347, 400, 'Fresh Produce'],
-    ['pudhina',                 'unit',  39,   10,  'Fresh Produce'],
-    ['pine',                    'unit',  15,   10,  'Fresh Produce'],
-    ['tomato',                  'unit',  22,   10,  'Fresh Produce'],
-    ['beetrrots',               'unit',  45,   10,  'Other'],
-    ['carrots',                 'unit',  19,   10,  'Fresh Produce'],
-    ['vene',                    'ml',    958,  220, 'Dairy & Ice Cream'],
-    ['buttersc',                'ml',    762,  240, 'Dairy & Ice Cream'],
-    ['buttrsc crush',           'ml',    1021, 250, 'Sauces, Syrups & Spices'],
-    ['chocolate',               'unit',  8,    10,  'Sauces, Syrups & Spices'],
-    ['choco syrup',             'unit',  20,   10,  'Sauces, Syrups & Spices'],
-    ['cocopow',                 'unit',  12,   10,  'Sauces, Syrups & Spices'],
-    ['kiwicrush',               'ml',    611,  160, 'Fresh Produce'],
-    ['litchi',                  'ml',    758,  200, 'Fresh Produce'],
-    ['80mange',                 'unit',  21,   10,  'Other'],
-    ['mangocrush',              'ml',    862,  240, 'Fresh Produce'],
-    ['rosesyrup',               'ml',    738,  230, 'Sauces, Syrups & Spices'],
-    ['strawberry',              'unit',  32,   10,  'Fresh Produce'],
-    ['straw crush',             'ml',    1017, 260, 'Sauces, Syrups & Spices'],
-    ['ven esse',                'unit',  13,   10,  'Other'],
-    ['strawcrush',              'ml',    386,  120, 'Sauces, Syrups & Spices'],
-    ['ven',                     'ml',    490,  110, 'Other'],
-    ['mango',                   'unit',  45,   10,  'Fresh Produce'],
-    ['blackcurrant',            'unit',  15,   10,  'Sauces, Syrups & Spices'],
-    ['blackcurrent crush',      'ml',    988,  250, 'Sauces, Syrups & Spices'],
-    ['kitkat',                  'unit',  69,   20,  'Dry Goods & Pantry'],
-    ['dates',                   'unit',  80,   30,  'Dry Goods & Pantry'],
-    ['ilachi',                  'unit',  5,    10,  'Other'],
-    ['badam',                   'unit',  24,   10,  'Dry Goods & Pantry'],
-    ['badampow',                'g',     4898, 1530,'Dry Goods & Pantry'],
-    ['hazelnut',                'g',     3286, 710, 'Dry Goods & Pantry'],
-    ['pistacrush',              'ml',    1090, 240, 'Dry Goods & Pantry'],
-    ['cash',                    'unit',  5,    10,  'Other'],
-    ['cherry',                  'unit',  43,   10,  'Dry Goods & Pantry'],
-    ['drygrapes',               'unit',  16,   10,  'Fresh Produce'],
-    ['oreopow',                 'g',     1371, 450, 'Dry Goods & Pantry'],
-    ['chocosyrup',              'unit',  11,   10,  'Sauces, Syrups & Spices'],
-    ['buttersc crush',          'ml',    4658, 1360,'Dairy & Ice Cream'],
-    ['coffeepow',               'g',     128,  30,  'Sauces, Syrups & Spices'],
-    ['strawsyrup',              'ml',    530,  150, 'Sauces, Syrups & Spices'],
-    ['pista',                   'scoops',9189, 3100,'Dry Goods & Pantry'],
-    ['poma',                    'g',     356,  90,  'Other'],
-    ['babycash',                'g',     59,   10,  'Other'],
-    ['drigrape',                'unit',  28,   10,  'Fresh Produce'],
-    ['crushes',                 'unit',  11,   10,  'Sauces, Syrups & Spices'],
-    ['kesarpista',              'scoops',4446, 1470,'Dry Goods & Pantry'],
-    ['dragon',                  'g',     261,  60,  'Fresh Produce'],
-    ['chocochips',              'g',     298,  100, 'Sauces, Syrups & Spices'],
-    ['curd',                    'ml',    4863, 1530,'Dairy & Ice Cream'],
-    ['icecubes(op)',            'unit',  13,   10,  'Other'],
-    ['litchicrush',             'ml',    662,  150, 'Fresh Produce'],
-    ['muskmelonfru',            'gm',    2261, 750, 'Fresh Produce'],
-    ['blackcurrantcrush',       'ml',    1066, 370, 'Sauces, Syrups & Spices'],
-    ['buttersccrush',           'ml',    4917, 1540,'Dairy & Ice Cream'],
-    ['strawberrycrush',         'ml',    806,  190, 'Fresh Produce'],
-    ['sugarsyrup',              'ml',    838,  220, 'Dry Goods & Pantry'],
-    ['strawberryscrush',        'ml',    787,  230, 'Fresh Produce'],
-    ['icecube',                 'unit',  33,   10,  'Other'],
-    ['sprite',                  'ml',    4198, 920, 'Beverages & Mixers'],
-    ['blueberrycrush',          'ml',    660,  140, 'Sauces, Syrups & Spices'],
-    ['soda',                    'ml',    672,  190, 'Beverages & Mixers'],
-    ['lime&mintsyrup',          'ml',    671,  190, 'Sauces, Syrups & Spices'],
-    ['blue lagoonsyrup',        'ml',    214,  50,  'Sauces, Syrups & Spices'],
-    ['watermeloncrush',         'ml',    746,  160, 'Fresh Produce'],
-    ['bluelogoonsyrup',         'ml',    338,  110, 'Sauces, Syrups & Spices'],
-    ['oreo &cream',             'scoops',62,   10,  'Dairy & Ice Cream'],
-    ['almond',                  'scoops',4399, 1060,'Dry Goods & Pantry'],
-    ['brownie cake',            'unit',  72,   20,  'Dry Goods & Pantry'],
-    ['babysch',                 'g',     117,  40,  'Other'],
-    ['dryfuit',                 'g',     4372, 1030,'Dry Goods & Pantry'],
-    ['burgur bun',              'unit',  70,   20,  'Dry Goods & Pantry'],
-    ['veg patte',               'unit',  22,   10,  'Meat & Protein'],
-    ['periperi sause',          'g',     387,  100, 'Sauces, Syrups & Spices'],
-    ['chipotal mayo',           'g',     266,  70,  'Sauces, Syrups & Spices'],
-    ['chicken patte',           'unit',  13,   10,  'Meat & Protein'],
-    ['spring onions',           'unit',  46,   10,  'Fresh Produce'],
-    ['red chiili',              'unit',  30,   10,  'Other'],
-    ['ginger&garlic',           'unit',  11,   10,  'Fresh Produce'],
-    ['salt',                    'unit',  17,   10,  'Other'],
-    ['red chilli pow',          'unit',  13,   10,  'Fresh Produce'],
-    ['maidha',                  'unit',  45,   10,  'Dry Goods & Pantry'],
-    ['green chilli',            'unit',  9,    10,  'Fresh Produce'],
-    ['corn floor',              'unit',  80,   20,  'Dry Goods & Pantry'],
-    ['kitchenking masala',      'unit',  19,   10,  'Sauces, Syrups & Spices'],
-    ['food color(opt)',         'unit',  10,   10,  'Other'],
-    ['chat masala',             'unit',  9,    10,  'Sauces, Syrups & Spices'],
-    ['white&black pepper',      'unit',  17,   10,  'Sauces, Syrups & Spices'],
-    ['soya sause',              'unit',  14,   10,  'Sauces, Syrups & Spices'],
-    ['red chilli sause',        'unit',  15,   10,  'Fresh Produce'],
-    ['green chilli sause',      'unit',  29,   10,  'Fresh Produce'],
-    ['venegar',                 'unit',  30,   10,  'Dairy & Ice Cream'],
-    ['paneer',                  'unit',  23,   10,  'Fresh Produce'],
-    ['mushroom',                'unit',  40,   10,  'Fresh Produce'],
-    ['boneless chicken',        'unit',  41,   10,  'Meat & Protein'],
-    ['maida',                   'unit',  47,   10,  'Dry Goods & Pantry'],
-    ['turmeric',                'unit',  3,    10,  'Sauces, Syrups & Spices'],
-    ['curryleaves',             'unit',  39,   10,  'Fresh Produce'],
-    ['garam masala',            'unit',  12,   10,  'Sauces, Syrups & Spices'],
-    ['red chilli',              'unit',  42,   10,  'Fresh Produce'],
-    ['redchilli pow',           'unit',  18,   10,  'Sauces, Syrups & Spices'],
-    ['soyasause',               'unit',  18,   10,  'Sauces, Syrups & Spices'],
-    ['tomatosause',             'unit',  16,   10,  'Fresh Produce'],
-    ['red&green chilli sause',  'unit',  9,    10,  'Fresh Produce'],
-    ['chicken wings',           'unit',  25,   10,  'Meat & Protein'],
-    ['pasta',                   'unit',  82,   20,  'Dry Goods & Pantry'],
-    ['garlic',                  'unit',  43,   10,  'Fresh Produce'],
-    ['black pepper',            'unit',  4,    10,  'Sauces, Syrups & Spices'],
-    ['redchilli flex',          'unit',  20,   10,  'Sauces, Syrups & Spices'],
-    ['origano',                 'unit',  12,   10,  'Sauces, Syrups & Spices'],
-    ['muchroom(opt)',           'unit',  18,   10,  'Other'],
-    ['paneer(opt',              'unit',  25,   10,  'Fresh Produce'],
-    ['chicken(opt)',            'unit',  35,   10,  'Meat & Protein'],
-    ['rice',                    'unit',  92,   20,  'Dry Goods & Pantry'],
-    ['beans',                   'unit',  25,   10,  'Fresh Produce'],
-    ['cabbage',                 'unit',  9,    10,  'Fresh Produce'],
-    ['azinamoto(opt)',          'unit',  44,   20,  'Other'],
-    ['black&white pepper',      'unit',  5,    10,  'Sauces, Syrups & Spices'],
-    ['mashrooms',               'unit',  18,   10,  'Other'],
-    ['eggs',                    'unit',  18,   10,  'Meat & Protein'],
-    ['noodles',                 'unit',  18,   10,  'Dry Goods & Pantry'],
-    ['french fries',            'unit',  57,   10,  'Dry Goods & Pantry'],
-    ['periperi pow',            'g',     274,  90,  'Sauces, Syrups & Spices'],
-    ['frech fires',             'gms',   5456, 1590,'Dry Goods & Pantry'],
-    ['madras masala pow',       'g',     463,  140, 'Sauces, Syrups & Spices'],
-    ['french fires',            'gms',   628,  190, 'Dry Goods & Pantry'],
-    ['red chilli flex',         'unit',  40,   10,  'Fresh Produce'],
-    ['coffee',                  'g',     389,  80,  'Sauces, Syrups & Spices'],
-    ['filter',                  'ml',    1998, 440, 'Sauces, Syrups & Spices'],
-    ['brownsugar',              'g',     1445, 480, 'Dry Goods & Pantry'],
-    ['boost',                   'g',     1773, 430, 'Dry Goods & Pantry'],
-    ['horlicks',                'g',     2225, 680, 'Dry Goods & Pantry'],
-    ['teapow',                  'g',     2167, 660, 'Dry Goods & Pantry'],
-    ['masala',                  'g',     486,  120, 'Sauces, Syrups & Spices'],
-    ['greentea',                'unit',  72,   20,  'Dry Goods & Pantry'],
-    ['honey',                   'g',     916,  200, 'Dry Goods & Pantry'],
-    ['tea pow',                 'g',     266,  90,  'Other'],
-    ['subseeds',                'g',     72,   10,  'Sauces, Syrups & Spices'],
-  ];
-
-  db.transaction(() => {
-    for (const [name, unit, qty, reorder, cat] of ings)
-      addIng.run(name, unit, qty, reorder, cat);
-  })();
-
-  const addItem = db.prepare(`
-    INSERT OR IGNORE INTO menu_items (name, price, emoji, section, category, badge, description, isFeatured)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-
-  // ── YOUR REAL MENU from inventory.xlsx (126 items) ──
-   const menuItems = [
-    /*['classic sandwich', 0, '🥪', 'Sandwiches & Burgers', 'food', null, null, 0],
-    ['club san', 0, '🥪', 'Sandwiches & Burgers', 'food', null, null, 0],
-    ['hot and spicy san', 0, '🥪', 'Sandwiches & Burgers', 'food', null, null, 0],
-    ['periperisan', 0, '🥪', 'Sandwiches & Burgers', 'food', null, null, 0],
-    ['veg mayo sand', 0, '🥪', 'Sandwiches & Burgers', 'food', null, null, 0],
-    ['tandoori sand', 0, '🥪', 'Sandwiches & Burgers', 'food', null, null, 0],
-    ['mushroomsna', 0, '🍄', 'Other', 'beverage', null, null, 0],
-    ['nutella', 0, '🍫', 'Sandwiches & Burgers', 'food', null, null, 0],
-    ['apple juice(milk)', 0, '🥤', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['avacado(milk)', 0, '🥤', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['banana juice(milk)', 0, '🥤', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['beetroot(milk)', 0, '🥤', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['carrot juice(milk)', 0, '🥤', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['dragon(milk)', 0, '🥤', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['muskmelon(milk)', 0, '🥤', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['pomegranate(milk)', 0, '🥤', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['grapes', 0, '🍽️', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['pineapple', 0, '🍽️', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['watermelon', 0, '🍽️', 'Other', 'beverage', null, null, 0],
-    ['ABC', 0, '🍽️', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['CAP', 0, '🍽️', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['CAG', 0, '🍽️', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['BCCT', 0, '🍽️', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['beetroot de', 0, '🍽️', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['carrot de', 0, '🍽️', 'Juices & Milkshakes', 'beverage', null, null, 0],
-    ['buttersc sh', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['chocolate', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['kiwi', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['litchi', 0, '🍽️', 'Other', 'beverage', null, null, 0],
-    ['mango', 0, '🍽️', 'Other', 'beverage', null, null, 0],
-    ['rosemilk', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['strawberry', 0, '🍽️', 'Other', 'beverage', null, null, 0],
-    ['vanilla', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['buttersc strawberry', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['mangostraw', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['black currant', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['kitkat', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['seedless dates', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['almond', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['hazelnut', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['pista', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['dry fruit', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['oreo', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['buttersc oreo', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['choco oreo', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['mango oreo', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['strawberry oreo', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['cold coffee', 0, '☕', 'Shakes', 'beverage', null, null, 0],
-    ['chocolate coldcofe', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['strawberrycoldcoffee', 0, '☕', 'Shakes', 'beverage', null, null, 0],
-    ['Fruit&nut falooda', 0, '🍨', 'Faloodas', 'beverage', null, null, 0],
-    ['kesarpista', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['buttersc falooda', 0, '🍨', 'Faloodas', 'beverage', null, null, 0],
-    ['blackcurrant', 0, '🍽️', 'Other', 'beverage', null, null, 0],
-    ['sweet lassi', 0, '🥛', 'Lassis', 'beverage', null, null, 0],
-    ['muskmelon', 0, '🍽️', 'Other', 'beverage', null, null, 0],
-    ['buttersc', 0, '🍽️', 'Shakes', 'beverage', null, null, 0],
-    ['blushingbride mojito', 0, '🍹', 'Mojitos & Coolers', 'beverage', null, null, 0],
-    ['energitic blueberry', 0, '🍽️', 'Other', 'beverage', null, null, 0],
-    ['chinese gooseberry', 0, '🍽️', 'Mojitos & Coolers', 'beverage', null, null, 0],
-    ['litchi lemonade', 0, '🍹', 'Mojitos & Coolers', 'beverage', null, null, 0],
-    ['mango mint lemonade', 0, '🍹', 'Mojitos & Coolers', 'beverage', null, null, 0],
-    ['red devil', 0, '🍹', 'Mojitos & Coolers', 'beverage', null, null, 0],
-    ['rose lemonade', 0, '🍹', 'Mojitos & Coolers', 'beverage', null, null, 0],
-    ['sparkling blackcurrant', 0, '🍹', 'Mojitos & Coolers', 'beverage', null, null, 0],
-    ['virgin mojito', 0, '🍹', 'Mojitos & Coolers', 'beverage', null, null, 0],
-    ['blue lagoon', 0, '🍹', 'Mojitos & Coolers', 'beverage', null, null, 0],
-    ['wonderful watermelon', 0, '🍹', 'Other', 'beverage', null, null, 0],
-    ['midnight beauty', 0, '🍹', 'Mojitos & Coolers', 'beverage', null, null, 0],
-    ['sea blossoms', 0, '🍹', 'Mojitos & Coolers', 'beverage', null, null, 0],
-    ['awsome sundae', 0, '🍧', 'Ice Cream Sundaes', 'food', null, null, 0],
-    ['black&white', 0, '🍧', 'Ice Cream Sundaes', 'food', null, null, 0],
-    ['king of fruit....', 0, '🍧', 'Ice Cream Sundaes', 'food', null, null, 0],
-    ['heaven of ice cream', 0, '🍧', 'Ice Cream Sundaes', 'food', null, null, 0],
-    ['choco berry with vanilla', 0, '🍧', 'Shakes', 'beverage', null, null, 0],
-    ['nuts with scotch', 0, '🍧', 'Ice Cream Sundaes', 'food', null, null, 0],
-    ['choco king', 0, '🍧', 'Shakes', 'beverage', null, null, 0],
-    ['hot brownie fudge', 0, '🍰', 'Desserts', 'food', null, null, 0],
-    ['dryfuit brownie fudge', 0, '🍰', 'Desserts', 'food', null, null, 0],
-    ['hot ven fudge', 0, '🍰', 'Desserts', 'food', null, null, 0],
-    ['hot choco brownie', 0, '🍰', 'Shakes', 'beverage', null, null, 0],
-    ['veg burger', 0, '🍔', 'Sandwiches & Burgers', 'food', null, null, 0],
-    ['chicken burgur', 0, '🍔', 'Sandwiches & Burgers', 'food', null, null, 0],
-    ['veg manchurian', 0, '🍄', 'Starters', 'food', null, null, 0],
-    ['paneeer manchu', 0, '🍄', 'Starters', 'food', null, null, 0],
-    ['mushroom manchu', 0, '🍄', 'Starters', 'food', null, null, 0],
-    ['chicken manchu', 0, '🍗', 'Starters', 'food', null, null, 0],
-    ['chicken 65', 0, '🍗', 'Starters', 'food', null, null, 0],
-    ['mushroom 65', 0, '🍄', 'Starters', 'food', null, null, 0],
-    ['paneer 65', 0, '🧀', 'Starters', 'food', null, null, 0],
-    ['chilli chicken', 0, '🍗', 'Starters', 'food', null, null, 0],
-    ['pepper chicken', 0, '🍗', 'Starters', 'food', null, null, 0],
-    ['chicken lolipop', 0, '🍗', 'Starters', 'food', null, null, 0],
-    ['dragon chicken', 0, '🍗', 'Starters', 'food', null, null, 0],
-    ['kalayika special chic', 0, '🍽️', 'Starters', 'food', null, null, 0],
-    ['pasta', 0, '🍜', 'Mains', 'food', null, null, 0],
-    ['veg fied rice', 0, '🍚', 'Mains', 'food', null, null, 0],
-    ['mashroom fr', 0, '🍽️', 'Mains', 'food', null, null, 0],
-    ['egg fr', 0, '🍽️', 'Mains', 'food', null, null, 0],
-    ['paneer fr', 0, '🧀', 'Mains', 'food', null, null, 0],
-    ['chicken fr', 0, '🍗', 'Mains', 'food', null, null, 0],
-    ['veg noodles', 0, '🍜', 'Mains', 'food', null, null, 0],
-    ['paneer noodles', 0, '🧀', 'Mains', 'food', null, null, 0],
-    ['egg noodles', 0, '🍜', 'Mains', 'food', null, null, 0],
-    ['mushroom nod', 0, '🍄', 'Mains', 'food', null, null, 0],
-    ['chicken noodles', 0, '🍗', 'Mains', 'food', null, null, 0],
-    ['periperifrench fires', 0, '🍟', 'Snacks', 'food', null, null, 0],
-    ['fried momo', 0, '🥟', 'Snacks', 'food', null, null, 0],
-    ['veg role', 0, '🌯', 'Snacks', 'food', null, null, 0],
-    ['paneer role', 0, '🧀', 'Snacks', 'food', null, null, 0],
-    ['veg nuggets', 0, '🍗', 'Snacks', 'food', null, null, 0],
-    ['veg fingers', 0, '🍗', 'Snacks', 'food', null, null, 0],
-    ['chicken role', 0, '🍗', 'Snacks', 'food', null, null, 0],
-    ['salted french fries', 0, '🍟', 'Snacks', 'food', null, null, 0],
-    ['madras msala ff', 0, '🍽️', 'Snacks', 'food', null, null, 0],
-    ['cheesy chilli', 0, '🍽️', 'Snacks', 'food', null, null, 0],
-    ['coffee(beverages)', 0, '☕', 'Hot Beverages', 'beverage', null, null, 0],
-    ['filter coffee', 0, '☕', 'Hot Beverages', 'beverage', null, null, 0],
-    ['karupati coffee', 0, '☕', 'Hot Beverages', 'beverage', null, null, 0],
-    ['badam milk', 0, '🥛', 'Hot Beverages', 'beverage', null, null, 0],
-    ['boost', 0, '🥛', 'Hot Beverages', 'beverage', null, null, 0],
-    ['horlicks', 0, '🥛', 'Hot Beverages', 'beverage', null, null, 0],
-    ['tea', 0, '🍵', 'Hot Beverages', 'beverage', null, null, 0],
-    ['bellam tea', 0, '🍵', 'Hot Beverages', 'beverage', null, null, 0],
-    ['greentea', 0, '🍵', 'Hot Beverages', 'beverage', null, null, 0],*/
-    ['lemon tea', 0, '🍵', 'Hot Beverages', 'beverage', null, null, 0],
-  ];
-
-  for (const row of menuItems) addItem.run(...row);
-  console.log(`✅  Seeded ${menuItems.length} menu items and ${ings.length} real ingredients from Excel.`);
 }
 // ═══════════════════════════════════════════════════════
 //  AUTH MIDDLEWARE  — used by Owner-only API routes
@@ -1333,6 +997,165 @@ app.get('/api/orders/parked/:token', (req, res) => {
 
 
 seed();
+
+// ═══════════════════════════════════════════════════════
+//  THERMAL PRINTER — ESC/POS DIRECT PRINT
+//
+//  This sends receipts directly to your thermal printer
+//  without opening a browser print dialog.
+//
+//  ── SETUP ──────────────────────────────────────────────
+//  1. Install the printer library:
+//       npm install node-thermal-printer
+//
+//  2. Find your printer connection type and set it below:
+//
+//     USB (most common for desktop POS):
+//       type: PrinterTypes.EPSON  (or STAR)
+//       interface: 'usb'          ← works on Linux/Mac
+//       On Windows, install Zadig driver and use:
+//       interface: 'printer:YourPrinterName'
+//       (get name from: Control Panel → Devices and Printers)
+//
+//     Network / Ethernet (IP-connected printer):
+//       interface: 'tcp://192.168.1.87:9100'
+//       ← replace with your printer's IP and port (usually 9100)
+//       To find the IP: print a self-test page on your printer
+//
+//     Serial port (older printers, rare):
+//       interface: '/dev/ttyUSB0'       (Linux)
+//       interface: 'COM3'               (Windows)
+//
+//  3. Set THERMAL_PRINTER_WIDTH_MM below to match your roll:
+//       58  → 50 mm paper (narrow roll, ~32 chars/line)
+//       80  → 80 mm paper (wide roll,   ~48 chars/line)
+//
+//  4. If you're NOT using direct ESC/POS printing, just leave
+//     this section as-is — the browser popup print path
+//     in men_m.html will still work fine.
+// ═══════════════════════════════════════════════════════
+
+// ▼▼▼ EDIT THESE TWO LINES ▼▼▼
+const THERMAL_PRINTER_INTERFACE  = 'tcp://192.168.1.87:9100'; // ← your printer IP:port or 'usb'
+const THERMAL_PRINTER_WIDTH_MM   = 80;                         // ← 58 or 80
+// ▲▲▲ EDIT THESE TWO LINES ▲▲▲
+
+let ThermalPrinter, PrinterTypes, CharacterSet;
+try {
+  const ntp = require('node-thermal-printer');
+  ThermalPrinter = ntp.printer;
+  PrinterTypes   = ntp.types;
+  CharacterSet   = ntp.CharacterSet;
+} catch (e) {
+  console.warn('⚠️  node-thermal-printer not installed. Direct ESC/POS printing disabled.');
+  console.warn('   Run: npm install node-thermal-printer  to enable it.');
+  console.warn('   Browser popup printing (men_m.html) still works without it.');
+}
+
+/* POST /api/print
+   Body: { invoiceNo }  — fetches invoice from DB and sends to thermal printer.
+   The frontend calls this as a background request after generating the invoice.
+   If this fails (printer offline), the browser popup print path is used as fallback. */
+app.post('/api/print', async (req, res) => {
+  if (!ThermalPrinter) {
+    return res.status(503).json({ success: false, error: 'node-thermal-printer not installed. Use browser print instead.' });
+  }
+
+  const { invoiceNo } = req.body;
+  if (!invoiceNo) return res.status(400).json({ success: false, error: 'invoiceNo required' });
+
+  const inv = db.prepare('SELECT * FROM invoices WHERE invoiceNo = ?').get(invoiceNo);
+  if (!inv)  return res.status(404).json({ success: false, error: 'Invoice not found' });
+
+  const customer = db.prepare('SELECT * FROM customers WHERE id = ?').get(inv.customerId);
+  const items    = db.prepare('SELECT * FROM order_items WHERE invoiceId = ?').all(inv.id);
+
+  // ── Character widths per paper size ──
+  const lineWidth   = THERMAL_PRINTER_WIDTH_MM >= 80 ? 48 : 32;
+  const colNameW    = THERMAL_PRINTER_WIDTH_MM >= 80 ? 28 : 18;
+  const colQtyW     = 4;
+  const colAmtW     = lineWidth - colNameW - colQtyW;
+
+  function pad(str, len, right = false) {
+    const s = String(str).slice(0, len);
+    return right ? s.padStart(len) : s.padEnd(len);
+  }
+  function divider(char = '-') { return char.repeat(lineWidth); }
+
+  try {
+    const printer = new ThermalPrinter({
+      type:      PrinterTypes.EPSON,       // ← change to PrinterTypes.STAR if you have a Star printer
+      interface: THERMAL_PRINTER_INTERFACE,
+      width:     lineWidth,
+      removeSpecialCharacters: false,
+      lineCharacter: '-',
+    });
+
+    const isConnected = await printer.isPrinterConnected();
+    if (!isConnected) throw new Error('Printer not reachable at ' + THERMAL_PRINTER_INTERFACE);
+
+    // ── Header ──
+    printer.alignCenter();
+    printer.bold(true);
+    printer.setTextSize(1, 1);
+    printer.println('MACH CAFE');
+    printer.bold(false);
+    printer.setTextNormal();
+    printer.println('Every cup crafted with care');
+    printer.drawLine();
+
+    // ── Meta ──
+    printer.alignLeft();
+    const ts = new Date(inv.timestamp);
+    printer.println(`${inv.invoiceNo}`);
+    printer.println(`${ts.toLocaleDateString('en-IN')} ${ts.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}`);
+    printer.println(`Table: ${inv.tableNo || 'Counter'}   Payment: ${inv.paymentMode || 'Cash'}`);
+    if (customer) printer.println(`Customer: ${customer.name}${customer.phone ? ' · ' + customer.phone : ''}`);
+    printer.drawLine();
+
+    // ── Column header ──
+    printer.println(
+      pad('Item', colNameW) + pad('Qty', colQtyW) + pad('Amt', colAmtW, true)
+    );
+    printer.println(divider());
+
+    // ── Items ──
+    for (const item of items) {
+      const nameLine = pad(item.name, colNameW);
+      const qtyLine  = pad(item.qty, colQtyW);
+      const amtLine  = pad('Rs.' + item.amount, colAmtW, true);
+      printer.println(nameLine + qtyLine + amtLine);
+    }
+    printer.drawLine();
+
+    // ── Totals ──
+    printer.println(pad('Subtotal', lineWidth - 10) + pad('Rs.' + inv.subtotal, 10, true));
+    printer.println(pad('CGST 2.5%', lineWidth - 10) + pad('Rs.' + inv.cgst, 10, true));
+    printer.println(pad('SGST 2.5%', lineWidth - 10) + pad('Rs.' + inv.sgst, 10, true));
+    printer.println(divider('='));
+    printer.bold(true);
+    printer.setTextSize(1, 1);
+    printer.println(pad('TOTAL', lineWidth - 12) + pad('Rs.' + inv.grand, 12, true));
+    printer.bold(false);
+    printer.setTextNormal();
+    printer.drawLine();
+
+    // ── Footer ──
+    printer.alignCenter();
+    printer.println('Thank you for visiting!');
+    printer.println('hello@mach.in');
+    printer.cut();
+    printer.beep();   // optional beep on cut — remove if your printer doesn't support it
+
+    await printer.execute();
+    res.json({ success: true, message: 'Printed successfully' });
+
+  } catch (err) {
+    console.error('Thermal print error:', err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 
 app.listen(PORT, () => {
   console.log(`\n☕  MACH Cafe running at http://localhost:${PORT}`);
