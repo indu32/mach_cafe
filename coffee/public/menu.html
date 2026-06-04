@@ -755,7 +755,8 @@ footer{
   <button class="mnav-btn" onclick="scrollToSection('cold',this)">🥤 Juices & Detox</button>
   <button class="mnav-btn" onclick="scrollToSection('cold-mojitos',this)">🍹 Mojitos</button>
   <button class="mnav-btn" onclick="scrollToSection('shakes',this)">🥤 Shakes</button>
-  <button class="mnav-btn" onclick="scrollToSection('shakes-falooda',this)">🍨 Falooda & Lassi</button>
+  <button class="mnav-btn" onclick="scrollToSection('faloodas',this)">🍨 Faloodas</button>
+  <button class="mnav-btn" onclick="scrollToSection('lassi',this)">🥛 Lassi</button>
   <button class="mnav-btn" onclick="scrollToSection('desserts',this)">🍫 Desserts</button>
   
   <button class="mnav-btn" onclick="scrollToSection('Icecreams',this)">🍦 Ice Creams</button>
@@ -769,7 +770,8 @@ footer{
 <section class="menu-section" id="cold"></section>
 <section class="menu-section" id="cold-mojitos"></section>
 <section class="menu-section" id="shakes"></section>
-<section class="menu-section" id="shakes-falooda"></section>
+<section class="menu-section" id="faloodas"></section>
+<section class="menu-section" id="lassi"></section>
 <section class="menu-section" id="desserts"></section>
 <section class="menu-section" id="Icecreams"></section>
 <section class="menu-section" id="Biscuits"></section>
@@ -1016,6 +1018,18 @@ const SECTION_META = {
     desc:'Chilled falooda in assorted flavours and rich creamy lassi.'
   },
 
+  faloodas:{
+    icon:'🍨',
+    title:'Faloodas',
+    desc:'Chilled falooda in assorted flavours — rose, pista, mango & more.'
+  },
+
+  lassi:{
+    icon:'🥛',
+    title:'Lassi',
+    desc:'Rich, creamy lassi — sweet, salty, mango and more.'
+  },
+
   desserts:{
     icon:'🍫',
     title:'Desserts',
@@ -1180,13 +1194,21 @@ async function loadMenu() {
 
 function renderAllSections(items) {
   // Split 'cold' items: Mojitos go to 'cold-mojitos'; rest stay in 'cold'
-  // Split 'shakes' items: Falooda & Lassi go to 'shakes-falooda'; rest stay in 'shakes'
+  // Split 'shakes' items: Falooda goes to 'faloodas'; Lassi goes to 'lassi'
   const remappedItems = items.map(item => {
     if (item.section === 'cold' && item.description === 'Mojitos') {
       return { ...item, section: 'cold-mojitos' };
     }
-    if (item.section === 'shakes' && (item.description === 'Falooda' || item.description === 'Lassi')) {
-      return { ...item, section: 'shakes-falooda' };
+    if (item.section === 'shakes' && item.description === 'Falooda') {
+      return { ...item, section: 'faloodas' };
+    }
+    if (item.section === 'shakes' && item.description === 'Lassi') {
+      return { ...item, section: 'lassi' };
+    }
+    if (item.section === 'shakes-falooda') {
+      // Legacy fallback: split by description
+      if (item.description && item.description.toLowerCase().includes('lassi')) return { ...item, section: 'lassi' };
+      return { ...item, section: 'faloodas' };
     }
     return item;
   });
