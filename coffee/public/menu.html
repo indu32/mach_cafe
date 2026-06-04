@@ -757,12 +757,11 @@ footer{
   <button class="mnav-btn" onclick="scrollToSection('shakes',this)">🥤 Shakes</button>
   <button class="mnav-btn" onclick="scrollToSection('shakes-falooda',this)">🍨 Falooda & Lassi</button>
   <button class="mnav-btn" onclick="scrollToSection('desserts',this)">🍫 Desserts</button>
+  
   <button class="mnav-btn" onclick="scrollToSection('Icecreams',this)">🍦 Ice Creams</button>
-  <button class="mnav-btn" onclick="scrollToSection('Biscuits',this)">🍪 Biscuits</button>
 </div>
 
 <!-- ▼▼▼ EXCEL UPLOAD BANNER — Upload your menu Excel file here ▼▼▼ -->
-
 <!-- ▲▲▲ END EXCEL UPLOAD BANNER ▲▲▲ -->
 
 <!-- MENU SECTIONS -->
@@ -859,20 +858,10 @@ footer{
       <button class="cust-close" onclick="closeCustomerModal()">✕</button>
     </div>
     <div class="cust-body">
-      <div class="cust-hint">Enter your phone number — if you've ordered before, we'll auto-fill your details.</div>
-      <div class="cust-field" id="field-phone">
-        <label>Phone Number <span style="color:#c0392b">*</span></label>
-        <div class="phone-wrap">
-          <input type="tel" id="cust-phone" placeholder="10-digit mobile number" maxlength="10" oninput="onPhoneInput(this)" />
-          <button class="phone-lookup" onclick="lookupCustomer()">Look Up</button>
-        </div>
-        <div class="returning-tag" id="returning-tag">✓ Returning customer — details filled!</div>
-        <div class="field-error">Please enter a valid 10-digit phone number.</div>
-      </div>
       <div class="cust-row">
         <div class="cust-field" id="field-name">
-          <label>Full Name <span style="color:#c0392b">*</span></label>
-          <input type="text" id="cust-name" placeholder="Your name" />
+          <label>Full Name <span style="color:var(--muted)">(optional)</span></label>
+          <input type="text" id="cust-name" placeholder="Your name (optional)" />
           <div class="field-error">Name is required.</div>
         </div>
         <div class="cust-field">
@@ -923,7 +912,6 @@ footer{
       </div>
       <div class="inv-cust-box">
         <div class="inv-field"><label>Customer</label><p id="inv-cust-name">—</p></div>
-        <div class="inv-field"><label>Phone</label><p id="inv-cust-phone">—</p></div>
         <div class="inv-field"><label>Email</label><p id="inv-cust-email">—</p></div>
         <div class="inv-field"><label>Payment</label><p id="inv-payment">—</p></div>
       </div>
@@ -932,8 +920,8 @@ footer{
         <tbody id="inv-items"></tbody>
       </table>
       <div class="inv-line"><span>Subtotal</span><span id="inv-subtotal">₹0</span></div>
-      <div class="inv-line"><span>CGST (2.5%)</span><span id="inv-cgst">₹0</span></div>
-      <div class="inv-line"><span>SGST (2.5%)</span><span id="inv-sgst">₹0</span></div>
+      <div class="inv-line" id="inv-gst-rows"><span>CGST (2.5%)</span><span id="inv-cgst">₹0</span></div>
+      <div class="inv-line" id="inv-sgst-row"><span>SGST (2.5%)</span><span id="inv-sgst">₹0</span></div>
       <div class="inv-grand"><span>Grand Total</span><span id="inv-grand">₹0</span></div>
       <div class="inv-note" id="inv-note">Thank you for visiting MACH Cafe! ☕<br>For queries: <strong>hello@mach.in</strong></div>
     </div>
@@ -1355,8 +1343,10 @@ function updateCartUI() {
   document.getElementById('cart-fab').classList.toggle('hidden', totalQty === 0);
   document.getElementById('cart-count').textContent    = totalQty;
   document.getElementById('cart-subtotal').textContent = '₹' + subtotal.toLocaleString('en-IN');
-  document.getElementById('cart-gst').textContent      = '₹' + gst.toLocaleString('en-IN');
-  document.getElementById('cart-total').textContent    = '₹' + (subtotal + gst).toLocaleString('en-IN');
+  const _isGuntCart = (sessionStorage.getItem('mach_location')||'guntupalli').toLowerCase().trim() === 'guntupalli';
+  const effectiveGst = _isGuntCart ? 0 : gst;
+  document.getElementById('cart-gst').textContent      = _isGuntCart ? '—' : '₹' + gst.toLocaleString('en-IN');
+  document.getElementById('cart-total').textContent    = '₹' + (subtotal + effectiveGst).toLocaleString('en-IN');
   document.getElementById('btn-place-order').disabled  = cart.length === 0;
   document.getElementById('btn-park-order').disabled   = cart.length === 0;
 
@@ -1411,7 +1401,7 @@ function placeOrder() {
   closeCart();
   document.getElementById('cust-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-  document.getElementById('cust-phone').focus();
+  document.getElementById('cust-name').focus();
 }
 
 function closeCustomerModal() {
@@ -1442,13 +1432,8 @@ async function lookupCustomer() {
 }
 
 function validate() {
-  let ok = true;
-  const phone = document.getElementById('cust-phone').value.trim();
-  const name  = document.getElementById('cust-name').value.trim();
-  ['field-phone','field-name'].forEach(id => document.getElementById(id).classList.remove('has-error'));
-  if (!/^\d{10}$/.test(phone)) { document.getElementById('field-phone').classList.add('has-error'); ok = false; }
-  if (!name)                   { document.getElementById('field-name').classList.add('has-error');  ok = false; }
-  return ok;
+  // Phone and name are both optional — no validation required
+  return true;
 }
 
 async function confirmOrder() {
@@ -1458,8 +1443,8 @@ async function confirmOrder() {
   btn.textContent = 'Placing Order…';
 
   const customer = {
-    name:    document.getElementById('cust-name').value.trim(),
-    phone:   document.getElementById('cust-phone').value.trim(),
+    name:    document.getElementById('cust-name').value.trim() || 'Walk-in',
+    phone:   null,
     email:   document.getElementById('cust-email').value.trim()   || null,
     address: document.getElementById('cust-address').value.trim() || null,
   };
@@ -1472,7 +1457,7 @@ async function confirmOrder() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         customerName:    customer.name,
-        customerPhone:   customer.phone,
+        customerPhone:   null,
         customerEmail:   customer.email   || null,
         customerAddress: customer.address || null,
         location: sessionStorage.getItem('mach_location') || 'guntupalli',
@@ -1493,16 +1478,18 @@ async function confirmOrder() {
       await loadMenu();
       closeCustomerModal();
       // Build invoice: server returns full object; fall back to cart data if missing
+      const _subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+      const _isGunt   = (sessionStorage.getItem('mach_location')||'guntupalli').toLowerCase().trim() === 'guntupalli';
       const inv = data.invoice || {
         invoiceNo:   data.invoiceNo,
         timestamp:   new Date().toISOString(),
         tableNo,
         paymentMode,
-        customer:    { name: customer.name, phone: customer.phone, email: customer.email },
+        customer:    { name: customer.name, phone: null, email: customer.email },
         items:       cart.map(i => ({ name: i.name, qty: i.qty, rate: i.price, amount: i.price * i.qty, emoji: i.emoji })),
-        subtotal:    cart.reduce((s, i) => s + i.price * i.qty, 0),
-        cgst:        Math.round(cart.reduce((s, i) => s + i.price * i.qty, 0) * 0.025),
-        sgst:        Math.round(cart.reduce((s, i) => s + i.price * i.qty, 0) * 0.025),
+        subtotal:    _subtotal,
+        cgst:        _isGunt ? 0 : Math.round(_subtotal * 0.025),
+        sgst:        _isGunt ? 0 : Math.round(_subtotal * 0.025),
         grand:       data.grand,
       };
       showInvoice(inv);
@@ -1512,7 +1499,8 @@ async function confirmOrder() {
   } catch (e) {
     // Offline fallback
     const subtotal = cart.reduce((s,i) => s + i.price*i.qty, 0);
-    const cgst = Math.round(subtotal*0.025), sgst = Math.round(subtotal*0.025);
+    const _isGunt2 = (sessionStorage.getItem('mach_location')||'guntupalli').toLowerCase().trim() === 'guntupalli';
+    const cgst = _isGunt2 ? 0 : Math.round(subtotal*0.025), sgst = _isGunt2 ? 0 : Math.round(subtotal*0.025);
     closeCustomerModal();
     showInvoice({
       invoiceNo: (() => { const d=new Date(); const yy=String(d.getFullYear()-2000).padStart(2,'0'); const mm=String(d.getMonth()+1).padStart(2,'0'); const dd=String(d.getDate()).padStart(2,'0'); return `MACH-${yy}${mm}${dd}-${Math.floor(1000+Math.random()*9000)}`; })(),
@@ -1534,7 +1522,6 @@ function showInvoice(inv) {
   document.getElementById('inv-table').textContent    = inv.tableNo   || 'Counter';
   const c = inv.customer || {};
   document.getElementById('inv-cust-name').textContent  = c.name  || '—';
-  document.getElementById('inv-cust-phone').textContent = c.phone || '—';
   document.getElementById('inv-cust-email').textContent = c.email || '—';
   document.getElementById('inv-payment').textContent    = inv.paymentMode || 'Cash';
 
@@ -1551,8 +1538,10 @@ function showInvoice(inv) {
   }
   document.getElementById('inv-items').innerHTML = rows;
   document.getElementById('inv-subtotal').textContent = '₹' + inv.subtotal.toLocaleString('en-IN');
-  document.getElementById('inv-cgst').textContent     = '₹' + inv.cgst.toLocaleString('en-IN');
-  document.getElementById('inv-sgst').textContent     = '₹' + inv.sgst.toLocaleString('en-IN');
+  const _guntupalli = (sessionStorage.getItem('mach_location')||'guntupalli').toLowerCase().trim() === 'guntupalli';
+  [document.getElementById('inv-gst-rows'), document.getElementById('inv-sgst-row')].forEach(el => { if (el) el.style.display = _guntupalli ? 'none' : ''; });
+  document.getElementById('inv-cgst').textContent     = '₹' + (inv.cgst||0).toLocaleString('en-IN');
+  document.getElementById('inv-sgst').textContent     = '₹' + (inv.sgst||0).toLocaleString('en-IN');
   document.getElementById('inv-grand').textContent    = '₹' + inv.grand.toLocaleString('en-IN');
   document.getElementById('invoice-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -1568,12 +1557,11 @@ function closeInvoice() {
   cart = [];
   cartSnapshotAtResume = [];   // reset snapshot on new order
   updateCartUI();
-  ['cust-phone','cust-name','cust-email','cust-table','cust-address'].forEach(id => {
+  ['cust-name','cust-email','cust-table','cust-address'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
   document.getElementById('cust-payment').value = 'Cash';
-  document.getElementById('returning-tag').style.display = 'none';
   document.getElementById('invoice-overlay').classList.remove('open');
   document.body.style.overflow = '';
 }
@@ -1628,7 +1616,8 @@ async function parkOrder() {
   const tableNo  = document.getElementById('cust-table')?.value.trim() || 'Counter';
   const token    = generateHoldToken();
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const gst      = Math.round(subtotal * 0.05);
+  const _parkIsGunt = (sessionStorage.getItem('mach_location')||'guntupalli').toLowerCase().trim() === 'guntupalli';
+  const gst      = _parkIsGunt ? 0 : Math.round(subtotal * 0.05);
   const grand    = subtotal + gst;
   const ts       = new Date().toISOString();
 
