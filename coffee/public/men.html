@@ -482,8 +482,10 @@ footer{
   <button class="mnav-btn" onclick="scrollToSection('cold',this)">Juices</button>
   <button class="mnav-btn" onclick="scrollToSection('shakes',this)">Mojitos</button>
   <button class="mnav-btn" onclick="scrollToSection('desserts',this)">Shakes</button>
+  
+  <button class="mnav-btn" onclick="scrollToSection('faloodas',this)">🍨 Faloodas</button>
+  <button class="mnav-btn" onclick="scrollToSection('lassi',this)">🥛 Lassi</button>
   <button class="mnav-btn" onclick="scrollToSection('Icecreams',this)">Ice Creams</button>
-  <button class="mnav-btn" onclick="scrollToSection('Biscuits',this)">Falooda &amp; Lassi</button>
 </div>
 
 <!-- MENU SECTIONS -->
@@ -492,7 +494,8 @@ footer{
 <section class="menu-section" id="shakes"></section>
 <section class="menu-section" id="desserts"></section>
 <section class="menu-section" id="Icecreams"></section>
-<section class="menu-section" id="Biscuits"></section>
+<section class="menu-section" id="faloodas"></section>
+<section class="menu-section" id="lassi"></section>
 
 <footer>
   <div class="f-logo">
@@ -549,6 +552,18 @@ const SECTION_META = {
     icon:'🥛',
     title:'Falooda & Lassi',
     desc:'Classic falooda, chilled lassi and biscuit accompaniments.'
+  },
+
+  faloodas:{
+    icon:'🍨',
+    title:'Faloodas',
+    desc:'Chilled falooda in assorted flavours — rose, pista, mango & more.'
+  },
+
+  lassi:{
+    icon:'🥛',
+    title:'Lassi',
+    desc:'Rich, creamy lassi — sweet, salty, mango and more.'
   }
 };
 
@@ -566,6 +581,23 @@ async function loadMenu() {
 
 // RENDER ALL SECTIONS
 function renderAllSections(items) {
+  // Remap: Falooda items → 'faloodas' section, Lassi items → 'lassi' section
+  // Items may come from DB as section='Biscuits' (legacy) or 'shakes-falooda' / 'shakes'
+  items = items.map(item => {
+    if (item.description === 'Falooda' || (item.section === 'Biscuits' && item.description && item.description.toLowerCase().includes('falooda'))) {
+      return { ...item, section: 'faloodas' };
+    }
+    if (item.description === 'Lassi' || (item.section === 'Biscuits' && item.description && item.description.toLowerCase().includes('lassi'))) {
+      return { ...item, section: 'lassi' };
+    }
+    if (item.section === 'Biscuits') {
+      // Remaining Biscuits items: check name for falooda/lassi keyword, else default to faloodas
+      const n = item.name.toLowerCase();
+      if (n.includes('lassi')) return { ...item, section: 'lassi' };
+      return { ...item, section: 'faloodas' };
+    }
+    return item;
+  });
   const sectionOrder = [...Object.keys(SECTION_META)];
   items.forEach(i => { if (!sectionOrder.includes(i.section)) sectionOrder.push(i.section); });
 
