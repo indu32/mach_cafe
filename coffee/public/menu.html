@@ -716,7 +716,7 @@ footer{
 <body>
 
 <nav>
-  <a href="home_m.html" class="nav-logo">
+  <a href="menu.html" class="nav-logo">
   <span style="font-family: 'Lastica', sans-serif; color:#3a2010">MACH </span>
   <em style="font-family: 'italic'; color: var(--caramel); font-style: italic;">Cafe</em>
 </a>
@@ -727,10 +727,9 @@ footer{
 
   <ul class="nav-links" id="navLinks">
     
-    <li><a href="home_m.html">Home</a></li>
+   
     <li><a href="menu.html" class="active">Menu</a></li>
-   <li><a href="contact_m.html">Contact</a></li>
-   <li><a href="contact_m.html" class="nav-reserve">Reserve a Table</a></li>
+   
     <li><button class="logout-btn" onclick="logout()">Logout</button></li>
   </ul>
 </nav>
@@ -940,9 +939,9 @@ footer{
   </div>
 
   <ul class="f-links">
-    <li><a href="/home_m.html">Home</a></li>
-    <li><a href="/men_m.html">Menu</a></li>
-    <li><a href="/contact_m.html">Contact</a></li>
+    
+    <li><a href="/menu.html">Menu</a></li>
+    
   </ul>
 
   <div class="f-copy">
@@ -1054,6 +1053,34 @@ let cart = [];
 let MENU_MAP = {};   // name → item object from DB
 let parkedOrders = []; // [{id, token, tableNo, items, subtotal, grand, timestamp}]
 
+async function loadParkedOrders() {
+  try {
+    const loc = sessionStorage.getItem('mach_location') || 'guntupalli';
+    const res = await fetch(`/api/orders/parked?location=${encodeURIComponent(loc)}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.success && Array.isArray(data.orders)) {
+      // Merge server orders into local array — avoid duplicates by token
+      const existingTokens = new Set(parkedOrders.map(o => o.token));
+      for (const o of data.orders) {
+        if (!existingTokens.has(o.token)) {
+          parkedOrders.push({
+            id:        o.id,
+            token:     o.token,
+            tableNo:   o.tableNo,
+            items:     (o.items || []).map(i => ({ name: i.name, emoji: i.emoji || '☕', price: i.rate, qty: i.qty })),
+            subtotal:  o.subtotal,
+            gst:       o.gst,
+            grand:     o.grand,
+            timestamp: o.created_at || new Date().toISOString(),
+          });
+          existingTokens.add(o.token);
+        }
+      }
+      updateCartUI();
+    }
+  } catch (_) { /* offline — parked orders remain empty */ }
+}
 
 function handleExcelUpload(event) {
   const file = event.target.files[0];
@@ -1801,6 +1828,15 @@ function resumeParkedOrder(idx) {
   // so parkOrder() can compute only the NEW items added after this resume.
   cartSnapshotAtResume = cart.map(i => ({ name: i.name, qty: i.qty }));
 
+  // Mark RESUMED on server (best-effort)
+  if (order.token) {
+    fetch(`/api/orders/parked/${encodeURIComponent(order.token)}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'RESUMED' }),
+    }).catch(() => {});
+  }
+
   // Remove from parked list
   parkedOrders.splice(idx, 1);
 
@@ -1811,6 +1847,15 @@ function resumeParkedOrder(idx) {
 
 function deleteParkedOrder(idx) {
   if (!confirm('Cancel this parked order?')) return;
+  const order = parkedOrders[idx];
+  // Mark CANCELLED on server (best-effort)
+  if (order && order.token) {
+    fetch(`/api/orders/parked/${encodeURIComponent(order.token)}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'CANCELLED' }),
+    }).catch(() => {});
+  }
   parkedOrders.splice(idx, 1);
   renderParkedOrders();
   updateCartUI();
@@ -1818,6 +1863,7 @@ function deleteParkedOrder(idx) {
 
 // START
 loadMenu();
+loadParkedOrders();
 </script>
 
 
