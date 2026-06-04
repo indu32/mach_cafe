@@ -312,6 +312,37 @@ body{
   .phone-lookup:hover { background: var(--caramel); }
   .returning-tag { font-size: 0.72rem; color: #3a7a3a; background: rgba(76,153,76,0.1); padding: 0.4rem 0.8rem; display: none; margin-top: 0.4rem; }
   .cust-actions { display: flex; gap: 1rem; padding: 1.5rem 2.5rem; background: var(--foam); border-top: 1px solid rgba(123,79,46,0.1); }
+
+  /* ── Cash Change Calculator ── */
+  .cash-calc-box {
+    display: none;
+    margin-top: 0.8rem;
+    background: rgba(123,79,46,0.06);
+    border-left: 3px solid var(--caramel);
+    padding: 1rem 1.2rem;
+    gap: 1rem;
+    flex-direction: column;
+  }
+  .cash-calc-box.show { display: flex; }
+  .cash-calc-row { display: flex; align-items: center; gap: 0.8rem; }
+  .cash-calc-row label { font-size: 0.68rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); white-space: nowrap; min-width: 110px; }
+  .cash-calc-row input {
+    flex: 1; padding: 0.65rem 0.9rem;
+    border: 1px solid rgba(123,79,46,0.25);
+    font-family: 'Jost', sans-serif; font-size: 1rem;
+    color: var(--espresso); background: #fff; outline: none;
+    transition: border-color 0.2s;
+  }
+  .cash-calc-row input:focus { border-color: var(--caramel); }
+  .cash-change-result {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.7rem 0; border-top: 1px solid rgba(123,79,46,0.12);
+    margin-top: 0.2rem;
+  }
+  .cash-change-label { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .cash-change-amount { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; }
+  .cash-change-amount.ok    { color: #2e7d32; }
+  .cash-change-amount.short { color: #c62828; }
   .cust-submit { flex: 1; padding: 1rem; background: var(--espresso); color: #fff; border: none; font-family: 'Jost', sans-serif; font-size: 0.82rem; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: background 0.3s; }
   .cust-submit:hover { background: var(--caramel); }
   .cust-submit:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -912,12 +943,30 @@ footer{
         </div>
         <div class="cust-field">
           <label>Payment Mode</label>
-          <select id="cust-payment">
+          <select id="cust-payment" onchange="onPaymentModeChange(this.value)">
             <option value="Cash">Cash</option>
             <option value="UPI">UPI</option>
             <option value="Card">Card / POS</option>
             <option value="Wallet">Wallet</option>
           </select>
+        </div>
+      </div>
+
+      <!-- Cash Change Calculator — shown only when Cash is selected -->
+      <div class="cash-calc-box" id="cash-calc-box">
+        <div class="cash-calc-row">
+          <label>Order Total</label>
+          <input type="text" id="cash-order-total" readonly tabindex="-1"
+            style="background:rgba(123,79,46,0.05);color:var(--caramel);font-family:'Playfair Display',serif;font-weight:700;" />
+        </div>
+        <div class="cash-calc-row">
+          <label>Cash Received</label>
+          <input type="number" id="cash-received" placeholder="Enter amount given by customer"
+            min="0" step="1" oninput="calcChange()" />
+        </div>
+        <div class="cash-change-result">
+          <span class="cash-change-label">Change to Return</span>
+          <span class="cash-change-amount" id="cash-change-amount">—</span>
         </div>
       </div>
       <div class="cust-field">
@@ -1486,15 +1535,56 @@ function closeCart() {
 function placeOrder() {
   if (!cart.length) return;
   closeCart();
+  // Pre-fill order total in cash calculator
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const loc = (sessionStorage.getItem('mach_location') || 'guntupalli').toLowerCase().trim();
+  const gst = loc === 'guntupalli' ? 0 : Math.round(subtotal * 0.05);
+  const grand = subtotal + gst;
+  document.getElementById('cash-order-total').value = '₹' + grand.toLocaleString('en-IN');
+  document.getElementById('cash-received').value = '';
+  document.getElementById('cash-change-amount').textContent = '—';
+  document.getElementById('cash-change-amount').className = 'cash-change-amount';
+  // Show cash box only if Cash is already selected
+  onPaymentModeChange(document.getElementById('cust-payment').value);
   document.getElementById('cust-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
   document.getElementById('cust-phone').focus();
+}
+
+function onPaymentModeChange(mode) {
+  const box = document.getElementById('cash-calc-box');
+  if (mode === 'Cash') {
+    box.classList.add('show');
+    calcChange();
+  } else {
+    box.classList.remove('show');
+  }
+}
+
+function calcChange() {
+  const received = parseFloat(document.getElementById('cash-received').value) || 0;
+  const totalStr = (document.getElementById('cash-order-total').value || '').replace(/[₹,]/g, '');
+  const total    = parseFloat(totalStr) || 0;
+  const el       = document.getElementById('cash-change-amount');
+  if (!received) { el.textContent = '—'; el.className = 'cash-change-amount'; return; }
+  const change = received - total;
+  if (change < 0) {
+    el.textContent = '−₹' + Math.abs(change).toLocaleString('en-IN') + '  (short)';
+    el.className   = 'cash-change-amount short';
+  } else {
+    el.textContent = '₹' + change.toLocaleString('en-IN');
+    el.className   = 'cash-change-amount ok';
+  }
 }
 
 function closeCustomerModal() {
   document.getElementById('cust-overlay').classList.remove('open');
   document.body.style.overflow = '';
   document.querySelectorAll('.cust-field').forEach(f => f.classList.remove('has-error'));
+  document.getElementById('cash-calc-box').classList.remove('show');
+  document.getElementById('cash-received').value = '';
+  document.getElementById('cash-change-amount').textContent = '—';
+  document.getElementById('cash-change-amount').className = 'cash-change-amount';
 }
 
 function onPhoneInput(el) {
@@ -1661,6 +1751,10 @@ function closeInvoice() {
     if (el) el.value = '';
   });
   document.getElementById('cust-payment').value = 'Cash';
+  document.getElementById('cash-calc-box').classList.remove('show');
+  document.getElementById('cash-received').value = '';
+  document.getElementById('cash-change-amount').textContent = '—';
+  document.getElementById('cash-change-amount').className = 'cash-change-amount';
   document.getElementById('invoice-overlay').classList.remove('open');
   document.body.style.overflow = '';
 }
