@@ -264,6 +264,7 @@
   <div class="header-right">
     <span class="last-upd" id="last-upd">Fetching…</span>
     <div class="live-badge"><div class="live-dot"></div> Live</div>
+    <button class="btn-logout" onclick="back()">Back To Menu</button>
     <button class="btn-logout" onclick="logout()">Logout</button>
   </div>
 </header>
@@ -310,6 +311,11 @@ function logout() {
   sessionStorage.clear();
   localStorage.removeItem('mach_token');
   window.location.href = 'home.html';
+}
+function back() {
+  //sessionStorage.clear();
+  //localStorage.removeItem('mach_token');
+  window.location.href = 'men_m.html';
 }
 
 // ── Auth guard ──
