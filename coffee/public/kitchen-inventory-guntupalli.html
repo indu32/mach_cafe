@@ -448,8 +448,11 @@
 <div class="panel" id="panel-import-excel">
   <div class="form-card">
     <h3>📥 Import Inventory from Excel</h3>
+    <div style="background:rgba(200,149,108,0.12);border-left:4px solid var(--accent);padding:0.8rem 1rem;margin-bottom:1rem;font-size:0.82rem;">
+      ⚠️ <strong>Looking to import Recipes_Ready.xlsx?</strong> — Go to the <strong>🍳 Recipes tab</strong> instead. This panel is only for <em>inventory stock items</em>.
+    </div>
     <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.2rem">
-      Upload an <strong>.xlsx</strong> file. Required column: <code>name</code>.
+      Upload an <strong>.xlsx</strong> file for inventory items. Required column: <code>name</code>.
       Optional columns: <code>unit</code>, <code>currentQty</code>, <code>reorderLevel</code>, <code>category</code>.<br>
       Existing items will be <em>updated</em>; new items will be <em>added</em> — nothing is deleted.
     </p>
@@ -524,7 +527,30 @@
 
 <div id="toast">✓ Done</div>
 
-<script src="/xlsx.full.min.js"></script>
+<!-- SheetJS: CDN with multiple fallbacks -->
+<script>
+(function(){
+  var cdns = [
+    'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+    '/xlsx.full.min.js'
+  ];
+  var idx = 0;
+  function tryNext() {
+    if (idx >= cdns.length) {
+      window._xlsxFailed = true;
+      console.error('SheetJS failed to load from all sources');
+      return;
+    }
+    var s = document.createElement('script');
+    s.src = cdns[idx++];
+    s.onload  = function() { console.log('SheetJS loaded from: ' + s.src); };
+    s.onerror = function() { document.head.removeChild(s); tryNext(); };
+    document.head.appendChild(s);
+  }
+  tryNext();
+})();
+</script>
 <script>
 // ╔══════════════════════════════════════════════════════╗
 // ║  BRANCH KEY — THE ONLY LINE TO CHANGE per branch    ║
@@ -533,6 +559,23 @@
 // ║  Kodaikanal → 'kodaikanal'                          ║
 // ╚══════════════════════════════════════════════════════╝
 const BRANCH = 'guntupalli';
+
+// ── XLSX guard: ensures SheetJS is available before any Excel operation ──
+function requireXLSX(cb) {
+  if (typeof XLSX !== 'undefined') { cb(); return; }
+  // Script may still be loading — poll for up to 5 seconds
+  var attempts = 0;
+  var timer = setInterval(function() {
+    attempts++;
+    if (typeof XLSX !== 'undefined') {
+      clearInterval(timer);
+      cb();
+    } else if (attempts >= 50) {
+      clearInterval(timer);
+      showToast('SheetJS not loaded. Make sure you have internet access or the server is running.', 'error');
+    }
+  }, 100);
+}
 
 // ═══════════════════════════════════════════════
 //  LOGOUT
@@ -617,9 +660,11 @@ async function api(url, method = 'GET', body = null) {
 //  OVERVIEW
 // ═══════════════════════════════════════════════
 async function loadOverview() {
-  const data = await api('/api/inventory');
-  if (!data.success) return;
-  const items = data.items;
+  const tbody = document.getElementById('overview-body');
+  try {
+    const data = await api('/api/inventory');
+    if (!data.success) throw new Error(data.error || 'API returned failure');
+    const items = data.items;
   let ok = 0, warn = 0, out = 0;
   items.forEach(i => {
     if (i.currentQty <= 0)                    out++;
@@ -633,7 +678,6 @@ async function loadOverview() {
   document.getElementById('last-updated').textContent =
     'Updated ' + new Date().toLocaleTimeString('en-IN');
 
-  const tbody = document.getElementById('overview-body');
   if (!items.length) {
     tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No items yet. Add items in the Manage Items tab.</td></tr>';
     return;
@@ -662,6 +706,13 @@ async function loadOverview() {
       <td><span class="badge-level ${lvlCls}">${lvlText}</span></td>
     </tr>`;
   }).join('');
+  } catch(err) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state" style="color:var(--red)">
+      ⚠️ Could not load inventory — make sure <strong>node server.js</strong> is running.<br>
+      <small style="font-size:0.75rem;color:var(--muted)">${err.message}</small>
+    </td></tr>`;
+    document.getElementById('last-updated').textContent = 'Failed to connect';
+  }
 }
 
 // ═══════════════════════════════════════════════
@@ -858,7 +909,10 @@ function _normaliseRows(rawRows) {
 function previewExcel() {
   const fileInput = document.getElementById('excel-file-input');
   if (!fileInput.files.length) { showToast('Please select an Excel file first', 'error'); return; }
-  const file = fileInput.files[0];
+  requireXLSX(() => _doPreviewExcel(fileInput.files[0]));
+}
+
+function _doPreviewExcel(file) {
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
@@ -882,7 +936,17 @@ function previewExcel() {
         rows    = _normaliseRows(rawRows);
       }
 
-      if (!rows.length) { showToast('No data rows found in file', 'error'); return; }
+      if (!rows.length) {
+        // Check if this looks like a Recipes file (has 'Menu Item' / 'Ingredient' columns)
+        const firstRaw = XLSX.utils.sheet_to_json(ws, { defval: '', header: 1 });
+        const headers = (firstRaw[0] || []).map(h => (h||'').toString().toLowerCase());
+        if (headers.includes('menu item') || headers.includes('ingredient')) {
+          showToast('This looks like a Recipes file — use the 🍳 Recipes tab to import it!', 'error');
+        } else {
+          showToast('No data rows found. Required column: "name". Optional: unit, currentQty, reorderLevel, category.', 'error');
+        }
+        return;
+      }
 
       _excelRows = rows;   // already normalised
       document.getElementById('excel-row-count').textContent = rows.length;
@@ -939,6 +1003,7 @@ function resetExcel() {
 }
 
 function downloadTemplate() {
+  requireXLSX(() => {
   const ws = XLSX.utils.aoa_to_sheet([
     ['name', 'unit', 'currentQty', 'reorderLevel', 'category'],
     ['Milk', 'ml', 5000, 500, 'Dairy'],
@@ -948,6 +1013,7 @@ function downloadTemplate() {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Inventory');
   XLSX.writeFile(wb, 'inventory-template.xlsx');
+  });
 }
 
 // ═══════════════════════════════════════════════
@@ -961,7 +1027,7 @@ async function loadRecipes() {
   grid.innerHTML = '<div class="empty-state">Loading…</div>';
   const [rd, id] = await Promise.all([
     api('/api/recipes'),
-    api('/api/inventory?location=' + BRANCH),
+    api('/api/inventory'),
   ]);
   if (!rd.success) { grid.innerHTML = '<div class="empty-state">Failed to load.</div>'; return; }
   _allRecipes = rd.recipes || [];
@@ -1111,19 +1177,28 @@ let _recipeImportRows = [];
 function previewRecipeExcel() {
   const file = document.getElementById('recipe-excel-input').files[0];
   if (!file) return;
+  requireXLSX(() => _doPreviewRecipeExcel(file));
+}
+
+function _doPreviewRecipeExcel(file) {
   const reader = new FileReader();
   reader.onload = e => {
     const wb = XLSX.read(e.target.result, { type: 'array' });
     const ws = wb.Sheets[wb.SheetNames[0]];
     const raw = XLSX.utils.sheet_to_json(ws, { defval: '' });
 
-    // Accept columns: Menu Item / menuItem, Ingredient / ingredient, Qty Per Serving / qtyPerServing, Unit / unit
-    _recipeImportRows = raw.filter(r => {
-      const item = (r['Menu Item'] || r['menuItem'] || r['menu_item'] || '').toString().trim();
-      const ing  = (r['Ingredient'] || r['ingredient'] || '').toString().trim();
-      return item && ing;
+    // Forward-fill "Menu Item" column: when Menu Item is blank, carry forward
+    // the last non-blank value (Excel groups ingredients under one item name)
+    let lastMenuItem = '';
+    _recipeImportRows = raw.map(r => {
+      const rawItem = (r['Menu Item'] || r['menuItem'] || r['menu_item'] || '').toString().trim();
+      if (rawItem) lastMenuItem = rawItem;
+      return { ...r, _menuItem: lastMenuItem };
+    }).filter(r => {
+      const ing = (r['Ingredient'] || r['ingredient'] || '').toString().trim();
+      return r._menuItem && ing;
     }).map(r => ({
-      menuItem:      (r['Menu Item']       || r['menuItem']       || r['menu_item']   || '').toString().trim(),
+      menuItem:      r._menuItem,
       ingredient:    (r['Ingredient']      || r['ingredient']     || '').toString().trim().toLowerCase(),
       qtyPerServing: parseFloat(r['Qty Per Serving'] || r['qtyPerServing'] || r['qty'] || 1) || 1,
       unit:          (r['Unit']            || r['unit']           || '').toString().trim(),
@@ -1186,6 +1261,7 @@ async function importRecipeExcel() {
 }
 
 function downloadRecipeTemplate() {
+  requireXLSX(() => {
   const ws = XLSX.utils.aoa_to_sheet([
     ['Menu Item', 'Ingredient', 'Qty Per Serving', 'Unit'],
     ['classic sandwich', 'breads', 2, 'unit'],
@@ -1195,6 +1271,7 @@ function downloadRecipeTemplate() {
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Recipes');
   XLSX.writeFile(wb, 'recipes-template.xlsx');
+  });
 }
 
 </script>
