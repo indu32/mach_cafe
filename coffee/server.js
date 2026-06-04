@@ -347,7 +347,7 @@ app.post('/api/menu/import-excel', (req, res) => {
 
   const errors   = [];
   const inserted = [];
-  const validSections = new Set(['coffees','cold','shakes','food','snacks','desserts','icecreams','biscuits']);
+  const validSections = new Set(['coffees','cold','shakes','food','snacks','desserts','icecreams','biscuits','faloodas','lassi','shakes-falooda','cold-mojitos']);
   // Track names already inserted this import to detect duplicates within batch
   const seenNames = new Set();
 
