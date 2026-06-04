@@ -101,7 +101,7 @@
 
   /* ── STATS ROW ── */
   .stats {
-    display: grid; grid-template-columns: repeat(7, 1fr);
+    display: grid; grid-template-columns: repeat(8, 1fr);
     gap: 1px; background: var(--border); border-bottom: 1px solid var(--border);
   }
   .stat-box { background: var(--surface); padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 0.7rem; }
@@ -110,6 +110,7 @@
   .stat-value { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--espresso); }
   .stat-value.upi  { color: #1565C0; }
   .stat-value.cash { color: #2e7d32; }
+  .stat-value.gst  { color: #7B4F2E; }
 
   /* ── LEGEND ── */
   .legend {
@@ -286,6 +287,7 @@
   <div class="stat-box"><div class="stat-icon">💰</div><div><div class="stat-label">Total Revenue</div><div class="stat-value" id="s-rev">—</div></div></div>
   <div class="stat-box"><div class="stat-icon">📲</div><div><div class="stat-label">UPI Revenue</div><div class="stat-value upi" id="s-upi">—</div></div></div>
   <div class="stat-box"><div class="stat-icon">💵</div><div><div class="stat-label">Cash Revenue</div><div class="stat-value cash" id="s-cash">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">🧾</div><div><div class="stat-label">GST (UPI + Cash)</div><div class="stat-value gst" id="s-gst">—</div></div></div>
   <div class="stat-box"><div class="stat-icon">🖨️</div><div><div class="stat-label">Printer 1 (Full)</div><div class="stat-value" id="s-p1">—</div></div></div>
   <div class="stat-box"><div class="stat-icon">☕</div><div><div class="stat-label">Printer 2 (Bev)</div><div class="stat-value" id="s-p2">—</div></div></div>
   <div class="stat-box"><div class="stat-icon">🍛</div><div><div class="stat-label">Printer 3 (Food)</div><div class="stat-value" id="s-p3">—</div></div></div>
@@ -389,6 +391,10 @@ async function fetchOrders() {
     const cashRev = orders.filter(o => (o.paymentMode||'').toUpperCase() === 'CASH').reduce((s,o)=>s+o.grand,0);
     document.getElementById('s-upi').textContent    = '₹' + upiRev.toLocaleString('en-IN');
     document.getElementById('s-cash').textContent   = '₹' + cashRev.toLocaleString('en-IN');
+
+    const gstOrders = orders.filter(o => { const pm = (o.paymentMode||'').toUpperCase(); return pm === 'UPI' || pm === 'CASH'; });
+    const totalGst  = gstOrders.reduce((s,o) => s + ((o.cgst||0) + (o.sgst||0)), 0);
+    document.getElementById('s-gst').textContent   = '₹' + totalGst.toLocaleString('en-IN');
 
     document.getElementById('s-p1').textContent     = orders.filter(o=>o.printers.includes(1)).length;
     document.getElementById('s-p2').textContent     = orders.filter(o=>o.printers.includes(2)).length;
