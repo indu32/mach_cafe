@@ -473,8 +473,9 @@ app.post('/api/orders', (req, res) => {
       const _rnd = String(Math.floor(1000 + Math.random() * 9000));
       const invoiceNo = `MACH-${_yy}${_mm}${_dd}-${_rnd}`;
       const subtotal  = items.reduce((s, i) => s + i.qty * i.rate, 0);
-      const cgst      = Math.round(subtotal * 0.025);
-      const sgst      = Math.round(subtotal * 0.025);
+      const noGst     = loc === 'guntupalli';
+      const cgst      = noGst ? 0 : Math.round(subtotal * 0.025);
+      const sgst      = noGst ? 0 : Math.round(subtotal * 0.025);
       const grand     = subtotal + cgst + sgst;
 
       const inv = db.prepare(`
@@ -596,6 +597,7 @@ app.get('/api/orders/routing', (req, res) => {
         invoiceNo:   inv.invoiceNo,   timestamp:   inv.timestamp,
         tableNo:     inv.tableNo,     status:      inv.status,
         grand:       inv.grand,       paymentMode: inv.paymentMode,  // ← added
+        cgst:        inv.cgst,        sgst:        inv.sgst,
         customer:    inv.custName,    phone:       inv.custPhone,
         printers,
         breakdown: { beverages, food, all: items.map(i => ({ name: i.name, qty: i.qty, amount: i.amount })) },
@@ -1134,8 +1136,10 @@ app.post('/api/print', async (req, res) => {
 
     // ── Totals ──
     printer.println(pad('Subtotal', lineWidth - 10) + pad('Rs.' + inv.subtotal, 10, true));
-    printer.println(pad('CGST 2.5%', lineWidth - 10) + pad('Rs.' + inv.cgst, 10, true));
-    printer.println(pad('SGST 2.5%', lineWidth - 10) + pad('Rs.' + inv.sgst, 10, true));
+    if (inv.location !== 'guntupalli') {
+      printer.println(pad('CGST 2.5%', lineWidth - 10) + pad('Rs.' + inv.cgst, 10, true));
+      printer.println(pad('SGST 2.5%', lineWidth - 10) + pad('Rs.' + inv.sgst, 10, true));
+    }
     printer.println(divider('='));
     printer.bold(true);
     printer.setTextSize(1, 1);
