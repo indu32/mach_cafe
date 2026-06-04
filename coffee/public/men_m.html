@@ -777,7 +777,8 @@ footer{
   <button class="mnav-btn" onclick="scrollToSection('cold',this)">🥤 Juices &amp; Detox</button>
   <button class="mnav-btn" onclick="scrollToSection('cold-mojitos',this)">🍹 Mojitos</button>
   <button class="mnav-btn" onclick="scrollToSection('shakes',this)">🥤 Shakes</button>
-  <button class="mnav-btn" onclick="scrollToSection('shakes-falooda',this)">🍨 Falooda &amp; Lassi</button>
+  <button class="mnav-btn" onclick="scrollToSection('faloodas',this)">🍨 Faloodas</button>
+  <button class="mnav-btn" onclick="scrollToSection('lassi',this)">🥛 Lassi</button>
   <button class="mnav-btn" onclick="scrollToSection('desserts',this)">🍫 Desserts</button>
   
   <button class="mnav-btn" onclick="scrollToSection('Icecreams',this)">🍦 Ice Creams</button>
@@ -803,7 +804,8 @@ footer{
 <section class="menu-section" id="cold"></section>
 <section class="menu-section" id="cold-mojitos"></section>
 <section class="menu-section" id="shakes"></section>
-<section class="menu-section" id="shakes-falooda"></section>
+<section class="menu-section" id="faloodas"></section>
+<section class="menu-section" id="lassi"></section>
 <section class="menu-section" id="desserts"></section>
 <section class="menu-section" id="Icecreams"></section>
 <section class="menu-section" id="Biscuits"></section>
@@ -1055,6 +1057,18 @@ const SECTION_META = {
     desc:'Chilled falooda in assorted flavours and rich creamy lassi.'
   },
 
+  faloodas:{
+    icon:'🍨',
+    title:'Faloodas',
+    desc:'Chilled falooda in assorted flavours — rose, pista, mango & more.'
+  },
+
+  lassi:{
+    icon:'🥛',
+    title:'Lassi',
+    desc:'Rich, creamy lassi — sweet, salty, mango and more.'
+  },
+
   desserts:{
     icon:'🍫',
     title:'Desserts',
@@ -1078,6 +1092,35 @@ const SECTION_META = {
 let cart = [];
 let MENU_MAP = {};   // name → item object from DB
 let parkedOrders = []; // [{id, token, tableNo, items, subtotal, grand, timestamp}]
+
+async function loadParkedOrders() {
+  try {
+    const loc = sessionStorage.getItem('mach_location') || 'guntupalli';
+    const res = await fetch(`/api/orders/parked?location=${encodeURIComponent(loc)}`);
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.success && Array.isArray(data.orders)) {
+      // Merge server orders into local array — avoid duplicates by token
+      const existingTokens = new Set(parkedOrders.map(o => o.token));
+      for (const o of data.orders) {
+        if (!existingTokens.has(o.token)) {
+          parkedOrders.push({
+            id:        o.id,
+            token:     o.token,
+            tableNo:   o.tableNo,
+            items:     (o.items || []).map(i => ({ name: i.name, emoji: i.emoji || '☕', price: i.rate, qty: i.qty })),
+            subtotal:  o.subtotal,
+            gst:       o.gst,
+            grand:     o.grand,
+            timestamp: o.created_at || new Date().toISOString(),
+          });
+          existingTokens.add(o.token);
+        }
+      }
+      updateCartUI();
+    }
+  } catch (_) { /* offline — parked orders remain empty */ }
+}
 // Tracks items already in cart when a parked order is resumed,
 // so the hold slip can show only NEW items added in this round.
 let cartSnapshotAtResume = [];
@@ -1224,7 +1267,13 @@ function renderAllSections(items) {
   // Remap mojitos and falooda/lassi into dedicated sub-sections
   items = items.map(item => {
     if (item.section === 'cold' && item.description === 'Mojitos') return { ...item, section: 'cold-mojitos' };
-    if (item.section === 'shakes' && (item.description === 'Falooda' || item.description === 'Lassi')) return { ...item, section: 'shakes-falooda' };
+    if (item.section === 'shakes' && item.description === 'Falooda') return { ...item, section: 'faloodas' };
+    if (item.section === 'shakes' && item.description === 'Lassi') return { ...item, section: 'lassi' };
+    if (item.section === 'shakes-falooda') {
+      // Legacy: if description says Lassi send to lassi, else faloodas
+      if (item.description && item.description.toLowerCase().includes('lassi')) return { ...item, section: 'lassi' };
+      return { ...item, section: 'faloodas' };
+    }
     return item;
   });
 
@@ -1969,6 +2018,15 @@ function resumeParkedOrder(idx) {
   // so parkOrder() can compute only the NEW items added after this resume.
   cartSnapshotAtResume = cart.map(i => ({ name: i.name, qty: i.qty }));
 
+  // Mark RESUMED on server (best-effort)
+  try {
+    fetch(`/api/orders/parked/${encodeURIComponent(order.token)}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'RESUMED' }),
+    }).catch(() => {});
+  } catch (_) {}
+
   // Remove from parked list
   parkedOrders.splice(idx, 1);
 
@@ -1979,6 +2037,15 @@ function resumeParkedOrder(idx) {
 
 function deleteParkedOrder(idx) {
   if (!confirm('Cancel this parked order?')) return;
+  const order = parkedOrders[idx];
+  // Mark CANCELLED on server (best-effort)
+  if (order && order.token) {
+    fetch(`/api/orders/parked/${encodeURIComponent(order.token)}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: 'CANCELLED' }),
+    }).catch(() => {});
+  }
   parkedOrders.splice(idx, 1);
   renderParkedOrders();
   updateCartUI();
@@ -1986,6 +2053,7 @@ function deleteParkedOrder(idx) {
 
 // START
 loadMenu();
+loadParkedOrders();
 </script>
 
 
