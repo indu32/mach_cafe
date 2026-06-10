@@ -28,9 +28,11 @@ const bcrypt   = require('bcryptjs');
 const app  = express();
 const PORT = 3000;
 
-// ── Change these two values before going live ──────────
-const OWNER_PASSWORD_HASH = bcrypt.hashSync('velvetbean2024', 10);
-const JWT_SECRET          = 'mach-cafe-secret-change-me';
+// ── Change these values before going live ─────────────
+const OWNER_PASSWORD_HASH   = bcrypt.hashSync('velvetbean2024', 10);
+const KITCHEN_PASSWORD_HASH = bcrypt.hashSync('kitchen2024', 10);   // ← kitchen staff password
+const MANAGER_PASSWORD_HASH = bcrypt.hashSync('manager2024', 10);   // ← manager password
+const JWT_SECRET            = 'mach-cafe-secret-change-me';
 // ───────────────────────────────────────────────────────
 
 app.use(cors());
@@ -255,6 +257,21 @@ function requireOwner(req, res, next) {
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
   if (!token) return res.status(401).json({ success: false, error: 'No token' });
   try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    if (payload.role !== 'owner')
+      return res.status(403).json({ success: false, error: 'Owner access required' });
+    next();
+  } catch {
+    res.status(401).json({ success: false, error: 'Invalid token' });
+  }
+}
+
+// Allows owner, kitchen, or manager roles
+function requireStaff(req, res, next) {
+  const auth = req.headers.authorization || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+  if (!token) return res.status(401).json({ success: false, error: 'No token' });
+  try {
     jwt.verify(token, JWT_SECRET);
     next();
   } catch {
@@ -274,6 +291,24 @@ app.post('/api/owner/login', (req, res) => {
     return res.status(401).json({ success: false, error: 'Wrong password' });
 
   const token = jwt.sign({ role: 'owner' }, JWT_SECRET, { expiresIn: '12h' });
+  res.json({ success: true, token });
+});
+
+// Kitchen / Manager login — issues a JWT for write access to inventory routes
+// POST /api/staff/login  { role: 'kitchen'|'manager', password }
+app.post('/api/staff/login', (req, res) => {
+  const { role, password } = req.body;
+  if (!role || !password)
+    return res.status(400).json({ success: false, error: 'role and password required' });
+
+  const hash = role === 'kitchen' ? KITCHEN_PASSWORD_HASH
+             : role === 'manager' ? MANAGER_PASSWORD_HASH
+             : null;
+
+  if (!hash || !bcrypt.compareSync(password, hash))
+    return res.status(401).json({ success: false, error: 'Wrong password' });
+
+  const token = jwt.sign({ role }, JWT_SECRET, { expiresIn: '12h' });
   res.json({ success: true, token });
 });
 
@@ -612,8 +647,38 @@ app.get('/api/orders/routing', (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════
-//  API — INVENTORY  (Kitchen read / Owner full CRUD)
+//  API — MENU ITEM ORDER COUNTS  (Cashier / Manager / Owner)
+//  GET /api/orders/item-counts?location=guntupalli[&date=YYYY-MM-DD]
+//  Returns total qty ordered per menu item, sorted descending.
 // ═══════════════════════════════════════════════════════
+
+app.get('/api/orders/item-counts', (req, res) => {
+  try {
+    const loc  = req.query.location || 'guntupalli';
+    const args = [loc];
+    let dateFilter = '';
+    if (req.query.date) {
+      dateFilter = ' AND inv.timestamp LIKE ?';
+      args.push(req.query.date + '%');
+    }
+
+    const rows = db.prepare(`
+      SELECT oi.name, SUM(oi.qty) AS totalQty
+      FROM order_items oi
+      JOIN invoices inv ON oi.invoiceId = inv.id
+      WHERE inv.location = ?${dateFilter}
+      GROUP BY oi.name
+      ORDER BY totalQty DESC
+    `).all(...args);
+
+    res.json({ success: true, location: loc, items: rows });
+  } catch (err) {
+    console.error('Item counts error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+
 
 /* GET all ingredients — Kitchen + Owner */
 app.get('/api/inventory', (req, res) => {
@@ -622,7 +687,7 @@ app.get('/api/inventory', (req, res) => {
 });
 
 /* GET single ingredient + recipe usage — Owner */
-app.get('/api/inventory/:id', requireOwner, (req, res) => {
+app.get('/api/inventory/:id', requireStaff, (req, res) => {
   const ing = db.prepare('SELECT * FROM ingredients WHERE id = ?').get(req.params.id);
   if (!ing) return res.status(404).json({ success: false, error: 'Not found' });
   const usedIn = db.prepare(`
@@ -634,7 +699,7 @@ app.get('/api/inventory/:id', requireOwner, (req, res) => {
 });
 
 /* ADD ingredient — Owner */
-app.post('/api/inventory', requireOwner, (req, res) => {
+app.post('/api/inventory', requireStaff, (req, res) => {
   const { name, unit, currentQty, reorderLevel, category, location } = req.body;
   if (!name || !unit) return res.status(400).json({ success: false, error: 'name and unit required' });
   const qty = parseFloat(currentQty) || 0;
@@ -646,7 +711,7 @@ app.post('/api/inventory', requireOwner, (req, res) => {
 });
 
 /* UPDATE ingredient quantity — Owner */
-app.put('/api/inventory/:id', requireOwner, (req, res) => {
+app.put('/api/inventory/:id', requireStaff, (req, res) => {
   const old = db.prepare('SELECT * FROM ingredients WHERE id = ?').get(req.params.id);
   if (!old) return res.status(404).json({ success: false, error: 'Not found' });
   const { name, unit, currentQty, reorderLevel, category } = req.body;
@@ -664,7 +729,7 @@ app.put('/api/inventory/:id', requireOwner, (req, res) => {
 });
 
 /* Bulk daily stock entry — Owner */
-app.post('/api/inventory/stock-entry', requireOwner, (req, res) => {
+app.post('/api/inventory/stock-entry', requireStaff, (req, res) => {
   const { entries } = req.body;
   if (!Array.isArray(entries)) return res.status(400).json({ success: false, error: 'entries[] required' });
   db.transaction(() => {
@@ -681,7 +746,7 @@ app.post('/api/inventory/stock-entry', requireOwner, (req, res) => {
 });
 
 /* DELETE ingredient — Owner */
-app.delete('/api/inventory/:id', requireOwner, (req, res) => {
+app.delete('/api/inventory/:id', requireStaff, (req, res) => {
   if (!db.prepare('SELECT id FROM ingredients WHERE id = ?').get(req.params.id))
     return res.status(404).json({ success: false, error: 'Not found' });
   db.prepare('DELETE FROM ingredients WHERE id = ?').run(req.params.id);
@@ -689,7 +754,7 @@ app.delete('/api/inventory/:id', requireOwner, (req, res) => {
 });
 
 /* GET inventory logs — Owner */
-app.get('/api/inventory/logs', requireOwner, (req, res) => {
+app.get('/api/inventory/logs', requireStaff, (req, res) => {
   let q = 'SELECT l.*, i.name AS itemName FROM inventory_logs l JOIN ingredients i ON l.itemId = i.id';
   const args = [];
   if (req.query.date) { q += ' WHERE l.createdAt LIKE ?'; args.push(req.query.date + '%'); }
@@ -797,7 +862,7 @@ app.get('/api/recipes/:menuItemId', (req, res) => {
 });
 
 /* POST /api/recipes/:menuItemId/ingredients */
-app.post('/api/recipes/:menuItemId/ingredients', requireOwner, (req, res) => {
+app.post('/api/recipes/:menuItemId/ingredients', requireStaff, (req, res) => {
   const { ingredientId, qtyPerServing } = req.body;
   if (!ingredientId || !qtyPerServing)
     return res.status(400).json({ success: false, error: 'ingredientId and qtyPerServing required' });
@@ -819,7 +884,7 @@ app.post('/api/recipes/:menuItemId/ingredients', requireOwner, (req, res) => {
 });
 
 /* PUT /api/recipes/links/:linkId */
-app.put('/api/recipes/links/:linkId', requireOwner, (req, res) => {
+app.put('/api/recipes/links/:linkId', requireStaff, (req, res) => {
   const { qtyPerServing } = req.body;
   if (!qtyPerServing) return res.status(400).json({ success: false, error: 'qtyPerServing required' });
   const r = db.prepare('UPDATE menu_item_ingredients SET qtyPerServing = ? WHERE id = ?').run(parseFloat(qtyPerServing), req.params.linkId);
@@ -829,7 +894,7 @@ app.put('/api/recipes/links/:linkId', requireOwner, (req, res) => {
 });
 
 /* DELETE /api/recipes/links/:linkId */
-app.delete('/api/recipes/links/:linkId', requireOwner, (req, res) => {
+app.delete('/api/recipes/links/:linkId', requireStaff, (req, res) => {
   const r = db.prepare('DELETE FROM menu_item_ingredients WHERE id = ?').run(req.params.linkId);
   if (!r.changes) return res.status(404).json({ success: false, error: 'Link not found' });
   refreshAvailability();
@@ -837,7 +902,7 @@ app.delete('/api/recipes/links/:linkId', requireOwner, (req, res) => {
 });
 
 /* DELETE /api/recipes/:menuItemId — clear all ingredients from a recipe */
-app.delete('/api/recipes/:menuItemId', requireOwner, (req, res) => {
+app.delete('/api/recipes/:menuItemId', requireStaff, (req, res) => {
   db.prepare('DELETE FROM menu_item_ingredients WHERE menuItemId = ?').run(req.params.menuItemId);
   refreshAvailability();
   res.json({ success: true });
@@ -850,7 +915,7 @@ app.delete('/api/recipes/:menuItemId', requireOwner, (req, res) => {
 //  clearFirst=true wipes all existing recipe links before inserting
 // ═══════════════════════════════════════════════════════
 
-app.post('/api/recipes/import', requireOwner, (req, res) => {
+app.post('/api/recipes/import', requireStaff, (req, res) => {
   const { rows, clearFirst, location } = req.body;
   if (!Array.isArray(rows) || !rows.length)
     return res.status(400).json({ success: false, error: 'rows[] required' });
