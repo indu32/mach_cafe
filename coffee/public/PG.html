@@ -101,7 +101,7 @@
 
   /* ── STATS ROW ── */
   .stats {
-    display: grid; grid-template-columns: repeat(8, 1fr);
+    display: grid; grid-template-columns: repeat(5, 1fr);
     gap: 1px; background: var(--border); border-bottom: 1px solid var(--border);
   }
   .stat-box { background: var(--surface); padding: 1.1rem 1.4rem; display: flex; align-items: center; gap: 0.7rem; }
@@ -111,6 +111,48 @@
   .stat-value.upi  { color: #1565C0; }
   .stat-value.cash { color: #2e7d32; }
   .stat-value.gst  { color: #7B4F2E; }
+
+  /* ── OPENING / CLOSING INPUTS ── */
+  .stat-amount-input {
+    font-family: 'Playfair Display', serif; font-size: 1rem;
+    color: var(--espresso); background: rgba(123,79,46,0.06);
+    border: 1px solid var(--border); outline: none;
+    padding: 0.15rem 0.3rem; width: 90px;
+    transition: border-color 0.2s;
+  }
+  .stat-amount-input:focus { border-color: var(--latte); background: #fff; }
+  .stat-amount-input.opening { color: #1b5e20; }
+  .stat-amount-input.closing { color: #b71c1c; }
+
+  /* ── ORDER COUNT TABLE ── */
+  .order-count-section {
+    padding: 1.5rem 2.5rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .order-count-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; color: var(--espresso);
+    margin-bottom: 1rem; letter-spacing: 0.5px;
+  }
+  .order-count-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+  .order-count-table thead th {
+    font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); padding: 0.5rem 0.8rem; text-align: left;
+    border-bottom: 2px solid var(--border); background: rgba(123,79,46,0.04);
+  }
+  .order-count-table thead th:nth-child(4),
+  .order-count-table thead th:nth-child(5) { text-align: right; }
+  .order-count-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  .order-count-table tbody tr:hover { background: rgba(123,79,46,0.04); }
+  .order-count-table td { padding: 0.45rem 0.8rem; color: var(--mocha); }
+  .order-count-table td:nth-child(4),
+  .order-count-table td:nth-child(5) { text-align: right; }
+  .oc-rank { color: var(--muted); font-size: 0.7rem; width: 28px; }
+  .oc-badge { font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; padding: 0.15rem 0.45rem; border-radius: 2px; }
+  .oc-beverage { background: #e3f2fd; color: #1565C0; border: 1px solid #bbdefb; }
+  .oc-food     { background: #fbe9e7; color: #BF360C; border: 1px solid #ffccbc; }
+  .oc-empty    { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.85rem; }
 
   /* ── LEGEND ── */
   .legend {
@@ -198,8 +240,8 @@
   }
 
   /* ── RESPONSIVE ── */
-  @media (max-width: 900px) {
-    .stats { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 1100px) {
+    .stats { grid-template-columns: repeat(5, 1fr); }
   }
 
   @media (max-width: 640px) {
@@ -292,6 +334,8 @@
   <div class="stat-box"><div class="stat-icon">🖨️</div><div><div class="stat-label">Printer 1 (Full)</div><div class="stat-value" id="s-p1">—</div></div></div>
   <div class="stat-box"><div class="stat-icon">☕</div><div><div class="stat-label">Printer 2 (Bev)</div><div class="stat-value" id="s-p2">—</div></div></div>
   <div class="stat-box"><div class="stat-icon">🍛</div><div><div class="stat-label">Printer 3 (Food)</div><div class="stat-value" id="s-p3">—</div></div></div>
+  <div class="stat-box"><div class="stat-icon">🔓</div><div><div class="stat-label">Opening Amount</div><input type="number" class="stat-amount-input opening" id="s-opening" placeholder="₹0" min="0" oninput="saveAmount('opening',this.value)"></div></div>
+  <div class="stat-box"><div class="stat-icon">🔒</div><div><div class="stat-label">Closing Amount</div><input type="number" class="stat-amount-input closing" id="s-closing" placeholder="₹0" min="0" oninput="saveAmount('closing',this.value)"></div></div>
 </div>
 
 <div class="legend">
@@ -299,6 +343,11 @@
   <div class="legend-item"><div class="leg-bar" style="background:var(--p2)"></div> Printer 1 + 2 (beverages)</div>
   <div class="legend-item"><div class="leg-bar" style="background:var(--p3)"></div> Printer 1 + 3 (food)</div>
   <div class="legend-item"><div class="leg-bar" style="background:#7B1FA2"></div> All 3 printers</div>
+</div>
+
+<div class="order-count-section">
+  <h3>📊 Menu Item Order Counts <span id="oc-date-label" style="font-size:0.75rem;color:var(--muted);font-family:'Jost',sans-serif;font-weight:400;margin-left:0.5rem"></span></h3>
+  <div id="order-count-body"><div class="oc-empty">Loading…</div></div>
 </div>
 
 <div class="orders" id="orders"></div>
@@ -315,6 +364,12 @@ function logout() {
 function back() {
   window.location.href = 'menu.html';
 }
+
+// ── Declare BEFORE auth guard so init() can safely call them ──
+function todayStr() { return new Date().toISOString().slice(0, 10); }
+function subtractDays(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
+
+let mode = 'today', selDate = todayStr();
 
 // ── Auth guard ──
 (function() {
@@ -334,15 +389,11 @@ function back() {
   init();
 })();
 
-let mode = 'today', selDate = todayStr();
-
-function todayStr() { return new Date().toISOString().slice(0, 10); }
-function subtractDays(n) { const d = new Date(); d.setDate(d.getDate() - n); return d.toISOString().slice(0, 10); }
-
 document.getElementById('date-picker').value = todayStr();
 document.getElementById('date-picker').addEventListener('change', function() {
   selDate = this.value; mode = 'custom';
   document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  loadAmounts();
   fetchOrders();
 });
 
@@ -352,12 +403,15 @@ function selectChip(el, days) {
   if (days === -1) { mode = 'all'; selDate = null; document.getElementById('date-picker').value = ''; }
   else if (days === 7) { mode = 'week'; selDate = null; document.getElementById('date-picker').value = ''; }
   else { mode = days === 0 ? 'today' : 'yesterday'; selDate = subtractDays(days); document.getElementById('date-picker').value = selDate; }
+  loadAmounts();
   fetchOrders();
 }
 
 function jumpDate(d) {
   document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  selDate = d; mode = 'custom'; document.getElementById('date-picker').value = d; fetchOrders();
+  selDate = d; mode = 'custom'; document.getElementById('date-picker').value = d;
+  loadAmounts();
+  fetchOrders();
 }
 
 function cardClass(p) {
@@ -366,6 +420,79 @@ function cardClass(p) {
   if (has2) return 'p12';
   if (has3) return 'p13';
   return 'p1only';
+}
+
+// ── Opening / Closing Amount ──────────────────────────────
+function amountKey(type) {
+  const dateKey = selDate || mode;
+  return `mach_${BRANCH}_${type}_${dateKey}`;
+}
+function saveAmount(type, value) {
+  localStorage.setItem(amountKey(type), parseFloat(value) || 0);
+}
+function loadAmounts() {
+  const savedOpening = localStorage.getItem(amountKey('opening'));
+  const savedClosing = localStorage.getItem(amountKey('closing'));
+  document.getElementById('s-opening').value = savedOpening !== null ? savedOpening : '';
+  document.getElementById('s-closing').value = savedClosing !== null ? savedClosing : '';
+}
+
+// ── Order Count by Menu Item ──────────────────────────────
+function renderOrderCounts(orders) {
+  const countMap = {}, typeMap = {};
+
+  orders.forEach(o => {
+    const bevs = o.breakdown.beverages.map(i => ({ ...i, type: 'beverage' }));
+    const food = o.breakdown.food.map(i => ({ ...i, type: 'food' }));
+    const rest = o.breakdown.all
+      .filter(i => !bevs.find(b => b.name === i.name) && !food.find(f => f.name === i.name))
+      .map(i => ({ ...i, type: 'other' }));
+    const items = [...bevs, ...food, ...rest];
+    const finalItems = items.length ? items : o.breakdown.all.map(i => ({ ...i, type: 'other' }));
+    finalItems.forEach(item => {
+      countMap[item.name] = (countMap[item.name] || 0) + item.qty;
+      if (!typeMap[item.name]) typeMap[item.name] = item.type;
+    });
+  });
+
+  const rows = Object.entries(countMap).sort((a, b) => b[1] - a[1]);
+  const dateLabel = mode === 'today' ? 'Today' : mode === 'yesterday' ? 'Yesterday'
+    : mode === 'week' ? 'Last 7 Days' : mode === 'all' ? 'All Time' : selDate || '';
+  document.getElementById('oc-date-label').textContent = `— ${dateLabel}`;
+
+  const body = document.getElementById('order-count-body');
+  if (!rows.length) { body.innerHTML = '<div class="oc-empty">No orders to count for this period.</div>'; return; }
+
+  const totalQty = rows.reduce((s, [, q]) => s + q, 0);
+  body.innerHTML = `
+    <table class="order-count-table">
+      <thead><tr>
+        <th class="oc-rank">#</th>
+        <th>Item Name</th>
+        <th>Type</th>
+        <th>Qty Ordered</th>
+        <th>% of Total</th>
+      </tr></thead>
+      <tbody>
+        ${rows.map(([name, qty], i) => {
+          const t = typeMap[name] || 'other';
+          const badgeClass = t === 'beverage' ? 'oc-beverage' : t === 'food' ? 'oc-food' : '';
+          const badgeLabel = t === 'beverage' ? '☕ Bev' : t === 'food' ? '🍛 Food' : '📄 Other';
+          const pct = totalQty ? ((qty / totalQty) * 100).toFixed(1) : '0.0';
+          return `<tr>
+            <td class="oc-rank">${i + 1}</td>
+            <td style="font-weight:500">${name}</td>
+            <td><span class="oc-badge ${badgeClass}">${badgeLabel}</span></td>
+            <td style="font-weight:700;color:var(--espresso)">${qty}</td>
+            <td style="color:var(--muted)">${pct}%</td>
+          </tr>`;
+        }).join('')}
+        <tr style="background:rgba(123,79,46,0.08);font-weight:700;border-top:2px solid var(--border)">
+          <td></td><td style="color:var(--espresso)">TOTAL</td><td></td>
+          <td style="color:var(--caramel);font-size:1rem">${totalQty}</td><td>100%</td>
+        </tr>
+      </tbody>
+    </table>`;
 }
 
 async function fetchOrders() {
@@ -393,16 +520,17 @@ async function fetchOrders() {
 
     const upiRev  = orders.filter(o => (o.paymentMode||'').toUpperCase() === 'UPI').reduce((s,o)=>s+o.grand,0);
     const cashRev = orders.filter(o => (o.paymentMode||'').toUpperCase() === 'CASH').reduce((s,o)=>s+o.grand,0);
-    document.getElementById('s-upi').textContent    = '₹' + upiRev.toLocaleString('en-IN');
-    document.getElementById('s-cash').textContent   = '₹' + cashRev.toLocaleString('en-IN');
+    document.getElementById('s-upi').textContent  = '₹' + upiRev.toLocaleString('en-IN');
+    document.getElementById('s-cash').textContent = '₹' + cashRev.toLocaleString('en-IN');
 
     const gstOrders = orders.filter(o => { const pm = (o.paymentMode||'').toUpperCase(); return pm === 'UPI' || pm === 'CASH'; });
-    const totalGst  = gstOrders.reduce((s,o) => s + ((o.cgst||0) + (o.sgst||0)), 0);
-    document.getElementById('s-gst').textContent   = '₹' + totalGst.toLocaleString('en-IN');
+    document.getElementById('s-gst').textContent = '₹' + gstOrders.reduce((s,o)=>s+((o.cgst||0)+(o.sgst||0)),0).toLocaleString('en-IN');
 
-    document.getElementById('s-p1').textContent     = orders.filter(o=>o.printers.includes(1)).length;
-    document.getElementById('s-p2').textContent     = orders.filter(o=>o.printers.includes(2)).length;
-    document.getElementById('s-p3').textContent     = orders.filter(o=>o.printers.includes(3)).length;
+    document.getElementById('s-p1').textContent = orders.filter(o=>o.printers.includes(1)).length;
+    document.getElementById('s-p2').textContent = orders.filter(o=>o.printers.includes(2)).length;
+    document.getElementById('s-p3').textContent = orders.filter(o=>o.printers.includes(3)).length;
+
+    renderOrderCounts(orders);
 
     const container = document.getElementById('orders');
     if (!orders.length) {
@@ -448,15 +576,17 @@ async function fetchOrders() {
     }).join('');
 
   } catch(e) {
+    console.error('fetchOrders error:', e);
     document.getElementById('orders').innerHTML =
       `<div class="error">⚠️ Could not connect to server.<br>
        <small style="font-size:0.8rem;margin-top:0.4rem;display:block;color:#8A6B55">
-         Make sure <strong>node server.js</strong> is running at <strong>http://localhost:3000</strong>
+         Make sure <strong>node server.js</strong> is running · Error: ${e.message}
        </small></div>`;
+    document.getElementById('order-count-body').innerHTML = '<div class="oc-empty">⚠️ Server not reachable.</div>';
   }
 }
 
-function init() { fetchOrders(); setInterval(fetchOrders, 5000); }
+function init() { loadAmounts(); fetchOrders(); setInterval(fetchOrders, 5000); }
 </script>
 </body>
 </html>
