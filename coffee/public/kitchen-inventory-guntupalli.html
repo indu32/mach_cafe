@@ -590,12 +590,13 @@ function logout() {
 //  AUTH GUARD
 //  Allows: kitchen (matching branch), manager, owner
 // ═══════════════════════════════════════════════
-(function () {
+(async function () {
   const role = sessionStorage.getItem('mach_role');
   const loc  = sessionStorage.getItem('mach_location');
 
   if (!role) { window.location.href = 'index.html'; return; }
 
+  // Owner must have a localStorage token (set by home.html login)
   if (role === 'owner') {
     const token = localStorage.getItem('mach_token');
     if (!token) { window.location.href = 'index.html'; return; }
@@ -605,6 +606,34 @@ function logout() {
   if (role === 'kitchen' && loc !== BRANCH) {
     window.location.href = 'index.html';
     return;
+  }
+
+  // Kitchen / Manager: get a JWT via /api/staff/login so write routes work
+  // The password is stored in sessionStorage by home.html after PIN entry
+  if (role === 'kitchen' || role === 'manager') {
+    const existingToken = sessionStorage.getItem('mach_token');
+    if (!existingToken) {
+      // Ask for the staff password once per session
+      const pwd = prompt('Enter staff password to continue:');
+      if (!pwd) { window.location.href = 'index.html'; return; }
+      try {
+        const r    = await fetch('/api/staff/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ role, password: pwd })
+        });
+        const data = await r.json();
+        if (!data.success) {
+          alert('Wrong password. Please try again.');
+          window.location.href = 'index.html';
+          return;
+        }
+        sessionStorage.setItem('mach_token', data.token);
+      } catch (e) {
+        alert('Could not connect to server. Make sure node server.js is running.');
+        return;
+      }
+    }
   }
 
   document.getElementById('auth-gate').style.display = 'none';
@@ -641,7 +670,10 @@ function showToast(msg, type = 'success') {
 //  API HELPER — always scoped to BRANCH
 // ═══════════════════════════════════════════════
 async function api(url, method = 'GET', body = null) {
-  const token = localStorage.getItem('mach_token') || '';
+  // Token may live in localStorage (owner) OR sessionStorage (kitchen/manager after staff login)
+  const token = localStorage.getItem('mach_token')
+             || sessionStorage.getItem('mach_token')
+             || '';
   const sep   = url.includes('?') ? '&' : '?';
   const opts  = {
     method,
@@ -1126,13 +1158,7 @@ async function saveRModalIngredient() {
   const qty         = parseFloat(document.getElementById('rmodal-qty').value);
   if (!ingredientId) { showToast('Select an ingredient', 'error'); return; }
   if (!qty || qty <= 0) { showToast('Enter a valid qty', 'error'); return; }
-  const token = localStorage.getItem('mach_token') || '';
-  const res = await fetch(`/api/recipes/${menuItemId}/ingredients`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...(token && { Authorization: 'Bearer ' + token }) },
-    body: JSON.stringify({ ingredientId, qtyPerServing: qty }),
-  });
-  const data = await res.json();
+  const data = await api(`/api/recipes/${menuItemId}/ingredients`, 'POST', { ingredientId, qtyPerServing: qty });
   if (data.success) { showToast('✓ Added!', 'success'); closeRModal(); loadRecipes(); }
   else showToast('Error: ' + (data.error || 'Failed'), 'error');
 }
@@ -1140,25 +1166,14 @@ async function saveRModalIngredient() {
 async function editRLink(linkId, currentQty) {
   const newQty = parseFloat(prompt('New quantity per serving:', currentQty));
   if (!newQty || newQty <= 0) return;
-  const token = localStorage.getItem('mach_token') || '';
-  const res = await fetch(`/api/recipes/links/${linkId}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...(token && { Authorization: 'Bearer ' + token }) },
-    body: JSON.stringify({ qtyPerServing: newQty }),
-  });
-  const data = await res.json();
+  const data = await api(`/api/recipes/links/${linkId}`, 'PUT', { qtyPerServing: newQty });
   if (data.success) { showToast('✓ Updated', 'success'); loadRecipes(); }
   else showToast('Error: ' + data.error, 'error');
 }
 
 async function deleteRLink(linkId) {
   if (!confirm('Remove this ingredient from the recipe?')) return;
-  const token = localStorage.getItem('mach_token') || '';
-  const res = await fetch(`/api/recipes/links/${linkId}`, {
-    method: 'DELETE',
-    headers: { ...(token && { Authorization: 'Bearer ' + token }) },
-  });
-  const data = await res.json();
+  const data = await api(`/api/recipes/links/${linkId}`, 'DELETE');
   if (data.success) { showToast('✓ Removed', 'success'); loadRecipes(); }
   else showToast('Error: ' + data.error, 'error');
 }
