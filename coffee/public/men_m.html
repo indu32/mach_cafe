@@ -461,14 +461,6 @@ body{
   }
   .csb-edit:hover { border-color: var(--latte); color: var(--latte); }
   .csb-divider { color: rgba(255,255,255,0.12); }
-  /* closing cash inline input */
-  .csb-close-input {
-    font-family: 'Playfair Display', serif; font-size: 0.9rem;
-    color: #ef9a9a; background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.2); outline: none;
-    padding: 0.15rem 0.4rem; width: 80px; transition: border-color 0.2s;
-  }
-  .csb-close-input:focus { border-color: #ef9a9a; }
   @media (max-width: 640px) {
     #cash-status-bar { padding: 0.5rem 1rem; gap: 0.8rem; }
   }
@@ -908,10 +900,7 @@ footer{
   <span class="csb-divider">|</span>
   <div class="csb-item">
     <span class="csb-label">🔒 Closing</span>
-    <input type="number" class="csb-close-input" id="csb-closing-input"
-      placeholder="₹0" min="0"
-      oninput="saveClosingCash(this.value)"
-      onchange="saveClosingCash(this.value)" />
+    <span class="csb-val" style="color:#ef9a9a;" id="csb-closing-val">—</span>
   </div>
   <span class="csb-divider">|</span>
   <div class="csb-item" style="color:rgba(255,255,255,0.3);font-size:0.65rem;letter-spacing:1px;" id="csb-date-label"></div>
@@ -1229,9 +1218,7 @@ function confirmOpeningCash() {
 function reopenCashGate() { showCashGate(); }
 
 function saveClosingCash(val) {
-  if (val === '') { localStorage.removeItem(cashClosingKey()); return; }
-  const v = parseFloat(val);
-  if (!isNaN(v) && v >= 0) localStorage.setItem(cashClosingKey(), v);
+  // no-op: closing cash is auto-calculated by printer dashboard (revenue + opening)
 }
 
 function updateCashStatusBar() {
@@ -1242,8 +1229,8 @@ function updateCashStatusBar() {
     d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
   document.getElementById('csb-opening-val').textContent =
     opening !== null ? '₹' + parseFloat(opening).toLocaleString('en-IN') : '—';
-  const closingInput = document.getElementById('csb-closing-input');
-  closingInput.value = closing !== null ? closing : '';
+  document.getElementById('csb-closing-val').textContent =
+    closing !== null ? '₹' + parseFloat(closing).toLocaleString('en-IN') : '—';
 }
 
 function initCashGate() {
