@@ -438,8 +438,15 @@ function amountKey(type) {
   return `mach_${BRANCH}_${type}_${dateKey}`;
 }
 function saveAmount(type, value) {
-  if (type === 'closing') return; // closing is auto-calculated, not manually saved
-  localStorage.setItem(amountKey(type), parseFloat(value) || 0);
+  if (type === 'closing') return; // closing is auto-calculated
+  if (value === '' || value === null) {
+    localStorage.removeItem(amountKey(type));
+    localStorage.removeItem(amountKey(type) + '_entered');
+    return;
+  }
+  const v = parseFloat(value) || 0;
+  localStorage.setItem(amountKey(type), v);
+  localStorage.setItem(amountKey(type) + '_entered', '1');
 }
 function loadAmounts() {
   const savedOpening = localStorage.getItem(amountKey('opening'));
