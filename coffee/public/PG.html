@@ -424,7 +424,17 @@ function cardClass(p) {
 
 // ── Opening / Closing Amount ──────────────────────────────
 function amountKey(type) {
-  const dateKey = selDate || mode;
+  // Use real ISO date so keys match menu.html (mach_branch_type_YYYY-MM-DD)
+  let dateKey;
+  if (selDate) {
+    dateKey = selDate;
+  } else if (mode === 'today') {
+    dateKey = todayStr();
+  } else if (mode === 'yesterday') {
+    dateKey = subtractDays(1);
+  } else {
+    dateKey = mode; // 'week' / 'all' — no single date, keep as-is
+  }
   return `mach_${BRANCH}_${type}_${dateKey}`;
 }
 function saveAmount(type, value) {
