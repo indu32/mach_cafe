@@ -1211,6 +1211,7 @@ function confirmOpeningCash() {
     return;
   }
   localStorage.setItem(cashOpeningKey(), parseFloat(val));
+  localStorage.setItem(cashOpeningKey() + '_entered', '1'); // mark as deliberately entered today
   document.getElementById('cash-gate-overlay').classList.add('hidden');
   updateCashStatusBar();
 }
@@ -1233,10 +1234,14 @@ function updateCashStatusBar() {
     closing !== null ? '₹' + parseFloat(closing).toLocaleString('en-IN') : '—';
 }
 
+function isOpeningEntered() {
+  // Must have the _entered flag — just having a value (even 0) is not enough
+  return localStorage.getItem(cashOpeningKey() + '_entered') === '1';
+}
+
 function initCashGate() {
-  const opening = localStorage.getItem(cashOpeningKey());
   updateCashStatusBar();
-  if (opening === null || opening === '') {
+  if (!isOpeningEntered()) {
     showCashGate();
   } else {
     document.getElementById('cash-gate-overlay').classList.add('hidden');
@@ -1719,8 +1724,7 @@ function closeCart() {
 function placeOrder() {
   if (!cart.length) return;
   // ── Opening cash check ──
-  const opening  = localStorage.getItem(cashOpeningKey());
-  if (opening === null || opening === '') {
+  if (!isOpeningEntered()) {
     closeCart();
     showCashGate();
     return;
