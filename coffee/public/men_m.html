@@ -383,6 +383,96 @@ body{
   .btn-park-order:disabled { opacity: 0.4; cursor: not-allowed; }
 
   /* ── Parked Orders FAB ── */
+  /* ── CASH MODAL ── */
+  #cash-gate-overlay {
+    position: fixed; inset: 0; background: rgba(20,10,4,0.82);
+    z-index: 2000; display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+  #cash-gate-overlay.hidden { display: none; }
+  .cash-gate-modal {
+    background: #fff; width: 100%; max-width: 440px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.45);
+  }
+  .cash-gate-header {
+    background: var(--espresso); color: #fff;
+    padding: 1.8rem 2.2rem;
+  }
+  .cash-gate-header h2 {
+    font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 0.3rem;
+  }
+  .cash-gate-header p {
+    font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;
+    opacity: 0.5; margin: 0;
+  }
+  .cash-gate-body { padding: 2rem 2.2rem; }
+  .cash-gate-body label {
+    display: block; font-size: 0.7rem; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem;
+  }
+  .cash-gate-body input[type="number"] {
+    width: 100%; padding: 0.85rem 1rem;
+    border: 1.5px solid rgba(123,79,46,0.3); outline: none;
+    font-family: 'Playfair Display', serif; font-size: 1.4rem;
+    color: var(--espresso); background: #fafaf8;
+    transition: border-color 0.2s;
+  }
+  .cash-gate-body input[type="number"]:focus { border-color: var(--caramel); background: #fff; }
+  .cash-gate-body input[type="number"]::placeholder { color: #ccc; font-size: 1rem; }
+  .cash-gate-date {
+    font-size: 0.78rem; color: var(--muted); margin-bottom: 1.2rem;
+    letter-spacing: 0.5px;
+  }
+  .cash-gate-err {
+    color: #c62828; font-size: 0.78rem; margin-top: 0.5rem;
+    display: none;
+  }
+  .cash-gate-err.show { display: block; }
+  .cash-gate-footer { padding: 0 2.2rem 2rem; }
+  .btn-cash-confirm {
+    width: 100%; padding: 1rem; background: var(--espresso); color: #fff;
+    border: none; font-family: 'Jost', sans-serif; font-size: 0.82rem;
+    letter-spacing: 3px; text-transform: uppercase; cursor: pointer;
+    transition: background 0.3s;
+  }
+  .btn-cash-confirm:hover { background: var(--caramel); }
+
+  /* ── CASH STATUS BAR ── */
+  #cash-status-bar {
+    background: var(--espresso);
+    padding: 0.55rem 4rem;
+    display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: sticky; top: 72px; z-index: 85;
+  }
+  .csb-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase;
+  }
+  .csb-label { color: rgba(255,255,255,0.4); }
+  .csb-val { font-family: 'Playfair Display', serif; font-size: 0.95rem; }
+  .csb-val.open-amt { color: #81c784; }
+  .csb-val.close-amt { color: #ef9a9a; }
+  .csb-edit {
+    background: none; border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.4); font-family: 'Jost', sans-serif;
+    font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 0.2rem 0.6rem; cursor: pointer; transition: all 0.2s; margin-left: 0.3rem;
+  }
+  .csb-edit:hover { border-color: var(--latte); color: var(--latte); }
+  .csb-divider { color: rgba(255,255,255,0.12); }
+  /* closing cash inline input */
+  .csb-close-input {
+    font-family: 'Playfair Display', serif; font-size: 0.9rem;
+    color: #ef9a9a; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.2); outline: none;
+    padding: 0.15rem 0.4rem; width: 80px; transition: border-color 0.2s;
+  }
+  .csb-close-input:focus { border-color: #ef9a9a; }
+  @media (max-width: 640px) {
+    #cash-status-bar { padding: 0.5rem 1rem; gap: 0.8rem; }
+  }
+
   .parked-fab { position: fixed; bottom: 5.5rem; right: 2rem; z-index: 200; background: var(--caramel); color: #fff; border: none; padding: 0.85rem 1.4rem; font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; box-shadow: 0 8px 32px rgba(0,0,0,0.25); transition: background 0.3s, transform 0.2s; }
   .parked-fab:hover { background: var(--mocha); transform: translateY(-2px); }
   .parked-fab.hidden { display: none; }
@@ -762,6 +852,26 @@ footer{
 
 <body>
 
+<!-- ── OPENING CASH GATE MODAL ── -->
+<div id="cash-gate-overlay">
+  <div class="cash-gate-modal">
+    <div class="cash-gate-header">
+      <h2>🔓 Enter Opening Cash</h2>
+      <p>Required before billing can begin</p>
+    </div>
+    <div class="cash-gate-body">
+      <div class="cash-gate-date" id="cg-date-display"></div>
+      <label>Opening Cash Amount (₹)</label>
+      <input type="number" id="cg-opening-input" placeholder="Enter amount in hand" min="0" step="1"
+        onkeydown="if(event.key==='Enter') confirmOpeningCash()" />
+      <div class="cash-gate-err" id="cg-err">Please enter a valid amount (0 or more).</div>
+    </div>
+    <div class="cash-gate-footer">
+      <button class="btn-cash-confirm" onclick="confirmOpeningCash()">Confirm & Start Billing →</button>
+    </div>
+  </div>
+</div>
+
 <nav>
   <a href="home_m.html" class="nav-logo">
   <span style="font-family: 'Lastica', sans-serif; color:#3a2010">MACH </span>
@@ -788,7 +898,24 @@ footer{
   </ul>
 </nav>
 
-<div class="menu-hero">
+<!-- ── CASH STATUS BAR ── -->
+<div id="cash-status-bar">
+  <div class="csb-item">
+    <span class="csb-label">🔓 Opening</span>
+    <span class="csb-val open-amt" id="csb-opening-val">—</span>
+    <button class="csb-edit" onclick="reopenCashGate()">Edit</button>
+  </div>
+  <span class="csb-divider">|</span>
+  <div class="csb-item">
+    <span class="csb-label">🔒 Closing</span>
+    <input type="number" class="csb-close-input" id="csb-closing-input"
+      placeholder="₹0" min="0"
+      oninput="saveClosingCash(this.value)"
+      onchange="saveClosingCash(this.value)" />
+  </div>
+  <span class="csb-divider">|</span>
+  <div class="csb-item" style="color:rgba(255,255,255,0.3);font-size:0.65rem;letter-spacing:1px;" id="csb-date-label"></div>
+</div><div class="menu-hero">
   <div class="menu-hero-content">
     <span class="menu-tag">Crafted with Intention</span>
 
@@ -1050,7 +1177,11 @@ footer{
 
   if (!role) {
     window.location.href = 'home.html';
+    return;
   }
+
+  // Run cash gate after DOM ready
+  window.addEventListener('DOMContentLoaded', initCashGate);
 
 })();
 
@@ -1059,6 +1190,72 @@ function logout() {
   localStorage.removeItem('mach_token');
   window.location.href = 'home.html';
 }
+
+// ── CASH MANAGEMENT ─────────────────────────────────────────
+function todayCashKey() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function cashOpeningKey()  {
+  const branch = (sessionStorage.getItem('mach_location') || 'guntupalli').toLowerCase().trim();
+  return 'mach_' + branch + '_opening_' + todayCashKey();
+}
+function cashClosingKey()  {
+  const branch = (sessionStorage.getItem('mach_location') || 'guntupalli').toLowerCase().trim();
+  return 'mach_' + branch + '_closing_' + todayCashKey();
+}
+
+function showCashGate() {
+  const d = new Date();
+  document.getElementById('cg-date-display').textContent =
+    d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  document.getElementById('cg-opening-input').value = '';
+  document.getElementById('cg-err').classList.remove('show');
+  document.getElementById('cash-gate-overlay').classList.remove('hidden');
+  setTimeout(() => document.getElementById('cg-opening-input').focus(), 80);
+}
+
+function confirmOpeningCash() {
+  const val = document.getElementById('cg-opening-input').value.trim();
+  if (val === '' || isNaN(parseFloat(val)) || parseFloat(val) < 0) {
+    document.getElementById('cg-err').classList.add('show');
+    return;
+  }
+  localStorage.setItem(cashOpeningKey(), parseFloat(val));
+  document.getElementById('cash-gate-overlay').classList.add('hidden');
+  updateCashStatusBar();
+}
+
+function reopenCashGate() { showCashGate(); }
+
+function saveClosingCash(val) {
+  if (val === '') { localStorage.removeItem(cashClosingKey()); return; }
+  const v = parseFloat(val);
+  if (!isNaN(v) && v >= 0) localStorage.setItem(cashClosingKey(), v);
+}
+
+function updateCashStatusBar() {
+  const opening = localStorage.getItem(cashOpeningKey());
+  const closing = localStorage.getItem(cashClosingKey());
+  const d = new Date();
+  document.getElementById('csb-date-label').textContent =
+    d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
+  document.getElementById('csb-opening-val').textContent =
+    opening !== null ? '₹' + parseFloat(opening).toLocaleString('en-IN') : '—';
+  const closingInput = document.getElementById('csb-closing-input');
+  closingInput.value = closing !== null ? closing : '';
+}
+
+function initCashGate() {
+  const opening = localStorage.getItem(cashOpeningKey());
+  updateCashStatusBar();
+  if (opening === null || opening === '') {
+    showCashGate();
+  } else {
+    document.getElementById('cash-gate-overlay').classList.add('hidden');
+  }
+}
+// ─────────────────────────────────────────────────────────────
 
 // SCROLL
 function scrollToSection(id, btn) {
@@ -1534,6 +1731,13 @@ function closeCart() {
 
 function placeOrder() {
   if (!cart.length) return;
+  // ── Opening cash check ──
+  const opening  = localStorage.getItem(cashOpeningKey());
+  if (opening === null || opening === '') {
+    closeCart();
+    showCashGate();
+    return;
+  }
   closeCart();
   // Pre-fill order total in cash calculator
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
