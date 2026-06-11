@@ -445,9 +445,15 @@ function amountKey(type) {
 }
 
 function saveAmount(type, value) {
-  if (type === 'closing') return; // closing is auto-calculated, not manually saved
+  if (type === 'closing') return; // closing is auto-calculated
+  if (value === '' || value === null) {
+    localStorage.removeItem(amountKey(type));
+    localStorage.removeItem(amountKey(type) + '_entered');
+    return;
+  }
   const v = parseFloat(value) || 0;
   localStorage.setItem(amountKey(type), v);
+  localStorage.setItem(amountKey(type) + '_entered', '1'); // mark as deliberately entered
 }
 
 function loadAmounts() {
