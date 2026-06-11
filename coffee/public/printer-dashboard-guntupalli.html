@@ -340,7 +340,7 @@
   <div class="stat-box"><div class="stat-icon">☕</div><div><div class="stat-label">Printer 2 (Bev)</div><div class="stat-value" id="s-p2">—</div></div></div>
   <div class="stat-box"><div class="stat-icon">🍛</div><div><div class="stat-label">Printer 3 (Food)</div><div class="stat-value" id="s-p3">—</div></div></div>
   <div class="stat-box"><div class="stat-icon">🔓</div><div><div class="stat-label">Opening Amount</div><input type="number" class="stat-amount-input opening" id="s-opening" placeholder="₹0" min="0" onchange="saveAmount('opening',this.value)" oninput="saveAmount('opening',this.value)"></div></div>
-  <div class="stat-box"><div class="stat-icon">🔒</div><div><div class="stat-label">Closing Amount</div><input type="number" class="stat-amount-input closing" id="s-closing" placeholder="₹0" min="0" onchange="saveAmount('closing',this.value)" oninput="saveAmount('closing',this.value)"></div></div>
+  <div class="stat-box"><div class="stat-icon">🔒</div><div><div class="stat-label">Closing Amount <span style="font-size:0.55rem;letter-spacing:1px;color:#b71c1c;opacity:0.7">(Revenue + Opening)</span></div><div class="stat-value closing" id="s-closing">—</div></div></div>
 </div>
 
 <div class="legend">
@@ -430,22 +430,39 @@ function cardClass(p) {
 
 // ── Opening / Closing Amount ──────────────────────────────
 function amountKey(type) {
-  const dateKey = selDate || mode;
+  // Use real ISO date so keys match menu.html (mach_branch_type_YYYY-MM-DD)
+  let dateKey;
+  if (selDate) {
+    dateKey = selDate;
+  } else if (mode === 'today') {
+    dateKey = todayStr();
+  } else if (mode === 'yesterday') {
+    dateKey = subtractDays(1);
+  } else {
+    dateKey = mode; // 'week' / 'all' — no single date, keep as-is
+  }
   return `mach_${BRANCH}_${type}_${dateKey}`;
 }
 
 function saveAmount(type, value) {
+  if (type === 'closing') return; // closing is auto-calculated, not manually saved
   const v = parseFloat(value) || 0;
   localStorage.setItem(amountKey(type), v);
 }
 
 function loadAmounts() {
   const openingEl = document.getElementById('s-opening');
-  const closingEl = document.getElementById('s-closing');
   const savedOpening = localStorage.getItem(amountKey('opening'));
-  const savedClosing = localStorage.getItem(amountKey('closing'));
   openingEl.value = savedOpening !== null ? savedOpening : '';
-  closingEl.value = savedClosing !== null ? savedClosing : '';
+  // Closing is auto-calculated after fetchOrders
+}
+
+function updateClosingDisplay(totalRevenue) {
+  const savedOpening = localStorage.getItem(amountKey('opening'));
+  const opening = savedOpening !== null ? parseFloat(savedOpening) || 0 : 0;
+  const closing = totalRevenue + opening;
+  localStorage.setItem(amountKey('closing'), closing);
+  document.getElementById('s-closing').textContent = '₹' + closing.toLocaleString('en-IN');
 }
 
 // ── Order Count by Menu Item ──────────────────────────────
@@ -545,12 +562,16 @@ async function fetchOrders() {
 
     document.getElementById('last-upd').textContent = new Date().toLocaleTimeString('en-IN');
     document.getElementById('s-total').textContent  = orders.length;
-    document.getElementById('s-rev').textContent    = '₹' + orders.reduce((s,o)=>s+o.grand,0).toLocaleString('en-IN');
+    const totalRevenue = orders.reduce((s,o)=>s+o.grand,0);
+    document.getElementById('s-rev').textContent    = '₹' + totalRevenue.toLocaleString('en-IN');
 
     const upiRev  = orders.filter(o => (o.paymentMode||'').toUpperCase() === 'UPI').reduce((s,o)=>s+o.grand,0);
     const cashRev = orders.filter(o => (o.paymentMode||'').toUpperCase() === 'CASH').reduce((s,o)=>s+o.grand,0);
     document.getElementById('s-upi').textContent    = '₹' + upiRev.toLocaleString('en-IN');
     document.getElementById('s-cash').textContent   = '₹' + cashRev.toLocaleString('en-IN');
+
+    // Auto-calculate closing = total revenue + opening
+    updateClosingDisplay(totalRevenue);
 
     const gstOrders = orders.filter(o => { const pm = (o.paymentMode||'').toUpperCase(); return pm === 'UPI' || pm === 'CASH'; });
     const totalGst  = gstOrders.reduce((s,o) => s + ((o.cgst||0) + (o.sgst||0)), 0);
